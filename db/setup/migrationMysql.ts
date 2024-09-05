@@ -1,6 +1,6 @@
-import { migrate } from 'drizzle-orm/postgres-js/migrator';
-import {pgClient, database} from "@db/setup/queryMysql";
+import { migrate } from 'drizzle-orm/mysql2/migrator';
+import {database, mysqlClient } from "@db/setup/queryMysql";
 
-await migrate(database, { migrationsFolder: 'db/migrations' });
+await migrate(database, { migrationsFolder: '@db/migrations' });
 
-await pgClient.end();
+await mysqlClient.end();

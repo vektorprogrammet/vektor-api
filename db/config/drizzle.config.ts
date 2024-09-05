@@ -1,11 +1,11 @@
-import type { defineConfig } from 'drizzle-kit';
-import { databaseConnectionParameters } from "@db/config/parameters";
+import { defineConfig } from 'drizzle-kit';
+import { drizzleDatabaseCredentials } from "@db/config/parameters";
 
 export default defineConfig({
-    schema: 'db/schema/*',
-    out: 'db/migrations',
+    schema: './db/schema/*',
+    out: './db/migrations',
     dialect: 'mysql',
-    dbCredentials: databaseConnectionParameters,
+    dbCredentials: drizzleDatabaseCredentials,
     verbose: true,
     strict: true,
 });

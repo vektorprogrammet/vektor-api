@@ -5,7 +5,13 @@
 		"moduleDetection": "force",
 
 		// Ignore module structure
-		"module": "Preserve",
+		"module": "esnext",
+
+		//
+		"moduleResolution": "node",
+
+		//
+		"target": "es2022",
 
 		// Allow JSON modules to be imported
 		"resolveJsonModule": true,
