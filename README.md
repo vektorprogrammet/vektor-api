@@ -9,10 +9,10 @@ Lag en database der
 Lag en .env fil med disse optionene:
 
 >DATABASE_HOST=**din host** *f.eks. localhost*
-DATABASE_PORT=**din port** *f.eks. 5432*
-DATABASE_NAME=**ditt databasenavn** *f.eks. vektorpostgres*
-DATABASE_USER=**din bruker** *f.eks.postgres*
-DATABASE_PASSWORD=**ditt passord** *pass123*
+>DATABASE_PORT=**din port** *f.eks. 5432*
+>DATABASE_NAME=**ditt databasenavn** *f.eks. vektorpostgres*
+>DATABASE_USER=**din bruker** *f.eks.postgres*
+>DATABASE_PASSWORD=**ditt passord** *pass123*
 
 ## Info
 
