@@ -1,6 +1,5 @@
 import "dotenv"
 import * as process from "node:process";
-import { ConnectionOptions } from "mysql2";
 
 const enviromentVariables = process.env;
 
@@ -25,7 +24,14 @@ if(isNaN(portAsNumber)) {
     throw new Error('Invalid DATABASE_PORT');
 }
 
-export const databaseConnectionParameters: ConnectionOptions =  {
+interface DatabaseConnectionOptions {
+    host: string,
+    database: string,
+    user: string,
+    password: string,
+    port: number,
+}
+export const databaseConnectionParameters: DatabaseConnectionOptions =  {
     host: enviromentVariables.DATABASE_HOST,
     database: enviromentVariables.DATABASE_NAME,
     user: enviromentVariables.DATABASE_USER,
@@ -33,12 +39,12 @@ export const databaseConnectionParameters: ConnectionOptions =  {
     port: portAsNumber,
 };
 
-type DatabaseCredentials = { host: string; port?: number; user?: string; password?: string; database: string; ssl?: string; } | { url: string; };
-
-export const drizzleDatabaseCredentials: DatabaseCredentials = {
+// Type defined at https://orm.drizzle.team/kit-docs/config-reference#dbcredentials
+export const drizzleDatabaseCredentials = {
     host: enviromentVariables.DATABASE_HOST,
-    database: enviromentVariables.DATABASE_NAME,
+    port: portAsNumber,
     user: enviromentVariables.DATABASE_USER,
     password: enviromentVariables.DATABASE_PASSWORD,
-    port: portAsNumber,
-}
+    database: enviromentVariables.DATABASE_NAME,
+    ssl: false, // can be boolean | "require" | "allow" | "prefer" | "verify-full" | options from node:tls
+  }

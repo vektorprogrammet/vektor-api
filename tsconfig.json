@@ -13,6 +13,9 @@
 		//
 		"target": "es2022",
 
+		//
+		"strict": true,
+
 		// Allow JSON modules to be imported
 		"resolveJsonModule": true,
 

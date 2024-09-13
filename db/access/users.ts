@@ -1,4 +1,4 @@
-import {database} from "@db/setup/queryMysql";
+import { database } from "@db/setup/queryPostgres";
 import {usersSchema, User, NewUser } from "@db/schema/users";
 import {eq} from "drizzle-orm";
 
