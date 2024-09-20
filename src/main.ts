@@ -5,7 +5,7 @@ import { errorHandler, defaultErrorHandler } from "@src/error/errorMiddleware";
 
 
 import usersRouter from "@routes/users/users";
-import { customHelmetSecurity } from "@src/security";
+import { customCors, customHelmetSecurity } from "@src/security";
 
 const app = express();
 const port = 3000;
@@ -13,6 +13,7 @@ const port = 3000;
 // Security
 app.use(customHelmetSecurity);
 app.disable('x-powered-by');
+app.use(customCors());
 
 app.use("/", logger);
 

@@ -1,4 +1,5 @@
 import { RequestHandler } from "express";
+import cors, { CorsOptions } from "cors";
 
 /*
     from https://helmetjs.github.io/faq/you-might-not-need-helmet/ at september 5. 2024
@@ -24,4 +25,13 @@ const SECURITY_HEADERS = { //
 export const customHelmetSecurity: RequestHandler = (req, res, next) => {
     res.set(SECURITY_HEADERS);
     next();
+}
+
+const corsOptions: CorsOptions = {
+    // origin: 'http://example.com',
+    optionsSuccessStatus: 200
+}
+
+export const customCors = () => {
+    return cors(corsOptions);
 }
