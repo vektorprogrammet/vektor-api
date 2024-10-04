@@ -8,7 +8,8 @@
     "watch": "tsx watch ./src/main.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "db:generate": "pnpm drizzle-kit generate --config=db/config/drizzle.config.ts",
-    "db:migrate": "pnpm drizzle-kit migrate --config=db/config/drizzle.config.ts"
+    "db:migrate": "pnpm drizzle-kit migrate --config=db/config/drizzle.config.ts",
+    "db:studio": "pnpm drizzle-kit studio --config=db/config/drizzle.config.ts"
   },
   "keywords": [],
   "author": "",
