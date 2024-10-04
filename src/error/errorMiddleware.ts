@@ -1,12 +1,13 @@
 import { ErrorRequestHandler } from "express";
-import { ClientError, ServerError } from "./errorTypes";
+import { isCustomError } from "@src/error/errorTypes";
 
 
 export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
-    if(!(err instanceof ClientError) && !(err instanceof ServerError)) {
-        return next();
+    if(!isCustomError(err)) {
+        return next(err);
     }
-    res.status(err.errorCode).send(err.getResponseBody());
+    const response = err.getResponseBody();
+    res.status(err.errorCode).send(response);
 };
 
 export const defaultErrorHandler: ErrorRequestHandler = (err, req, res, next) => {

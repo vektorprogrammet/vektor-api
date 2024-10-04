@@ -1,10 +1,10 @@
 import express from "express";
 
 import {logger} from "@src/logging/loggingMiddleware"
-import { errorHandler, defaultErrorHandler } from "@src/error/errorMiddleware";
+import { errorHandler, /*defaultErrorHandler*/ } from "@src/error/errorMiddleware";
 
+import outlayRouter from "@routes/outlays/main"
 
-import usersRouter from "@routes/users/users";
 import { customCors, customHelmetSecurity } from "@src/security";
 
 const app = express();
@@ -17,10 +17,10 @@ app.use(customCors());
 
 app.use("/", logger);
 
-app.use("/users/", usersRouter);
+app.use("/outlays", outlayRouter);
 
-app.use("/", errorHandler)
-app.use("/", defaultErrorHandler);
+app.use("/", errorHandler);
+//app.use("/", defaultErrorHandler);
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);

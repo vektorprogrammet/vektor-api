@@ -36,6 +36,7 @@
       		"@src/*": ["src/*"],
       		"@db/*": ["db/*"],
       		"@routes/*": ["src/routes/*"],
+			"@config/*": ["config/"],
     	},
 	},
 }
