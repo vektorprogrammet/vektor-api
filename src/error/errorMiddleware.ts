@@ -1,16 +1,15 @@
 import { ErrorRequestHandler } from "express";
-import { isCustomError } from "@src/error/errorTypes";
+import { isHTTPError } from "@src/error/httpErrors";
 
 
 export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
-    if(!isCustomError(err)) {
+    if(!isHTTPError(err)) {
         return next(err);
     }
-    const response = err.getResponseBody();
-    res.status(err.errorCode).send(response);
+    res.status(err.getErrorCode()).send(err.getResponseBodyJSON());
 };
 
 export const defaultErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
-    console.log("WARNING! DEFAULT EXPRESS ERRORHANDLER IS USED. SOMETHING IS WRONG.");
+    console.warn("WARNING! DEFAULT EXPRESS ERRORHANDLER IS USED. SOMETHING IS WRONG.");
     res.status(500).send("Unknown error.");
 }

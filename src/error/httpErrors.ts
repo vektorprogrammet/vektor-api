@@ -1,9 +1,10 @@
 import { STATUS_CODES } from "http";
-import { ZodError, ZodErrorMap, ZodIssueCode } from "zod";
+import { Result } from "@src/error/types";
+import { isORMError } from "./dbErrors";
 
-class AppError extends Error {
-    errorCode: number
-    displayCause: boolean
+class HTTPError extends Error {
+    private errorCode: number
+    private displayCause: boolean
     constructor(message: string, httpErrorCode: number, displayCause: boolean) {
         super(message);
         if(!Object.keys(STATUS_CODES).includes(httpErrorCode.toString())) {
@@ -12,37 +13,42 @@ class AppError extends Error {
         if(Math.floor(httpErrorCode / 100) !== 4 && Math.floor(httpErrorCode / 100) !== 5) {
             throw new Error(httpErrorCode + " is not a http errorcode.");
         }
-        this.name = "AppError";
+        this.name = "HTTPError";
         this.errorCode = httpErrorCode;
         this.displayCause = displayCause;
     }
-    getHTTPErrorLabel() {
-        return STATUS_CODES[this.errorCode.toString()];
+    private getHTTPErrorLabel(): string {
+        return STATUS_CODES[this.errorCode.toString()] as string;
     }
-    getResponseBody() {
+    private getCauseString() {
         let causeString = "";
-        if (this.displayCause) {
-            let cause = this.cause as Error;
-            while(cause) {
-                if (isCustomError(cause)) {
-                    if (cause.displayCause) {
-                        causeString += cause.getResponseBody();
-                    } else {
-                        causeString += cause.message;
-                        break;
-                    }
-                } else {
-                    causeString += cause.message;
-                    break;
-                }
-                cause = cause.cause as Error;
+        if (this.displayCause && this.cause instanceof Error) {
+            if (isHTTPError(this.cause)) {
+                causeString += this.cause.getResponseBodyText();
+            } else if (isORMError(this.cause)) {
+                causeString += this.cause.getResponse();
+            } else if (this.cause instanceof Error) {
+                causeString += this.cause.message;
             }
         }
-        return this.errorCode.toString() + " " + this.getHTTPErrorLabel() + ": " + this.message + "\n" + causeString;
+        return causeString;
+    }
+    getResponseBodyText() {
+        return this.errorCode.toString() + " " + this.getHTTPErrorLabel() + ": " + this.message + "\n\t" + this.getCauseString();
+    }
+    getResponseBodyJSON() {
+        return {
+            error: true,
+            message: this.message,
+            cause: this.getCauseString(),
+        };
+    }
+    getErrorCode(): number {
+        return this.errorCode;
     }
 }
 
-class ServerError extends AppError {
+class ServerError extends HTTPError {
     constructor(message: string, httpErrorCode: number = 500, displayCause: boolean = false) {
         super(message, httpErrorCode, displayCause);
         if(Math.floor(httpErrorCode / 100) !== 5) {
@@ -52,7 +58,7 @@ class ServerError extends AppError {
     }
 }
 
-class ClientError extends AppError {
+class ClientError extends HTTPError {
     constructor(message: string, httpErrorCode: number = 400, displayCause: boolean = true) {
         super(message, httpErrorCode, displayCause);
         if(Math.floor(httpErrorCode / 100) !== 4) {
@@ -67,6 +73,7 @@ export const clientError = (httpStatusCode: number = 400, message: string, cause
     if (cause !== undefined) {
         error.cause = cause;
     }
+    Error.captureStackTrace(error, clientError);
     return error;
 }
 
@@ -75,12 +82,12 @@ export const serverError = (httpStatusCode: number = 500, message: string, cause
     if (cause !== undefined) {
         error.cause = cause;
     }
+    Error.captureStackTrace(error, serverError);
     return error;
 }
 
-export const isCustomError = (x: any) => {
-    return (x instanceof ServerError || x instanceof ClientError);
+export function isHTTPError(x: unknown): x is ServerError | ClientError | HTTPError  {
+    return (x instanceof ServerError || x instanceof ClientError || x instanceof HTTPError);
 }
-export const isZodError = (x: any) => {
-    return (x instanceof ZodError)
-}
+
+export type HTTPResult<T> = Result<T, HTTPError>;
