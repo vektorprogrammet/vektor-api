@@ -3,7 +3,7 @@ import { fieldsOfStudySchema } from '@db/schema/fieldsOfStudy';
 import { relations } from 'drizzle-orm';
 import schema from '@db/schema/schema';
 
-export const cities = schema.enum("city", ["Trondheim", "Ås", "Bergen"]);
+export const cities = schema.enum("city", ["Trondheim", "Ås", "Bergen", "Tromsø"]);
 
 export const departmentsSchema = schema.table("departments", {
     id: serial('id').primaryKey(),
