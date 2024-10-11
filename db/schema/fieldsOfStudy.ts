@@ -7,7 +7,7 @@ export const fieldsOfStudySchema = schema.table("fieldsOfStudy", {
     id: serial('id').primaryKey(),
     studyCode: text('studyCode').notNull(),
     name: text("name").notNull(),
-    departmentId: integer("departmentId").notNull(),
+    departmentId: integer("departmentId").notNull().references(() => departmentsSchema.id),
 });
 
 export const fieldsOfStudyRelations = relations(fieldsOfStudySchema, ({ one, many }) => ({

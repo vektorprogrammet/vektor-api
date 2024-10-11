@@ -1,5 +1,5 @@
 import { serial, text, integer, numeric, date } from 'drizzle-orm/pg-core';
-import { createInsertSchema, createSelectSchema } from "drizzle-zod"
+import { createInsertSchema, } from "drizzle-zod"
 import { relations } from 'drizzle-orm';
 import { usersSchema } from '@db/schema/users';
 import schema from '@db/schema/schema';
@@ -9,7 +9,7 @@ import { isScaleTwoDecimalNumber, isValidNorwegiaAccountNumberNoIBAN, removeSepa
 
 export const recieptsSchema = schema.table("reciepts", {
     id: serial('id').primaryKey(),
-    userId: integer("userId").notNull(),
+    userId: integer("userId").notNull().references(() => usersSchema.id),
     title: text("title").notNull(),
     description: text("description").notNull(),
     moneyAmount: numeric("moneyAmount", {scale: 2}).notNull(),
@@ -28,9 +28,10 @@ export const reciptsRelations = relations(recieptsSchema, ({ one }) => ({
 
 export type Reciept = typeof recieptsSchema.$inferSelect;
 export type NewReciept = typeof recieptsSchema.$inferInsert;
+export type RecieptId = Reciept["id"];
 
 export const recieptInsertSchema = createInsertSchema(recieptsSchema, {
-    userId: (schema) => schema.userId.finite().safe().nonnegative().int(),
+    userId: (schema) => schema.userId.finite().safe().positive().int(),
     title: (schema) => schema.title.min(1),
     description: (schema) => schema.description.min(1),
     moneyAmount: (schema) => schema.moneyAmount.trim().refine(isScaleTwoDecimalNumber, {
@@ -42,4 +43,8 @@ export const recieptInsertSchema = createInsertSchema(recieptsSchema, {
     id: true,
     submitDate: true,
     payBackDate: true,
+}).strict();
+
+export const recieptPaybackSchema = z.object({
+    recieptId: z.number().finite().safe().positive().int(),
 });
