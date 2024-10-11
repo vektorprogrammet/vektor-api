@@ -5,6 +5,7 @@
   "main": "./src/main.ts",
   "type": "module",
   "scripts": {
+    "once": "tsx ./src/main.ts",
     "watch": "tsx watch ./src/main.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "db:generate": "pnpm drizzle-kit generate --config=db/config/drizzle.config.ts",
