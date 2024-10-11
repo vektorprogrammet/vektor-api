@@ -1,6 +1,7 @@
 import { STATUS_CODES } from "http";
-import { Result } from "@src/error/types";
+import { isZodError, Result } from "@src/error/types";
 import { isORMError } from "./dbErrors";
+import { fromZodError } from "zod-validation-error";
 
 class HTTPError extends Error {
     private errorCode: number
@@ -27,6 +28,8 @@ class HTTPError extends Error {
                 causeString += this.cause.getResponseBodyText();
             } else if (isORMError(this.cause)) {
                 causeString += this.cause.getResponse();
+            } else if (isZodError(this.cause)) {
+                causeString += fromZodError(this.cause);
             } else if (this.cause instanceof Error) {
                 causeString += this.cause.message;
             }
