@@ -1,9 +1,9 @@
-import { clientError } from "@src/error/errorTypes";
+import { clientError } from "@src/error/httpErrors";
 import { parseMoneyToTwoDecimals, removeSeparatorsNorwegianAccountNumberNoIBAN} from "@src/parsing/moneyParser"
 import { Router, urlencoded } from "express"
 import { z } from "zod";
-import { recieptInsertSchema } from "@db/schema/reciepts";
-import { insertReciepts } from "@db/access/reciepts"
+import { recieptInsertSchema, recieptPaybackSchema } from "@db/schema/reciepts";
+import { insertReciepts, paybackReciepts } from "@db/access/reciepts"
 
 const outlayRouter = Router();
 
@@ -36,19 +36,41 @@ const outlayRequestSchema = z.object({
     purchaseDate: z.string().date("Must be a valid ISO date format. (YYYY-MM-DD)").transform((dateString) => {
         return new Date(dateString);
     }),
-}).pipe(recieptInsertSchema.strict());
+}).pipe(recieptInsertSchema);
 
 outlayRouter.use(urlencoded({ extended: true }));
 
-outlayRouter.post("/new", (req, res, next) => {
-    let outlayRequest = outlayRequestSchema.safeParse(req.body);
+outlayRouter.post("/new", async (req, res, next) => {
+    const outlayRequest = outlayRequestSchema.safeParse(req.body);
     if(!outlayRequest.success) {
         const error = clientError(400, "Failed parsing outlayrequest.", outlayRequest.error);
         return next(error);
     }
-    insertReciepts([outlayRequest.data]);
+    const databaseResult = await insertReciepts([outlayRequest.data]);
+    if (!databaseResult.success) {
+        const error = clientError(403, "Database error", databaseResult.error)
+        return next(error);
+    }
     console.log(outlayRequest.data);
     res.json(outlayRequest.data);
+});
+
+const outlayPaybackSchema = z.object({
+    recieptId: z.string().transform((numString) => {return Number(numString)}),
+}).pipe(recieptPaybackSchema);
+
+outlayRouter.put("/payback", async (req, res, next) => {
+    let paybackRequest = outlayPaybackSchema.safeParse(req.body);
+    if (!paybackRequest.success) {
+        const error = clientError(400, "Failed parsing paybackrequest", paybackRequest.error);
+        return next(error);
+    }
+    let databaseResult = await paybackReciepts([paybackRequest.data.recieptId]);
+    if (!databaseResult.success) {
+        const error = clientError(403, "Database error", databaseResult.error);
+        return next(error);
+    }
+    res.json(paybackRequest.data);
 });
 
 export default outlayRouter;
