@@ -1,50 +1,36 @@
 import "dotenv"
 import * as process from "node:process";
+import { z } from "zod";
+import { fromZodError } from "zod-validation-error";
 
 const enviromentVariables = process.env;
 
-if(!enviromentVariables.DATABASE_HOST) {
-    throw new Error('Missing DATABASE_HOST');
-}
-if(!enviromentVariables.DATABASE_NAME) {
-    throw new Error('Missing DATABASE_NAME');
-}
-if(!enviromentVariables.DATABASE_USER) {
-    throw new Error('Missing DATABASE_USER');
-}
-if(!enviromentVariables.DATABASE_PASSWORD) {
-    throw new Error('Missing DATABASE_PASSWORD');
-}
+const databaseConnectionParametersSchema = z.object({
+    DATABASE_HOST: z.string().min(1),
+    DATABASE_NAME: z.string().min(1),
+    DATABASE_USER: z.string().min(1),
+    DATABASE_PASSWORD: z.string().min(1),
+    DATABASE_PORT: z.coerce.number().positive().finite().safe().int(),
+}).transform(schema => {
+    return {
+        host: schema.DATABASE_HOST.trim(),
+        database: schema.DATABASE_NAME.trim(),
+        user: schema.DATABASE_USER.trim(),
+        password: schema.DATABASE_PASSWORD.trim(),
+        port: schema.DATABASE_PORT,
+    }
+});
 
-if(!enviromentVariables.DATABASE_PORT) {
-    throw new Error('Missing DATABASE_PORT');
+const parsedEnviromentVariablesResult = databaseConnectionParametersSchema.safeParse(enviromentVariables);
+if (!parsedEnviromentVariablesResult.success) {
+    throw new Error("Invalid enviroment varaibles: " + fromZodError(parsedEnviromentVariablesResult.error).message);
 }
-let portAsNumber = parseInt(enviromentVariables.DATABASE_PORT);
-if(isNaN(portAsNumber)) {
-    throw new Error('Invalid DATABASE_PORT');
-}
+const parsedEnviromentVariables = parsedEnviromentVariablesResult.data;
 
-interface DatabaseConnectionOptions {
-    host: string,
-    database: string,
-    user: string,
-    password: string,
-    port: number,
-}
-export const databaseConnectionParameters: DatabaseConnectionOptions =  {
-    host: enviromentVariables.DATABASE_HOST,
-    database: enviromentVariables.DATABASE_NAME,
-    user: enviromentVariables.DATABASE_USER,
-    password: enviromentVariables.DATABASE_PASSWORD,
-    port: portAsNumber,
-};
+type DatabaseConnectionOptions = z.infer<typeof databaseConnectionParametersSchema>;
 
-// Type defined at https://orm.drizzle.team/kit-docs/config-reference#dbcredentials
-export const drizzleDatabaseCredentials = {
-    host: enviromentVariables.DATABASE_HOST,
-    port: portAsNumber,
-    user: enviromentVariables.DATABASE_USER,
-    password: enviromentVariables.DATABASE_PASSWORD,
-    database: enviromentVariables.DATABASE_NAME,
-    ssl: false, // can be boolean | "require" | "allow" | "prefer" | "verify-full" | options from node:tls
-  }
+export const databaseConnectionParameters: DatabaseConnectionOptions = parsedEnviromentVariables;
+
+// Types defined at https://orm.drizzle.team/kit-docs/config-reference#dbcredentials
+const sslSetting: boolean | "require" | "allow" | "prefer" | "verify-full" = false;
+export const drizzleDatabaseCredentials = Object.assign({ssl: sslSetting}, databaseConnectionParameters);
