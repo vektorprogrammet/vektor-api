@@ -1,25 +1,25 @@
 import { serial, text, integer } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
-import schema from '@db/schema/schema';
+import vektorSchema from '@db/schema/schema';
 
-import { fieldsOfStudySchema } from '@db/schema/fieldsOfStudy';
-import { recieptsSchema } from '@db/schema/reciepts';
+import { fieldsOfStudyTable } from '@db/schema/fieldsOfStudy';
+import { recieptsTable } from '@db/schema/reciepts';
 
-export const usersSchema = schema.table("users", {
+export const usersTable = vektorSchema.table("users", {
     id: serial('id').primaryKey(),
     firstName: text('firstName').notNull(),
     lastName: text("lastName").notNull(),
-    fieldOfStudyId: integer("fieldOfStudyId").notNull().references(() => fieldsOfStudySchema.id),
+    fieldOfStudyId: integer("fieldOfStudyId").notNull().references(() => fieldsOfStudyTable.id),
 });
 
-export const usersRelations = relations(usersSchema, ({ one, many }) => ({
-    fieldOfStudy: one(fieldsOfStudySchema, {
-        fields: [usersSchema.fieldOfStudyId],
-        references: [fieldsOfStudySchema.id],
+export const usersRelations = relations(usersTable, ({ one, many }) => ({
+    fieldOfStudy: one(fieldsOfStudyTable, {
+        fields: [usersTable.fieldOfStudyId],
+        references: [fieldsOfStudyTable.id],
     }),
-    reciepts: many(recieptsSchema)
+    reciepts: many(recieptsTable)
   }));
 
 
-export type User = typeof usersSchema.$inferSelect;
-export type NewUser = typeof usersSchema.$inferInsert;
+export type User = typeof usersTable.$inferSelect;
+export type NewUser = typeof usersTable.$inferInsert;

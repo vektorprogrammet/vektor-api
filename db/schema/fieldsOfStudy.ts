@@ -1,21 +1,21 @@
 import { serial, text, integer } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
-import schema from '@db/schema/schema';
-import { departmentsSchema } from '@db/schema/departments';
+import vektorSchema from '@db/schema/schema';
+import { departmentsTable } from '@db/schema/departments';
 
-export const fieldsOfStudySchema = schema.table("fieldsOfStudy", {
+export const fieldsOfStudyTable = vektorSchema.table("fieldsOfStudy", {
     id: serial('id').primaryKey(),
     studyCode: text('studyCode').notNull(),
     name: text("name").notNull(),
-    departmentId: integer("departmentId").notNull().references(() => departmentsSchema.id),
+    departmentId: integer("departmentId").notNull().references(() => departmentsTable.id),
 });
 
-export const fieldsOfStudyRelations = relations(fieldsOfStudySchema, ({ one, many }) => ({
-    department: one(departmentsSchema, {
-        fields: [fieldsOfStudySchema.departmentId],
-        references: [departmentsSchema.id],
+export const fieldsOfStudyRelations = relations(fieldsOfStudyTable, ({ one, many }) => ({
+    department: one(departmentsTable, {
+        fields: [fieldsOfStudyTable.departmentId],
+        references: [departmentsTable.id],
     })
   }));
 
-export type FieldOfStudy = typeof fieldsOfStudySchema.$inferSelect;
-export type NewFieldOfStudy = typeof fieldsOfStudySchema.$inferInsert;
+export type FieldOfStudy = typeof fieldsOfStudyTable.$inferSelect;
+export type NewFieldOfStudy = typeof fieldsOfStudyTable.$inferInsert;

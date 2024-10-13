@@ -1,15 +1,15 @@
 import { serial, text, integer, numeric, date } from 'drizzle-orm/pg-core';
 import { createInsertSchema, } from "drizzle-zod"
 import { relations } from 'drizzle-orm';
-import { usersSchema } from '@db/schema/users';
-import schema from '@db/schema/schema';
+import { usersTable } from '@db/schema/users';
+import vektorSchema from '@db/schema/schema';
 import { z } from "zod";
 
 import { isScaleTwoDecimalNumber, isValidNorwegiaAccountNumberNoIBAN, removeSeparatorsNorwegianAccountNumberNoIBAN } from '@src/parsing/moneyParser';
 
-export const recieptsSchema = schema.table("reciepts", {
+export const recieptsTable = vektorSchema.table("reciepts", {
     id: serial('id').primaryKey(),
-    userId: integer("userId").notNull().references(() => usersSchema.id),
+    userId: integer("userId").notNull().references(() => usersTable.id),
     title: text("title").notNull(),
     description: text("description").notNull(),
     moneyAmount: numeric("moneyAmount", {scale: 2}).notNull(),
@@ -19,18 +19,18 @@ export const recieptsSchema = schema.table("reciepts", {
     payBackDate: date("payBackDate", {mode: "date"}),
 });
 
-export const reciptsRelations = relations(recieptsSchema, ({ one }) => ({
-    user: one(usersSchema, {
-        fields: [recieptsSchema.userId],
-        references: [usersSchema.id],
+export const reciptsRelations = relations(recieptsTable, ({ one }) => ({
+    user: one(usersTable, {
+        fields: [recieptsTable.userId],
+        references: [usersTable.id],
     }),
   }));
 
-export type Reciept = typeof recieptsSchema.$inferSelect;
-export type NewReciept = typeof recieptsSchema.$inferInsert;
+export type Reciept = typeof recieptsTable.$inferSelect;
+export type NewReciept = typeof recieptsTable.$inferInsert;
 export type RecieptId = Reciept["id"];
 
-export const recieptInsertSchema = createInsertSchema(recieptsSchema, {
+export const recieptInsertSchema = createInsertSchema(recieptsTable, {
     userId: (schema) => schema.userId.finite().safe().positive().int(),
     title: (schema) => schema.title.min(1),
     description: (schema) => schema.description.min(1),

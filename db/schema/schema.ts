@@ -1,5 +1,5 @@
 import { pgSchema } from "drizzle-orm/pg-core";
 
-const schema = pgSchema("vektor");
+const vektorSchema = pgSchema("vektor");
 
-export default schema;
+export default vektorSchema;
