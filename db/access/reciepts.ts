@@ -23,18 +23,33 @@ export async function insertReciepts(reciepts: NewReciept[]): Promise<DatabaseRe
     });
 };
 
-export async function paybackReciepts(reciptIds: RecieptId[]): Promise<DatabaseResult<Reciept[]>> {
+export async function paybackReciepts(recieptIds: RecieptId[]): Promise<DatabaseResult<Reciept[]>> {
     return catchDatabase(() => { 
         return database.transaction(async tx => {
             const updateResult = await database
                 .update(recieptsSchema)
                 .set({ payBackDate: new Date() })
-                .where(inArray(recieptsSchema.id, reciptIds))
+                .where(inArray(recieptsSchema.id, recieptIds))
                 .returning();
-            if (updateResult.length !== reciptIds.length) {
+            if (updateResult.length !== recieptIds.length) {
                 throw databaseError("Couldn't update, some id's didn't exist.")
             }
             return updateResult;
         })
     });
 };
+
+export async function selectRecipts(recieptIds: RecieptId[]): Promise<DatabaseResult<Reciept[]>> {
+    return catchDatabase(() => {
+        return database.transaction(async tx => {
+            const selectResult = await tx
+                .select()
+                .from(recieptsSchema)
+                .where(inArray(recieptsSchema.id, recieptIds))
+            if (selectResult.length !== recieptIds.length) {
+                throw databaseError("Couldn't select receipts, id's didn't exist.")
+            }
+            return selectResult;
+        });
+    });
+}

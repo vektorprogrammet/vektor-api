@@ -7,6 +7,7 @@ import { errorHandler, /*defaultErrorHandler*/ } from "@src/error/errorMiddlewar
 import outlayRouter from "@routes/outlays/main"
 
 import { customCors, customHelmetSecurity } from "@src/security";
+import recieptRouter from "./routes/reciepts/main";
 
 const app = express();
 const port = 3000;
@@ -20,6 +21,7 @@ app.use("/", responseFormatter)
 app.use("/", logger);
 
 app.use("/outlays", outlayRouter);
+app.use("/reciepts", recieptRouter);
 
 app.use("/", errorHandler);
 //app.use("/", defaultErrorHandler);

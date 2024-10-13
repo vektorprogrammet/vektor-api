@@ -2,8 +2,8 @@ import { clientError } from "@src/error/httpErrors";
 import { parseMoneyToTwoDecimals, removeSeparatorsNorwegianAccountNumberNoIBAN} from "@src/parsing/moneyParser"
 import { Router, urlencoded } from "express"
 import { z } from "zod";
-import { recieptInsertSchema, recieptPaybackSchema } from "@db/schema/reciepts";
-import { insertReciepts, paybackReciepts } from "@db/access/reciepts"
+import { recieptInsertSchema } from "@db/schema/reciepts";
+import { insertReciepts } from "@db/access/reciepts"
 
 const outlayRouter = Router();
 
@@ -51,26 +51,7 @@ outlayRouter.post("/new", async (req, res, next) => {
         const error = clientError(403, "Database error", databaseResult.error)
         return next(error);
     }
-    console.log(outlayRequest.data);
     res.json(outlayRequest.data);
-});
-
-const outlayPaybackSchema = z.object({
-    recieptId: z.string().transform((numString) => {return Number(numString)}),
-}).pipe(recieptPaybackSchema);
-
-outlayRouter.put("/payback", async (req, res, next) => {
-    let paybackRequest = outlayPaybackSchema.safeParse(req.body);
-    if (!paybackRequest.success) {
-        const error = clientError(400, "Failed parsing paybackrequest", paybackRequest.error);
-        return next(error);
-    }
-    let databaseResult = await paybackReciepts([paybackRequest.data.recieptId]);
-    if (!databaseResult.success) {
-        const error = clientError(403, "Database error", databaseResult.error);
-        return next(error);
-    }
-    res.json(paybackRequest.data);
 });
 
 export default outlayRouter;
