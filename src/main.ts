@@ -1,7 +1,6 @@
 import express from "express";
 
 import {logger} from "@src/logging/loggingMiddleware"
-import { responseFormatter } from "@src/httpResponse";
 import { errorHandler, /*defaultErrorHandler*/ } from "@src/error/errorMiddleware";
 
 import outlayRouter from "@routes/outlays/main"
@@ -17,7 +16,6 @@ app.use(customHelmetSecurity);
 app.disable('x-powered-by');
 app.use(customCors());
 
-app.use("/", responseFormatter)
 app.use("/", logger);
 
 app.use("/outlays", outlayRouter);
