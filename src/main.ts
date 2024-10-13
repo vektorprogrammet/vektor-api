@@ -1,7 +1,7 @@
 import express from "express";
 
 import {logger} from "@src/logging/loggingMiddleware"
-import { errorHandler, /*defaultErrorHandler*/ } from "@src/error/errorMiddleware";
+import { errorHandler, defaultErrorHandler } from "@src/error/errorMiddleware";
 
 import outlayRouter from "@routes/outlays/main"
 
@@ -22,7 +22,7 @@ app.use("/outlays", outlayRouter);
 app.use("/reciepts", recieptRouter);
 
 app.use("/", errorHandler);
-//app.use("/", defaultErrorHandler);
+app.use("/", defaultErrorHandler);
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
