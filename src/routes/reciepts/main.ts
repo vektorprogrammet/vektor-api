@@ -19,7 +19,7 @@ recieptRouter.put("/payback", async (req, res, next) => {
     }
     const databaseResult = await paybackReciepts([paybackRequest.data.recieptId]);
     if (!databaseResult.success) {
-        return next(clientError(403, "Database error", databaseResult.error));
+        return next(clientError(400, "Database error", databaseResult.error));
     }
     res.json(paybackRequest.data);
 });
@@ -31,7 +31,7 @@ recieptRouter.get("/get", async (req, res, next) => {
     }
     const databaseResult = await selectRecipts([recieptRequest.data.recieptId]);
     if (!databaseResult.success) {
-        return next(clientError(403, "Database error", databaseResult.error));
+        return next(clientError(400, "Database error", databaseResult.error));
     }
     res.json(databaseResult.data);
 });

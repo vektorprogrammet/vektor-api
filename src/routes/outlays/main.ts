@@ -48,10 +48,10 @@ outlayRouter.post("/new", async (req, res, next) => {
     }
     const databaseResult = await insertReciepts([outlayRequest.data]);
     if (!databaseResult.success) {
-        const error = clientError(403, "Database error", databaseResult.error)
+        const error = clientError(400, "Database error", databaseResult.error)
         return next(error);
     }
-    res.json(outlayRequest.data);
+    res.status(201).json(outlayRequest.data);
 });
 
 export default outlayRouter;

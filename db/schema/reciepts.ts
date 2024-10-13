@@ -46,5 +46,5 @@ export const recieptInsertSchema = createInsertSchema(recieptsTable, {
 }).strict();
 
 export const recieptPaybackSchema = z.object({
-    recieptId: z.number().finite().safe().positive().int(),
+    recieptId: z.number().positive().finite().safe().int(),
 });
