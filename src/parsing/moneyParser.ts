@@ -27,7 +27,7 @@ export function isScaleTwoDecimalNumber(numericString: string) {
 		parts.length === 2 &&
 		parts[1].length === 2 &&
 		parts[0].length > 0 &&
-		!isNaN(Number.parseFloat(numericString))
+		!Number.isNaN(Number.parseFloat(numericString))
 	);
 }
 const mainSeparator = " " as const; // this must be a string
