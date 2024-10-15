@@ -79,6 +79,7 @@ class ClientError extends HTTPError {
 }
 
 export const clientError = (
+	// biome-ignore lint/style/useDefaultParameterLast: To have code as first parameter
 	httpStatusCode = 400,
 	message: string,
 	cause?: Error,
@@ -93,6 +94,7 @@ export const clientError = (
 };
 
 export const serverError = (
+	// biome-ignore lint/style/useDefaultParameterLast: To have code as first parameter
 	httpStatusCode = 500,
 	message: string,
 	cause?: Error,
