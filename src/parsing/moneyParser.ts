@@ -5,19 +5,19 @@ export function parseMoneyToTwoDecimals(money: string) {
 		throw new Error("Money is not a valid number.");
 	}
 	const parts = money.split(".");
-	if (parts.length == 1) {
-		return parts[0] + "." + "00";
-	} else if (parts.length == 2) {
-		if (parts[1].length === 0) {
-			return parts[0] + "." + "00";
-		} else if (parts[1].length === 1) {
-			return parts[0] + "." + parts[1] + "0";
-		} else {
-			return parts[0] + "." + parts[1].substring(0, 2);
-		}
-	} else {
-		throw new Error("Money is not a valid number.");
+	if (parts.length === 1) {
+		return `${parts[0]}.00`;
 	}
+	if (parts.length === 2) {
+		if (parts[1].length === 0) {
+			return `${parts[0]}.00`;
+		}
+		if (parts[1].length === 1) {
+			return `${parts[0]}.${parts[1]}0`;
+		}
+		return `${parts[0]}.${parts[1].substring(0, 2)}`;
+	}
+	throw new Error("Money is not a valid number.");
 }
 
 export function isScaleTwoDecimalNumber(numericString: string) {

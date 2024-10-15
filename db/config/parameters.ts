@@ -27,8 +27,7 @@ const parsedEnviromentVariablesResult =
 	databaseConnectionParametersSchema.safeParse(enviromentVariables);
 if (!parsedEnviromentVariablesResult.success) {
 	throw new Error(
-		"Invalid enviroment varaibles: " +
-			fromZodError(parsedEnviromentVariablesResult.error).message,
+		`Invalid enviroment varaibles: ${fromZodError(parsedEnviromentVariablesResult.error).message}`,
 	);
 }
 const parsedEnviromentVariables = parsedEnviromentVariablesResult.data;

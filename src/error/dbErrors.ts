@@ -35,7 +35,7 @@ class ORMError extends Error {
 	}
 	getResponse(): string {
 		return this.hasValidPgCode()
-			? this.message + ": " + this.getCode() + "; " + this.getCodeName()
+			? `${this.message}: ${this.getCode()}; ${this.getCodeName()}`
 			: this.message;
 	}
 }

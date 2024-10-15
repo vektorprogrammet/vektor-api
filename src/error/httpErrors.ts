@@ -1,4 +1,4 @@
-import { STATUS_CODES } from "http";
+import { STATUS_CODES } from "node:http";
 import { type Result, isZodError } from "@src/error/types";
 import { fromZodError } from "zod-validation-error";
 import { isORMError } from "./dbErrors";
@@ -9,13 +9,13 @@ class HTTPError extends Error {
 	constructor(message: string, httpErrorCode: number, displayCause: boolean) {
 		super(message);
 		if (!Object.keys(STATUS_CODES).includes(httpErrorCode.toString())) {
-			throw new Error(httpErrorCode + " is not a http statuscode.");
+			throw new Error(`${httpErrorCode} is not a http statuscode.`);
 		}
 		if (
 			Math.floor(httpErrorCode / 100) !== 4 &&
 			Math.floor(httpErrorCode / 100) !== 5
 		) {
-			throw new Error(httpErrorCode + " is not a http errorcode.");
+			throw new Error(`${httpErrorCode} is not a http errorcode.`);
 		}
 		this.name = "HTTPError";
 		this.errorCode = httpErrorCode;
@@ -40,15 +40,7 @@ class HTTPError extends Error {
 		return causeString;
 	}
 	getResponseBodyText() {
-		return (
-			this.errorCode.toString() +
-			" " +
-			this.getHTTPErrorLabel() +
-			": " +
-			this.message +
-			"\n\t" +
-			this.getCauseString()
-		);
+		return `${this.errorCode.toString()} ${this.getHTTPErrorLabel()}: ${this.message}\n\t${this.getCauseString()}`;
 	}
 	getResponseBodyJSON() {
 		return {
@@ -67,7 +59,7 @@ class ServerError extends HTTPError {
 		super(message, httpErrorCode, displayCause);
 		if (Math.floor(httpErrorCode / 100) !== 5) {
 			throw new Error(
-				httpErrorCode + " is not a valid servererrorcode. Must start with 5.",
+				`${httpErrorCode} is not a valid servererrorcode. Must start with 5.`,
 			);
 		}
 		this.name = "ServerError";
@@ -79,7 +71,7 @@ class ClientError extends HTTPError {
 		super(message, httpErrorCode, displayCause);
 		if (Math.floor(httpErrorCode / 100) !== 4) {
 			throw new Error(
-				httpErrorCode + "is not a valid clienterrorcode. Must start with 4.",
+				`${httpErrorCode}is not a valid clienterrorcode. Must start with 4.`,
 			);
 		}
 		this.name = "ClientError";

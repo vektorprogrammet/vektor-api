@@ -546,12 +546,11 @@ export function safeGetPgErrorName(
 			success: true,
 			data: getPgErrorName(result.data),
 		};
-	} else {
-		return {
-			success: false,
-			error: result.error,
-		};
 	}
+	return {
+		success: false,
+		error: result.error,
+	};
 }
 export function isPgError(error: unknown): error is DatabaseError {
 	return error instanceof DatabaseError;
