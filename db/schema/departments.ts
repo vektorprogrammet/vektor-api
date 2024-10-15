@@ -2,6 +2,7 @@ import { serial } from 'drizzle-orm/pg-core';
 import { fieldsOfStudySchema } from '@db/schema/fieldsOfStudy';
 import { relations } from 'drizzle-orm';
 import schema from '@db/schema/schema';
+import { teamsTable } from './team';
 
 export const cities = schema.enum("city", ["Trondheim", "Ås", "Bergen"]);
 
@@ -11,8 +12,9 @@ export const departmentsSchema = schema.table("departments", {
 });
 
 export const departmentsRelations = relations(departmentsSchema, ({ many }) => ({
-    fieldsOfStudy: many(fieldsOfStudySchema),
-  }));
+  fieldsOfStudy: many(fieldsOfStudySchema),
+  teams: many(teamsTable),
+}));
 
 export type Department = typeof departmentsSchema.$inferSelect;
 export type NewDepartment = typeof departmentsSchema.$inferInsert;

@@ -37,8 +37,8 @@ erDiagram
         string email
         string description
         string shortDescription
-        int acceptApplication
-        int active
+        boolean acceptApplication
+        boolean active
         date deadline
     }
     TEAM_APPLICATION {
