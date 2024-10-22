@@ -41,7 +41,7 @@ export const databaseConnectionParameters: DatabaseConnectionOptions =
 
 // Types defined at https://orm.drizzle.team/kit-docs/config-reference#dbcredentials
 const sslSetting: boolean | "require" | "allow" | "prefer" | "verify-full" =
-	false;
+	"require";
 export const drizzleDatabaseCredentials = Object.assign(
 	{ ssl: sslSetting },
 	databaseConnectionParameters,
