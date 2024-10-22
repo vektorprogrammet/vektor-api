@@ -1,6 +1,6 @@
 {
-  "name": "prototype",
-  "version": "1.0.0",
+  "name": "vektor-api",
+  "version": "0.0.1",
   "description": "",
   "main": "./src/main.ts",
   "type": "module",
