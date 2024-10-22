@@ -3,6 +3,7 @@ import schema from "@db/schema/schema";
 import { integer } from "drizzle-orm/pg-core";
 import { departmentsSchema } from "@db/schema/departments";
 import { relations } from "drizzle-orm";
+import { teamApplicationsTable } from "@db/schema/teamApplication";
 
 export const teamsTable = schema.table("teams", {
     id: serial('id').primaryKey(),
@@ -20,7 +21,8 @@ export const teamRelations = relations(teamsTable, ({ one, many }) => ({
     department: one(departmentsSchema, {
         fields: [teamsTable.departmentId],
         references: [departmentsSchema.id],
-    })
+    }),
+    teamApplication: many(teamApplicationsTable)
 }));
 
 export type Team = typeof teamsTable.$inferSelect;
