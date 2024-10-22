@@ -5,6 +5,8 @@ import { fromZodError } from "zod-validation-error";
 
 const enviromentVariables = process.env;
 
+const ca_cert = enviromentVariables["CA_CERT"];
+
 const databaseConnectionParametersSchema = z
 	.object({
 		DATABASE_HOST: z.string().min(1),
@@ -13,9 +15,20 @@ const databaseConnectionParametersSchema = z
 		DATABASE_PASSWORD: z.string().min(1),
 		DATABASE_PORT: z.coerce.number().positive().finite().safe().int(),
 		SSL_OPTION: z.union([
-			z.literal("true").transform(() => {
-				return true;
-			}),
+			z.literal("true").transform((_, ctx) => {
+				if (ca_cert) {
+					return {
+						rejectUnauthorized: true,
+						ca: ca_cert
+					};
+				}
+				ctx.addIssue({
+					code: z.ZodIssueCode.custom,
+					message: "No ca certifiacate.",
+				});
+				return z.NEVER;
+				}
+			),
 			z.literal("false").transform(() => {
 				return false;
 			}),
