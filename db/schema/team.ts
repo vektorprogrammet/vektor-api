@@ -1,13 +1,13 @@
 import { boolean, date, serial, text } from "drizzle-orm/pg-core";
-import schema from "@db/schema/schema";
+import vektorSchema from "@db/schema/schema";
 import { integer } from "drizzle-orm/pg-core";
-import { departmentsSchema } from "@db/schema/departments";
+import { departmentsTable } from "@db/schema/departments";
 import { relations } from "drizzle-orm";
 import { teamApplicationsTable } from "@db/schema/teamApplication";
 
-export const teamsTable = schema.table("teams", {
+export const teamsTable = vektorSchema.table("teams", {
     id: serial('id').primaryKey(),
-    departmentId: integer("departmentId").notNull().references(() => departmentsSchema.id),
+    departmentId: integer("departmentId").notNull().references(() => departmentsTable.id),
     name: text("name").notNull(),
     email: text("email").notNull(),
     description: text("description").notNull(),
@@ -18,9 +18,9 @@ export const teamsTable = schema.table("teams", {
 });
 
 export const teamRelations = relations(teamsTable, ({ one, many }) => ({
-    department: one(departmentsSchema, {
+    department: one(departmentsTable, {
         fields: [teamsTable.departmentId],
-        references: [departmentsSchema.id],
+        references: [departmentsTable.id],
     }),
     teamApplication: many(teamApplicationsTable)
 }));

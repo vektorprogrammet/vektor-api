@@ -1,11 +1,11 @@
 import { serial, text, integer } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
-import schema from '@db/schema/schema';
+import vektorSchema from '@db/schema/schema';
 
 
 import { teamsTable } from '@db/schema/team';
 
-export const teamApplicationsTable = schema.table("teamApplications", {
+export const teamApplicationsTable = vektorSchema.table("teamApplications", {
     id: serial('id').primaryKey(),
     teamId: integer('teamId').notNull().references(() => teamsTable.id),
     name: text('name').notNull(),
