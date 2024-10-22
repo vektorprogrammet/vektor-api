@@ -4,9 +4,13 @@
 		// Treat files as modules even if it doesn't use import/export
 		"moduleDetection": "force",
 
+		// Directories
+		"outDir": "./build",
+		"rootDir": "./",
+
 		// Ignore module structure
 		"module": "esnext",
-
+		"skipLibCheck": true,
 		//
 		"moduleResolution": "node",
 
