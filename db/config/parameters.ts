@@ -19,10 +19,6 @@ const databaseConnectionParametersSchema = z
 			z.literal("false").transform(() => {
 				return false;
 			}),
-			z.literal("require"),
-			z.literal("allow"),
-			z.literal("prefer"),
-			z.literal("verify-full"),
 		]),
 	})
 	.transform((schema) => {
