@@ -7,39 +7,39 @@ Kildekoden er på engelsk
 Start med å kjøre `npm install` og pass på at du har fått installert alle avhengighetene riktig.
 Deretter lag en `.env`-fil for å lage egne miljøvariabler
 Start med å sette:
-> PORT=**porten du vil kjøre apien fra** *f.eks. 8080*
-> HOSTING_URL=**urlen du kjører apiet fra** *f.eks. localhost*
+> PORT=***porten du vil kjøre apien fra*** *f.eks. 8080*
+> HOSTING_URL=***urlen du kjører apiet fra*** *f.eks. localhost*
 
 Deretter må du sette opp databasetilkoblingene.
 
 ---
 
-### Med av lokal database
+### Med lokal database
 
 Start med å sette opp et postgres bilde i docker.
 Lag en database i bilet du satte opp.
-Husk url(mest sannsynlig `localhost`), port, og database navn.
+Husk url(mest sannsynlig `localhost`), port, database navn, bruker(`postgres` om du ikke har spesifisert det) og passord.
 Lokale databaser pleier ikke støtte SSL-tilkoblinger. Derfor må du nok sette opp denne instillingen i `.env`-filen:
 > DATABASE_SSL_OPTION=**false**
 
-### Med dev database på digital ocean
+### Med dev-database på digital ocean
 
 Du finner tilkoblingsinnstillingene på digital ocean.
 Siden databasen fortsatt er i utvilking og vi ikke har skaffet et CA-sertifikat til den enda, må du sette:
 > DATABASE_SSL_OPTION=**dev**
 
-eventuelt **kan** du kopiere CA-serifikatet til databasen fra digital ocean og sette, men dette er unødvendig under utvilking
+Eventuelt **kan** du kopiere CA-serifikatet til databasen fra digital ocean og sette dette i en miljøvariabel, men dette er unødvendig under utvilking. Om du uansett vil prøve må du sette:
 > DATABASE_SSL_OPTION=**prod-provide_ca_cert**
-> CA_CERT=**CA-sertifikatet**
+> CA_CERT=***CA-sertifikatet***
 
 ---
 
 Nå legger du inn databaseinnstillingene som miljøvariabler:
-> DATABASE_HOST=**din host** *f.eks. localhost*
-> DATABASE_PORT=**din port** *f.eks. 5432*
-> DATABASE_NAME=**ditt databasenavn** *f.eks. vektorpostgres*
-> DATABASE_USER=**din bruker** *f.eks.postgres*
-> DATABASE_PASSWORD=**ditt passord** *pass123*
+> DATABASE_HOST=***din host*** *f.eks. localhost*
+> DATABASE_PORT=***din port*** *f.eks. 5432*
+> DATABASE_NAME=***ditt databasenavn*** *f.eks. vektorpostgres*
+> DATABASE_USER=***din bruker*** *f.eks.postgres*
+> DATABASE_PASSWORD=***ditt passord*** *pass123*
 
 Eventuelt kan du sette:
 >LOG_DATABASE_CREDENTIALS_ON_STARTUP=**true**
