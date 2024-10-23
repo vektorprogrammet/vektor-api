@@ -1,18 +1,52 @@
-# Vektorprogrammets nye nettside
+# Vektorprogrammets API
 
 Kildekoden er på engelsk
 
-## Startup
+## Setup
 
-Start med å sette opp en postgres database i docker
-Lag en database der
-Lag en .env fil med disse optionene:
+Start med å kjøre `npm install` og pass på at du har fått installert alle avhengighetene riktig.
+Deretter lag en `.env`-fil for å lage egne miljøvariabler
+Start med å sette:
+> PORT=**porten du vil kjøre apien fra** *f.eks. 8080*
+> HOSTING_URL=**urlen du kjører apiet fra** *f.eks. localhost*
 
-> DATABASE_HOST=**din host** *f.eks. localhost*\
-> DATABASE_PORT=**din port** *f.eks. 5432*\
-> DATABASE_NAME=**ditt databasenavn** *f.eks. vektorpostgres*\
-> DATABASE_USER=**din bruker** *f.eks.postgres*\
-> DATABASE_PASSWORD=**ditt passord** *pass123*\
+Deretter må du sette opp databasetilkoblingene.
+
+---
+
+### Med av lokal database
+
+Start med å sette opp et postgres bilde i docker.
+Lag en database i bilet du satte opp.
+Husk url(mest sannsynlig `localhost`), port, og database navn.
+Lokale databaser pleier ikke støtte SSL-tilkoblinger. Derfor må du nok sette opp denne instillingen i `.env`-filen:
+> DATABASE_SSL_OPTION=**false**
+
+### Med dev database på digital ocean
+
+Du finner tilkoblingsinnstillingene på digital ocean.
+Siden databasen fortsatt er i utvilking og vi ikke har skaffet et CA-sertifikat til den enda, må du sette:
+> DATABASE_SSL_OPTION=**dev**
+
+eventuelt **kan** du kopiere CA-serifikatet til databasen fra digital ocean og sette, men dette er unødvendig under utvilking
+> DATABASE_SSL_OPTION=**prod-provide_ca_cert**
+> CA_CERT=**CA-sertifikatet**
+
+---
+
+Nå legger du inn databaseinnstillingene som miljøvariabler:
+> DATABASE_HOST=**din host** *f.eks. localhost*
+> DATABASE_PORT=**din port** *f.eks. 5432*
+> DATABASE_NAME=**ditt databasenavn** *f.eks. vektorpostgres*
+> DATABASE_USER=**din bruker** *f.eks.postgres*
+> DATABASE_PASSWORD=**ditt passord** *pass123*
+
+Eventuelt kan du sette:
+>LOG_DATABASE_CREDENTIALS_ON_STARTUP=**true**
+
+for å sjekke at tilkoblingsinstillingene til databasen ser bra ut når du kjører appen.
+
+For å kjøre appen og migrere databasen, se scripts lenger nede.
 
 ## Recommended Extensions
 
@@ -55,18 +89,39 @@ VS Marketplace Link: <https://marketplace.visualstudio.com/items?itemName=yoavbl
 
 ## Scripts
 
-- `once`
+### Development
+
+- `dev:once`
   - Run server
-- `watch`
+- `dev`
   - Run server w/restart on changes
 - `test`
   - Run tests
+
+### Linting and formatting
+
 - `format`
   - Format files in `db` and `src`, safe fixes applied
 - `lint`
   - Lint files in `db` and `src`, safe fixes applied
 - `check`
   - Format and lint files in `db` and `src`, safe fixes applied
+
+### Production
+
+- `build`
+  - Build server into /build
+- `start`
+  - Run the built server in /build
+
+### Database
+
+- `db:generate`
+  - Generate migration files to /db/migrations
+- `db:migrate`
+  - Migrate the database with the generated migrationfiles in /db/migrations
+- `db:studio`
+  - Open the database in the drizzle studio interface
 
 ## Info
 
