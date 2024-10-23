@@ -1,4 +1,3 @@
-import "dotenv";
 import * as process from "node:process";
 import { z } from "zod";
 import { fromZodError } from "zod-validation-error";
@@ -19,7 +18,7 @@ const databaseConnectionParametersSchema = z
 				if (ca_cert) {
 					return {
 						rejectUnauthorized: true,
-						ca: ca_cert
+						ca: ca_cert,
 					};
 				}
 				ctx.addIssue({
@@ -27,8 +26,7 @@ const databaseConnectionParametersSchema = z
 					message: "No ca certifiacate.",
 				});
 				return z.NEVER;
-				}
-			),
+			}),
 			z.literal("false").transform(() => {
 				return false;
 			}),

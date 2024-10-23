@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { drizzleDatabaseCredentials } from "@db/config/parameters";
 import { defineConfig } from "drizzle-kit";
 
