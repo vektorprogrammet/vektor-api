@@ -1,8 +1,8 @@
-import { serial } from 'drizzle-orm/pg-core';
-import { fieldsOfStudyTable } from '@db/schema/fieldsOfStudy';
-import { relations } from 'drizzle-orm';
-import { teamsTable } from '@db/schema/team';
-import vektorSchema from '@db/schema/schema';
+import { fieldsOfStudyTable } from "@db/schema/fieldsOfStudy";
+import vektorSchema from "@db/schema/schema";
+import { teamsTable } from "@db/schema/team";
+import { relations } from "drizzle-orm";
+import { serial } from "drizzle-orm/pg-core";
 
 export const cities = vektorSchema.enum("city", [
 	"Trondheim",
@@ -19,6 +19,6 @@ export const departmentsTable = vektorSchema.table("departments", {
 export const departmentsRelations = relations(departmentsTable, ({ many }) => ({
 	fieldsOfStudy: many(fieldsOfStudyTable),
 	teams: many(teamsTable),
-}))
+}));
 export type Department = typeof departmentsTable.$inferSelect;
 export type NewDepartment = typeof departmentsTable.$inferInsert;
