@@ -4,11 +4,13 @@ import { fromZodError } from "zod-validation-error";
 
 const enviromentVariables = process.env;
 
+console.log(enviromentVariables["PUBLIC_URL"]);
+console.log(enviromentVariables["PRIVATE_URL"]);
 const hostOptionsSchema = z
 	.object({
 		PORT: z.coerce.number(),
 		PUBLIC_URL: z.optional(z.string().url()),
-		PRIVATE_URL: z.union([z.literal("localhost"), z.string().url()]),
+		PRIVATE_URL: z.union([z.literal("localhost"), z.string().url(), z.string().ip()]),
 	})
 	.transform((schema) => {
 		return {
