@@ -15,7 +15,13 @@ export const databaseConnectionParameters = z
 		DATABASE_PORT: z.coerce.number().positive().finite().safe().int(),
 		SSL_OPTION: z
 			.union([
-				z.literal("customOn").transform((_, ctx) => {
+				z.literal("prod").transform((_, ctx) => {
+					return {
+						requestCert: true,
+						rejectUnauthorized: true,
+					} as ConnectionOptions;
+				}),
+				z.literal("prod-provide_ca_cert").transform((_, ctx) => {
 					const ca_cert = getCaCert();
 					if (ca_cert === undefined) {
 						ctx.addIssue({
@@ -30,9 +36,9 @@ export const databaseConnectionParameters = z
 						ca: ca_cert,
 					} as ConnectionOptions;
 				}),
-				z.literal("customOff").transform(() => {
+				z.literal("dev").transform(() => {
 					return {
-						requestCert: false,
+						requestCert: true,
 						rejectUnauthorized: false,
 					} as ConnectionOptions;
 				}),
@@ -43,7 +49,7 @@ export const databaseConnectionParameters = z
 					return false;
 				}),
 			])
-			.default("false"),
+			.default("prod"),
 	})
 	.transform((schema) => {
 		return {
