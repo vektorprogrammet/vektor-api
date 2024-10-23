@@ -26,12 +26,5 @@ app.use("/", errorHandler);
 app.use("/", defaultErrorHandler);
 
 app.listen(hostOptions.port, () => {
-	if (hostOptions.publicURL !== undefined) {
-		console.log(
-			`Listening on public IP at ${hostOptions.publicURL}:${hostOptions.port}`,
-		);
-	}
-	console.log(
-		`Listening on private IP at ${hostOptions.privateURL}:${hostOptions.port}`,
-	);
+	console.log(`Listening on at ${hostOptions.hosting_url}:${hostOptions.port}`);
 });

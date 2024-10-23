@@ -1,12 +1,12 @@
-import * as process from "node:process";
+import { env } from "node:process";
+import type { ConnectionOptions } from "node:tls";
 import { z } from "zod";
-import { fromZodError } from "zod-validation-error";
 
-const enviromentVariables = process.env;
+function getCaCert(): string | Buffer | Array<string | Buffer> | undefined {
+	return env.CA_CERT;
+}
 
-const ca_cert = enviromentVariables["CA_CERT"];
-
-const databaseConnectionParametersSchema = z
+export const databaseConnectionParameters = z
 	.object({
 		DATABASE_HOST: z.string().min(1),
 		DATABASE_NAME: z.string().min(1),
@@ -15,20 +15,25 @@ const databaseConnectionParametersSchema = z
 		DATABASE_PORT: z.coerce.number().positive().finite().safe().int(),
 		SSL_OPTION: z.union([
 			z.literal("on").transform((_, ctx) => {
-				return {
-					rejectUnauthorized: true,
-					requestCert: true,
-				};
-				if (ca_cert) {
+				const ca_cert = getCaCert();
+				if (ca_cert === undefined) {
+					ctx.addIssue({
+						code: z.ZodIssueCode.custom,
+						message: "Could not find ca certificate",
+					});
+					return z.NEVER;
 				}
-				ctx.addIssue({
-					code: z.ZodIssueCode.custom,
-					message: "No ca certifiacate.",
-				});
-				return z.NEVER;
+				return {
+					requestCert: true,
+					rejectUnauthorized: true,
+					ca: ca_cert,
+				} as ConnectionOptions;
 			}),
 			z.literal("off").transform(() => {
-				return false;
+				return {
+					requestCert: false,
+					rejectUnauthorized: false,
+				} as ConnectionOptions;
 			}),
 		]),
 	})
@@ -41,22 +46,9 @@ const databaseConnectionParametersSchema = z
 			port: schema.DATABASE_PORT,
 			ssl: schema.SSL_OPTION,
 		};
-	});
+	})
+	.parse(env);
 
-const parsedEnviromentVariablesResult =
-	databaseConnectionParametersSchema.safeParse(enviromentVariables);
-if (!parsedEnviromentVariablesResult.success) {
-	throw new Error(
-		`Invalid enviroment varaibles: ${fromZodError(parsedEnviromentVariablesResult.error).message}`,
-	);
+if (env.LOG_DATABASE_CREDENTIALS_ON_STARTUP === "true") {
+	console.log("Database parameters:", databaseConnectionParameters);
 }
-const parsedEnviromentVariables = parsedEnviromentVariablesResult.data;
-
-type DatabaseConnectionOptions = z.infer<
-	typeof databaseConnectionParametersSchema
->;
-
-export const databaseConnectionParameters: DatabaseConnectionOptions =
-	parsedEnviromentVariables;
-
-export const drizzleDatabaseCredentials = databaseConnectionParameters;
