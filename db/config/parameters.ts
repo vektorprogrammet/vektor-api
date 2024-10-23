@@ -13,7 +13,7 @@ export const databaseConnectionParameters = z
 		DATABASE_USER: z.string().min(1),
 		DATABASE_PASSWORD: z.string().min(1),
 		DATABASE_PORT: z.coerce.number().positive().finite().safe().int(),
-		SSL_OPTION: z
+		DATABASE_SSL_OPTION: z
 			.union([
 				z.literal("prod").transform((_, ctx) => {
 					return {
@@ -58,7 +58,7 @@ export const databaseConnectionParameters = z
 			user: schema.DATABASE_USER.trim(),
 			password: schema.DATABASE_PASSWORD.trim(),
 			port: schema.DATABASE_PORT,
-			ssl: schema.SSL_OPTION,
+			ssl: schema.DATABASE_SSL_OPTION,
 		};
 	})
 	.parse(env);
