@@ -14,12 +14,12 @@ const databaseConnectionParametersSchema = z
 		DATABASE_PASSWORD: z.string().min(1),
 		DATABASE_PORT: z.coerce.number().positive().finite().safe().int(),
 		SSL_OPTION: z.union([
-			z.literal("true").transform((_, ctx) => {
+			z.literal("on").transform((_, ctx) => {
+				return {
+					rejectUnauthorized: true,
+					requestCert: true,
+				};
 				if (ca_cert) {
-					return {
-						rejectUnauthorized: true,
-						ca: ca_cert,
-					};
 				}
 				ctx.addIssue({
 					code: z.ZodIssueCode.custom,
@@ -27,7 +27,7 @@ const databaseConnectionParametersSchema = z
 				});
 				return z.NEVER;
 			}),
-			z.literal("false").transform(() => {
+			z.literal("off").transform(() => {
 				return false;
 			}),
 		]),
