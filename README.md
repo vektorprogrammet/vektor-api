@@ -8,6 +8,7 @@ Start med å kjøre `npm install` og pass på at du har fått installert alle av
 Deretter lag en `.env`-fil for å lage egne miljøvariabler
 Start med å sette:
 > PORT=***porten du vil kjøre apien fra*** *f.eks. 8080*
+>
 > HOSTING_URL=***urlen du kjører apiet fra*** *f.eks. localhost*
 
 Deretter må du sette opp databasetilkoblingene.
@@ -30,15 +31,20 @@ Siden databasen fortsatt er i utvilking og vi ikke har skaffet et CA-sertifikat 
 
 Eventuelt **kan** du kopiere CA-serifikatet til databasen fra digital ocean og sette dette i en miljøvariabel, men dette er unødvendig under utvilking. Om du uansett vil prøve må du sette:
 > DATABASE_SSL_OPTION=**prod-provide_ca_cert**
+>
 > CA_CERT=***CA-sertifikatet***
 
 ---
 
 Nå legger du inn databaseinnstillingene som miljøvariabler:
 > DATABASE_HOST=***din host*** *f.eks. localhost*
+>
 > DATABASE_PORT=***din port*** *f.eks. 5432*
+>
 > DATABASE_NAME=***ditt databasenavn*** *f.eks. vektorpostgres*
+>
 > DATABASE_USER=***din bruker*** *f.eks.postgres*
+>
 > DATABASE_PASSWORD=***ditt passord*** *pass123*
 
 Eventuelt kan du sette:
