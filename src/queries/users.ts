@@ -1,6 +1,6 @@
 import { type NewUser, type User, usersTable } from "@db/schema/users";
 import { database } from "@db/setup/queryPostgres";
-import { type DatabaseResult, catchDatabase } from "@src/error/dbErrors";
+import { type DatabaseResult, catchDatabase } from "@db/errors/dbErrors";
 import { eq } from "drizzle-orm";
 
 export const getUsersFromId = async (

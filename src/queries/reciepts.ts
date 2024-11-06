@@ -10,7 +10,7 @@ import {
 	type DatabaseResult,
 	catchDatabase,
 	databaseError,
-} from "@src/error/dbErrors";
+} from "@db/errors/dbErrors";
 import { inArray, sql } from "drizzle-orm";
 
 export async function insertReciepts(
