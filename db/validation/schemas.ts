@@ -3,7 +3,7 @@ import { createInsertSchema } from "drizzle-zod";
 import {
 	isScaleTwoDecimalNumber,
 	isValidNorwegiaAccountNumberNoIBAN,
-} from "@src/parsing/moneyParser";
+} from "lib/moneyParser";
 
 export const recieptInsertSchema = createInsertSchema(recieptsTable, {
 	userId: (schema) => schema.userId.finite().safe().positive().int(),

@@ -4,7 +4,7 @@ import { clientError } from "@src/error/httpErrors";
 import {
 	parseMoneyToTwoDecimals,
 	removeSeparatorsNorwegianAccountNumberNoIBAN,
-} from "@src/parsing/moneyParser";
+} from "lib/moneyParser";
 import { Router, urlencoded } from "express";
 import { z } from "zod";
 
