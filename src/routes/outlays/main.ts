@@ -1,5 +1,5 @@
 import { insertReciepts } from "@src/queries/reciepts";
-import { recieptInsertSchema } from "@db/schema/reciepts";
+import { recieptInsertSchema } from "@db/validation/schemas";
 import { clientError } from "@src/error/httpErrors";
 import {
 	parseMoneyToTwoDecimals,
