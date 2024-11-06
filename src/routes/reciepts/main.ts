@@ -1,4 +1,4 @@
-import { paybackReciepts, selectRecipts } from "@db/access/reciepts";
+import { paybackReciepts, selectRecipts } from "@src/queries/reciepts";
 import { recieptPaybackSchema } from "@db/schema/reciepts";
 import { clientError } from "@src/error/httpErrors";
 import { Router, urlencoded } from "express";

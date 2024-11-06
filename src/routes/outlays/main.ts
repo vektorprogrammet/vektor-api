@@ -1,4 +1,4 @@
-import { insertReciepts } from "@db/access/reciepts";
+import { insertReciepts } from "@src/queries/reciepts";
 import { recieptInsertSchema } from "@db/schema/reciepts";
 import { clientError } from "@src/error/httpErrors";
 import {
