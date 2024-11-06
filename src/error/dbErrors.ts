@@ -1,4 +1,4 @@
-import type { Result } from "@src/error/types";
+import type { Result } from "lib/types";
 import type { DatabaseError } from "pg-protocol";
 import {
 	getPgErrorName,
