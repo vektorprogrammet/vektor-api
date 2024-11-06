@@ -8,10 +8,10 @@ import {
 } from "@src/middleware/errorMiddleware";
 import { logger } from "@src/middleware/loggingMiddleware";
 
-import outlayRouter from "@routes/outlays/main";
+import outlayRouter from "@src/routers/outlays";
 
 import { customCors, customHelmetSecurity } from "@src/security";
-import recieptRouter from "./routes/reciepts/main";
+import recieptRouter from "./routers/reciepts";
 
 const app = express();
 
