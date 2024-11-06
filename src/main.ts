@@ -2,8 +2,11 @@ import "dotenv/config";
 import express from "express";
 
 import { hostOptions } from "@src/enviroment";
-import { defaultErrorHandler, errorHandler } from "@src/error/errorMiddleware";
-import { logger } from "@src/logging/loggingMiddleware";
+import {
+	defaultErrorHandler,
+	errorHandler,
+} from "@src/middleware/errorMiddleware";
+import { logger } from "@src/middleware/loggingMiddleware";
 
 import outlayRouter from "@routes/outlays/main";
 
