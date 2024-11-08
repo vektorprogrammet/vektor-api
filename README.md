@@ -2,6 +2,13 @@
 
 Kildekoden er på engelsk
 
+## Folder structure
+
+- `/`
+  - `db/` database modul
+  - `lib/` generell delt kode
+  - `src/` serverkode (CORE og API samlet)
+
 ## Setup
 
 Start med å kjøre `npm install` og pass på at du har fått installert alle avhengighetene riktig.
