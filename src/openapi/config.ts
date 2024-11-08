@@ -1,9 +1,9 @@
 import "zod-openapi/extend";
 import { recieptsSelectSchema } from "@src/response-handling/reciepts";
 import { hostOptions } from "@src/enviroment";
-import { queryValidator } from "@src/reciept-handling/common";
-import { outlayRequestValidator } from "@src/reciept-handling/outlayHandling";
-import { recieptIdValidator } from "@src/reciept-handling/recieptHandling";
+import { queryValidator } from "@src/request-handling/common";
+import { outlayRequestValidator } from "@src/request-handling/outlayHandling";
+import { recieptIdValidator } from "@src/request-handling/recieptHandling";
 import openapiFromJsdoc from "swagger-jsdoc";
 import { createDocument } from "zod-openapi";
 

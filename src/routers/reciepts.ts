@@ -2,7 +2,7 @@ import { paybackReciepts, selectRecipts } from "@src/db-access/reciepts";
 import { clientError } from "@src/error/httpErrors";
 import { Router, urlencoded } from "express";
 
-import { recieptIdValidator } from "@src/reciept-handling/recieptHandling";
+import { recieptIdValidator } from "@src/request-handling/recieptHandling";
 
 const recieptRouter = Router();
 

@@ -1,6 +1,6 @@
 import { insertReciepts } from "@src/db-access/reciepts";
 import { clientError } from "@src/error/httpErrors";
-import { outlayRequestTransformer } from "@src/reciept-handling/outlayHandling";
+import { outlayRequestTransformer } from "@src/request-handling/outlayHandling";
 import { Router, urlencoded } from "express";
 
 const outlayRouter = Router();
