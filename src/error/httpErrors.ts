@@ -1,7 +1,7 @@
 import { STATUS_CODES } from "node:http";
-import { type Result, isZodError } from "@src/error/types";
+import { type Result, isZodError } from "@lib/types";
+import { isORMError } from "@src/error/ormError";
 import { fromZodError } from "zod-validation-error";
-import { isORMError } from "./dbErrors";
 
 class HTTPError extends Error {
 	private errorCode: number;
