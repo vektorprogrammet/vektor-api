@@ -1,5 +1,5 @@
-import vektorSchema from "@db-tables/schema";
-import { usersTable } from "@db-tables/users";
+import vektorSchema from "@db/tables/schema";
+import { usersTable } from "@db/tables/users";
 import { relations } from "drizzle-orm";
 import { date, integer, numeric, serial, text } from "drizzle-orm/pg-core";
 

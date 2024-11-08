@@ -1,11 +1,8 @@
-import { recieptsTable } from "@db-tables/reciepts";
-import { usersTable } from "@db-tables/users";
+import { recieptsTable } from "@db/tables/reciepts";
+import { usersTable } from "@db/tables/users";
 import { database } from "@db/setup/queryPostgres";
-import type {
-	NewReciept,
-	Reciept,
-	RecieptKey,
-} from "@src/db-validation/reciepts";
+import type { NewReciept } from "@src/db-validation/reciepts";
+import type { Reciept, RecieptKey } from "@src/response-handling/reciepts";
 import {
 	type DatabaseResult,
 	catchDatabase,

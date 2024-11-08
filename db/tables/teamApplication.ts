@@ -1,8 +1,8 @@
-import vektorSchema from "@db-tables/schema";
+import vektorSchema from "@db/tables/schema";
 import { relations } from "drizzle-orm";
 import { integer, serial, text } from "drizzle-orm/pg-core";
 
-import { teamsTable } from "@db-tables/team";
+import { teamsTable } from "@db/tables/team";
 
 export const teamApplicationsTable = vektorSchema.table("teamApplications", {
 	id: serial("id").primaryKey(),

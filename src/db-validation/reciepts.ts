@@ -1,5 +1,5 @@
-import { recieptsTable } from "@db-tables/reciepts";
-import { keySchema } from "@db-validation/common";
+import { recieptsTable } from "@db/tables/reciepts";
+import { keySchema } from "@src/db-validation/common";
 import { isScaleTwoSerial } from "@lib/moneyParser";
 import { isValidNorwegiaAccountNumberNoIBAN } from "@lib/moneyParser";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";

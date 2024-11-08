@@ -1,6 +1,6 @@
-import { fieldsOfStudyTable } from "@db-tables/fieldsOfStudy";
-import vektorSchema from "@db-tables/schema";
-import { teamsTable } from "@db-tables/team";
+import { fieldsOfStudyTable } from "@db/tables/fieldsOfStudy";
+import vektorSchema from "@db/tables/schema";
+import { teamsTable } from "@db/tables/team";
 import { relations } from "drizzle-orm";
 import { serial } from "drizzle-orm/pg-core";
 

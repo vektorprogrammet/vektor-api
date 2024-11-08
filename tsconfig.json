@@ -1,6 +1,5 @@
 {
 	"compilerOptions": {
-
 		// Treat files as modules even if it doesn't use import/export
 		"moduleDetection": "force",
 
@@ -37,13 +36,9 @@
 
 		// Path redirects
 		"paths": {
-      		"@src/*": ["src/*"],
+			"@src/*": ["src/*"],
 			"@db/*": ["db/*"],
-      		"@db-tables/*": ["db/tables/*"],
-			"@features/*": ["src/features/*"],
-			"@db-access/*": ["src/db-access/*"],
-			"@db-validation/*": ["src/db-validation/*"],
-			"@lib/*": ["lib/*"],
-    	},
-	},
+			"@lib/*": ["lib/*"]
+		}
+	}
 }
