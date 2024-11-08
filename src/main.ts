@@ -23,6 +23,10 @@ app.use(customHelmetSecurity);
 app.disable("x-powered-by");
 app.use(customCors());
 
+// OpenAPI
+app.use("/docs/api/", openapiExpressHandler.serve);
+app.get("/docs/api/", openapiExpressHandler.setup(openapiSpecification));
+
 app.use("/", logger);
 
 app.use("/outlays", outlayRouter);

@@ -15,7 +15,8 @@
     "check": "biome check --write ./src ./db",
     "db:generate": "drizzle-kit generate --config=db/config/drizzle.config.ts",
     "db:migrate": "drizzle-kit migrate --config=db/config/drizzle.config.ts",
-    "db:studio": "drizzle-kit studio --config=db/config/drizzle.config.ts"
+    "db:studio": "drizzle-kit studio --config=db/config/drizzle.config.ts",
+    "docs:generate": "tsx ./src/openapi/generateDocument.ts"
   },
   "license": "ISC",
   "dependencies": {
@@ -26,7 +27,10 @@
     "express": "^4.21.1",
     "pg": "^8.13.0",
     "pg-protocol": "^1.7.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
     "zod": "^3.23.8",
+    "zod-openapi": "^3.3.0",
     "zod-validation-error": "^3.4.0"
   },
   "devDependencies": {
@@ -35,9 +39,12 @@
     "@types/express": "^4.17.21",
     "@types/node": "^22.7.8",
     "@types/pg": "^8.11.10",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.7",
     "drizzle-kit": "^0.24.2",
     "tsc-alias": "^1.8.10",
     "tsx": "^4.19.1",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "yaml": "^2.6.0"
   }
 }
