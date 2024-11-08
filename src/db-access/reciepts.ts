@@ -1,16 +1,16 @@
-import {
-	type NewReciept,
-	type Reciept,
-	type RecieptId,
-	recieptsTable,
-} from "@db/schema/reciepts";
-import { usersTable } from "@db/schema/users";
+import { recieptsTable } from "@db-tables/reciepts";
+import { usersTable } from "@db-tables/users";
 import { database } from "@db/setup/queryPostgres";
+import type {
+	NewReciept,
+	Reciept,
+	RecieptKey,
+} from "@src/db-validation/reciepts";
 import {
 	type DatabaseResult,
 	catchDatabase,
-	databaseError,
-} from "@src/error/dbErrors";
+	ormError,
+} from "@src/error/ormError";
 import { inArray, sql } from "drizzle-orm";
 
 export async function insertReciepts(
@@ -28,7 +28,7 @@ export async function insertReciepts(
 					),
 				);
 			if (selectResult.length !== reciepts.length) {
-				throw databaseError("User creating recipt does not exist.");
+				throw ormError("User creating recipt does not exist.");
 			}
 			const insertResult = await tx
 				.insert(recieptsTable)
@@ -40,7 +40,7 @@ export async function insertReciepts(
 }
 
 export async function paybackReciepts(
-	recieptIds: RecieptId[],
+	recieptIds: RecieptKey[],
 ): Promise<DatabaseResult<Reciept[]>> {
 	return catchDatabase(() => {
 		return database.transaction(async (tx) => {
@@ -50,7 +50,7 @@ export async function paybackReciepts(
 				.where(inArray(recieptsTable.id, recieptIds))
 				.returning();
 			if (updateResult.length !== recieptIds.length) {
-				throw databaseError("Couldn't update, some id's didn't exist.");
+				throw ormError("Couldn't update, some id's didn't exist.");
 			}
 			return updateResult;
 		});
@@ -58,7 +58,7 @@ export async function paybackReciepts(
 }
 
 export async function selectRecipts(
-	recieptIds: RecieptId[],
+	recieptIds: RecieptKey[],
 ): Promise<DatabaseResult<Reciept[]>> {
 	return catchDatabase(() => {
 		return database.transaction(async (tx) => {
@@ -67,7 +67,7 @@ export async function selectRecipts(
 				.from(recieptsTable)
 				.where(inArray(recieptsTable.id, recieptIds));
 			if (selectResult.length !== recieptIds.length) {
-				throw databaseError("Couldn't select receipts, id's didn't exist.");
+				throw ormError("Couldn't select receipts, id's didn't exist.");
 			}
 			return selectResult;
 		});

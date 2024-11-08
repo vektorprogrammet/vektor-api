@@ -1,12 +1,12 @@
-import type { Result } from "@src/error/types";
-import type { DatabaseError } from "pg-protocol";
 import {
 	getPgErrorName,
 	isPgError,
 	isValidPgCode,
 	type pgErrorCode,
 	type pgErrorName,
-} from "./pgErrors";
+} from "@db/errors/pgErrors";
+import type { Result } from "@lib/types";
+import type { DatabaseError } from "pg-protocol";
 
 const defaultDatabaseErrorMessage =
 	"Error when trying to contact database" as const;
@@ -44,12 +44,12 @@ export function isORMError(error: unknown): error is ORMError {
 	return error instanceof ORMError;
 }
 
-export const databaseError = (message: string, cause?: Error): ORMError => {
+export const ormError = (message: string, cause?: Error): ORMError => {
 	const error = new ORMError(message);
 	if (cause !== undefined) {
 		error.cause = cause;
 	}
-	Error.captureStackTrace(error, databaseError);
+	Error.captureStackTrace(error, ormError);
 	return error;
 };
 
@@ -68,7 +68,7 @@ export async function catchDatabase<T>(
 		const dbError =
 			error instanceof ORMError
 				? error
-				: databaseError(
+				: ormError(
 						message !== undefined ? message : defaultDatabaseErrorMessage,
 						error instanceof Error ? error : undefined,
 					);

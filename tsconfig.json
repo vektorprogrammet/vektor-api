@@ -38,9 +38,12 @@
 		// Path redirects
 		"paths": {
       		"@src/*": ["src/*"],
-      		"@db/*": ["db/*"],
-      		"@routes/*": ["src/routes/*"],
-			"@config/*": ["config/"],
+			"@db/*": ["db/*"],
+      		"@db-tables/*": ["db/tables/*"],
+			"@features/*": ["src/features/*"],
+			"@db-access/*": ["src/db-access/*"],
+			"@db-validation/*": ["src/db-validation/*"],
+			"@lib/*": ["lib/*"],
     	},
 	},
 }

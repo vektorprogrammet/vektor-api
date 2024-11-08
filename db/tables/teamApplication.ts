@@ -1,8 +1,8 @@
-import vektorSchema from "@db/schema/schema";
+import vektorSchema from "@db-tables/schema";
 import { relations } from "drizzle-orm";
 import { integer, serial, text } from "drizzle-orm/pg-core";
 
-import { teamsTable } from "@db/schema/team";
+import { teamsTable } from "@db-tables/team";
 
 export const teamApplicationsTable = vektorSchema.table("teamApplications", {
 	id: serial("id").primaryKey(),
@@ -27,6 +27,3 @@ export const teamApplicationsRelations = relations(
 		}),
 	}),
 );
-
-export type TeamApplication = typeof teamApplicationsTable.$inferSelect;
-export type NewTeamApplication = typeof teamApplicationsTable.$inferInsert;

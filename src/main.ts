@@ -2,13 +2,19 @@ import "dotenv/config";
 import express from "express";
 
 import { hostOptions } from "@src/enviroment";
-import { defaultErrorHandler, errorHandler } from "@src/error/errorMiddleware";
-import { logger } from "@src/logging/loggingMiddleware";
+import {
+	defaultErrorHandler,
+	errorHandler,
+} from "@src/middleware/errorMiddleware";
+import { logger } from "@src/middleware/loggingMiddleware";
 
-import outlayRouter from "@routes/outlays/main";
+import outlayRouter from "@src/routers/outlays";
 
 import { customCors, customHelmetSecurity } from "@src/security";
-import recieptRouter from "./routes/reciepts/main";
+import recieptRouter from "./routers/reciepts";
+
+import { openapiSpecification } from "@src/openapi/config";
+import openapiExpressHandler from "swagger-ui-express";
 
 const app = express();
 
