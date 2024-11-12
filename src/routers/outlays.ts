@@ -11,6 +11,7 @@ outlayRouter.use(urlencoded({ extended: true }));
  * @openapi
  * outlays:
  *  post:
+ *   tags: [outlays]
  *   description: Legg til utlegg
  *   requestBody:
  *    required: true

@@ -12,6 +12,7 @@ recieptRouter.use(urlencoded({ extended: true }));
  * @openapi
  * /reciepts/payback/:
  *  put:
+ *   tags: [reciepts]
  *   description: Mark reciept as paid
  *   requestBody:
  *    required: true
@@ -45,6 +46,7 @@ recieptRouter.put("/payback", async (req, res, next) => {
  * @openapi
  * /reciepts/:
  *  get:
+ *   tags: [reciepts]
  *   summar: Get reciept with id
  *   description: Get reciept with id
  *   requestBody:

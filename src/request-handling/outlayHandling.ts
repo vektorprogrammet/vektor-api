@@ -31,7 +31,7 @@ export const outlayRequestTransformer = outlayRequestValidator.transform(
 			moneyAmount: (() => {
 				const result = ceilToTwoDecimals(schema.moneyAmount);
 				if (result.success) {
-					return result.data;
+					return String(result.data);
 				}
 				ctx.addIssue({
 					code: z.ZodIssueCode.custom,

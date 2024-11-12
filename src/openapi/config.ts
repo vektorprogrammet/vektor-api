@@ -35,6 +35,16 @@ const openapiDocument = createDocument({
 			description: "Development vektor api on digital ocean",
 		},
 	],
+	tags: [
+		{
+			name: "reciepts",
+			description: "",
+		},
+		{
+			name: "outlays",
+			description: "",
+		}
+	],
 	paths: {},
 	components: {
 		schemas: {
