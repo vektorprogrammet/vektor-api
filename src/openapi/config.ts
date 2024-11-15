@@ -1,9 +1,13 @@
 import "zod-openapi/extend";
-import { recieptsSelectSchema } from "@src/response-handling/reciepts";
 import { hostOptions } from "@src/enviroment";
-import { queryValidator } from "@src/request-handling/common";
-import { outlayRequestValidator } from "@src/request-handling/outlayHandling";
-import { recieptIdValidator } from "@src/request-handling/recieptHandling";
+import {
+	idValidator,
+	limitValidator,
+	offsetValidator,
+	sortValidator,
+} from "@src/request-handling/common";
+import { expenseRequestValidator } from "@src/request-handling/expenses";
+import { expensesSelectSchema } from "@src/response-handling/expenses";
 import openapiFromJsdoc from "swagger-jsdoc";
 import { createDocument } from "zod-openapi";
 
@@ -37,21 +41,27 @@ const openapiDocument = createDocument({
 	],
 	tags: [
 		{
-			name: "reciepts",
+			name: "expenses",
 			description: "",
 		},
 		{
-			name: "outlays",
+			name: "expenses",
 			description: "",
-		}
+		},
 	],
 	paths: {},
 	components: {
 		schemas: {
-			OutlayRequest: outlayRequestValidator,
-			RecieptId: recieptIdValidator,
-			Reciept: recieptsSelectSchema,
-			Query: queryValidator,
+			expenseRequest: expenseRequestValidator,
+			expense: expensesSelectSchema,
+		},
+		parameters: {
+			id: idValidator.openapi({ param: { in: "path", name: "id" } }),
+			limit: limitValidator.openapi({ param: { in: "query", name: "limit" } }),
+			sort: sortValidator.openapi({ param: { in: "query", name: "sort" } }),
+			offset: offsetValidator.openapi({
+				param: { in: "query", name: "offset" },
+			}),
 		},
 	},
 });
