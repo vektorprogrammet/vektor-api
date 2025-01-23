@@ -1,11 +1,11 @@
-import { recieptsTable } from "@db/tables/reciepts";
-import { keySchema } from "@src/db-validation/common";
+import { expensesTable } from "@db/tables/expenses";
 import { isScaleTwoSerial } from "@lib/moneyParser";
 import { isValidNorwegiaAccountNumberNoIBAN } from "@lib/moneyParser";
+import { keySchema } from "@src/db-validation/common";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
 
-export const recieptInsertSchema = createInsertSchema(recieptsTable, {
+export const expenseInsertSchema = createInsertSchema(expensesTable, {
 	userId: (schema) => schema.userId.refine((id) => keySchema.parse(id)),
 	title: (schema) => schema.title.min(1),
 	description: (schema) => schema.description.min(1),
@@ -22,4 +22,4 @@ export const recieptInsertSchema = createInsertSchema(recieptsTable, {
 	payBackDate: true,
 });
 
-export type NewReciept = z.infer<typeof recieptInsertSchema>;
+export type NewExpense = z.infer<typeof expenseInsertSchema>;

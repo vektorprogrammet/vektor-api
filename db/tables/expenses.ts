@@ -1,9 +1,9 @@
-import vektorSchema from "@db/tables/schema";
+import mainSchema from "@db/tables/schema";
 import { usersTable } from "@db/tables/users";
 import { relations } from "drizzle-orm";
 import { date, integer, numeric, serial, text } from "drizzle-orm/pg-core";
 
-export const recieptsTable = vektorSchema.table("reciepts", {
+export const expensesTable = mainSchema.table("expenses", {
 	id: serial("id").primaryKey(),
 	userId: integer("userId")
 		.notNull()
@@ -17,9 +17,9 @@ export const recieptsTable = vektorSchema.table("reciepts", {
 	payBackDate: date("payBackDate", { mode: "date" }),
 });
 
-export const reciptsRelations = relations(recieptsTable, ({ one }) => ({
+export const expensesRelations = relations(expensesTable, ({ one }) => ({
 	user: one(usersTable, {
-		fields: [recieptsTable.userId],
+		fields: [expensesTable.userId],
 		references: [usersTable.id],
 	}),
 }));

@@ -8,10 +8,8 @@ import {
 } from "@src/middleware/errorMiddleware";
 import { logger } from "@src/middleware/loggingMiddleware";
 
-import outlayRouter from "@src/routers/outlays";
-
 import { customCors, customHelmetSecurity } from "@src/security";
-import recieptRouter from "./routers/reciepts";
+import { expenseRouter, expensesRouter } from "./routers/expense";
 
 import { openapiSpecification } from "@src/openapi/config";
 import openapiExpressHandler from "swagger-ui-express";
@@ -29,8 +27,8 @@ app.get("/docs/api/", openapiExpressHandler.setup(openapiSpecification));
 
 app.use("/", logger);
 
-app.use("/outlays", outlayRouter);
-app.use("/reciepts", recieptRouter);
+app.use("/expense", expenseRouter);
+app.use("/expenses", expensesRouter);
 
 app.use("/", errorHandler);
 app.use("/", defaultErrorHandler);
