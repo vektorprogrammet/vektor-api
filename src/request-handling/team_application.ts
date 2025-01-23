@@ -1,9 +1,4 @@
-import { Router, urlencoded } from "express";
 import { z } from "zod";
-
-const teamApplicationRouter = Router()
-
-teamApplicationRouter.use(urlencoded({ extended: true }));
 
 const teamApplicationSchema = z.object({
     id: z.coerce.number(),
