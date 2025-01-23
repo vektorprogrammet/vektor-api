@@ -1,7 +1,8 @@
-import { TeamApplication, teamApplicationsTable } from "@db/schema/teamApplication";
+import { teamApplicationsTable } from "@db/tables/teamApplication";
 import { database } from "@db/setup/queryPostgres";
-import { catchDatabase, DatabaseResult } from "@src/error/dbErrors";
+import { catchDatabase, DatabaseResult } from "@src/error/ormError";
 import { asc } from 'drizzle-orm';
+import { TeamApplication } from "@src/response-handling/team_application";
 
 export const getTeamApplications = async (
     limit: number
