@@ -3,3 +3,4 @@ node_modules
 db/migrations
 .vscode
 build
+openapi-document.yaml

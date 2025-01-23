@@ -1,11 +1,11 @@
-import { departmentsTable } from "@db/schema/departments";
-import vektorSchema from "@db/schema/schema";
-import { teamApplicationsTable } from "@db/schema/teamApplication";
+import { departmentsTable } from "@db/tables/departments";
+import mainSchema from "@db/tables/schema";
+import { teamApplicationsTable } from "@db/tables/teamApplication";
 import { relations } from "drizzle-orm";
 import { boolean, date, serial, text } from "drizzle-orm/pg-core";
 import { integer } from "drizzle-orm/pg-core";
 
-export const teamsTable = vektorSchema.table("teams", {
+export const teamsTable = mainSchema.table("teams", {
 	id: serial("id").primaryKey(),
 	departmentId: integer("departmentId")
 		.notNull()
@@ -26,6 +26,3 @@ export const teamRelations = relations(teamsTable, ({ one, many }) => ({
 	}),
 	teamApplication: many(teamApplicationsTable),
 }));
-
-export type Team = typeof teamsTable.$inferSelect;
-export type NewTeam = typeof teamsTable.$inferInsert;

@@ -1,12 +1,12 @@
-import type { Result } from "@src/error/types";
-import type { DatabaseError } from "pg-protocol";
 import {
 	getPgErrorName,
 	isPgError,
 	isValidPgCode,
 	type pgErrorCode,
 	type pgErrorName,
-} from "./pgErrors";
+} from "@db/errors/pgErrors";
+import type { Result } from "@lib/types";
+import type { DatabaseError } from "pg-protocol";
 
 const defaultDatabaseErrorMessage =
 	"Error when trying to contact database" as const;
@@ -44,12 +44,12 @@ export function isORMError(error: unknown): error is ORMError {
 	return error instanceof ORMError;
 }
 
-export const databaseError = (message: string, cause?: Error): ORMError => {
+export const ormError = (message: string, cause?: unknown): ORMError => {
 	const error = new ORMError(message);
 	if (cause !== undefined) {
 		error.cause = cause;
 	}
-	Error.captureStackTrace(error, databaseError);
+	Error.captureStackTrace(error, ormError);
 	return error;
 };
 
@@ -68,7 +68,7 @@ export async function catchDatabase<T>(
 		const dbError =
 			error instanceof ORMError
 				? error
-				: databaseError(
+				: ormError(
 						message !== undefined ? message : defaultDatabaseErrorMessage,
 						error instanceof Error ? error : undefined,
 					);
@@ -78,4 +78,26 @@ export async function catchDatabase<T>(
 			error: dbError,
 		};
 	}
+}
+
+export function handleDatabaseRejection(reason: unknown) {
+	let message = "Unknown orm error";
+	if (reason instanceof Error) {
+		message = reason.message;
+		if (isPgError(reason)) {
+			if (isValidPgCode(reason.code)) {
+				message += `: ${getPgErrorName(reason.code)}`;
+			}
+			if (reason.detail) {
+				message += ` (${reason.detail})`;
+			}
+		}
+	}
+	return { success: false as const, error: ormError(message, reason) };
+}
+export function handleDatabaseFullfillment<T>(value: T): DatabaseResult<T> {
+	return {
+		success: true as const,
+		data: value,
+	};
 }

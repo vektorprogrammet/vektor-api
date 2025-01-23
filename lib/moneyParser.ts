@@ -1,34 +1,47 @@
 import { z } from "zod";
-
-export function parseMoneyToTwoDecimals(money: string) {
-	if (Number.isNaN(Number.parseFloat(money))) {
-		throw new Error("Money is not a valid number.");
+import { parseError, type ParseResult } from "./types";
+function isRealNumber(number: number) {
+	let isReal = !Number.isNaN(number) && Number.isFinite(number);
+	if (Number.isInteger(number)) {
+		isReal = isReal && Number.isSafeInteger(number);
 	}
-	const parts = money.split(".");
-	if (parts.length === 1) {
-		return `${parts[0]}.00`;
-	}
-	if (parts.length === 2) {
-		if (parts[1].length === 0) {
-			return `${parts[0]}.00`;
-		}
-		if (parts[1].length === 1) {
-			return `${parts[0]}.${parts[1]}0`;
-		}
-		return `${parts[0]}.${parts[1].substring(0, 2)}`;
-	}
-	throw new Error("Money is not a valid number.");
+	return isReal;
 }
-
-export function isScaleTwoDecimalNumber(numericString: string) {
-	const parts = numericString.split(".");
-
-	return (
-		parts.length === 2 &&
-		parts[1].length === 2 &&
-		parts[0].length > 0 &&
-		!Number.isNaN(Number.parseFloat(numericString))
-	);
+export function ceilSerialToTwoDecimals(serial: string): ParseResult<string> {
+	const number = Number.parseFloat(serial);
+	const ceilResult = ceilToTwoDecimals(number);
+	if (ceilResult.success) {
+		return {
+			success: true,
+			data: String(ceilResult.data),
+		};
+	}
+	return {
+		success: false,
+		error: ceilResult.error.into(serial, "Cannot ceil. Serial is not vaild."),
+	}
+}
+export function ceilToTwoDecimals(number: number): ParseResult<number> {
+	if (!isRealNumber(number)) {
+		return {
+			success: false,
+			error: parseError("Cannot ceil. Number is not valid.", number),
+		};
+	}
+	let newNum = number * 100;
+	newNum = Math.ceil(newNum);
+	newNum = newNum / 100;
+	return { success: true, data: newNum };
+}
+export function isScaleTwoSerial(serial: string) {
+	const number = Number.parseFloat(serial);
+	return isScaleTwo(number);
+}
+function isScaleTwo(number: number) {
+	if (isRealNumber(number)) {
+		return false;
+	}
+	return number * 100 === Math.floor(number * 100);
 }
 const mainSeparator = " " as const; // this must be a string
 const sparatorSchema = z.union([

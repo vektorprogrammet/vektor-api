@@ -1,11 +1,11 @@
-import vektorSchema from "@db/schema/schema";
+import mainSchema from "@db/tables/schema";
 import { relations } from "drizzle-orm";
 import { integer, serial, text } from "drizzle-orm/pg-core";
 
-import { fieldsOfStudyTable } from "@db/schema/fieldsOfStudy";
-import { recieptsTable } from "@db/schema/reciepts";
+import { expensesTable } from "@db/tables/expenses";
+import { fieldsOfStudyTable } from "@db/tables/fieldsOfStudy";
 
-export const usersTable = vektorSchema.table("users", {
+export const usersTable = mainSchema.table("users", {
 	id: serial("id").primaryKey(),
 	firstName: text("firstName").notNull(),
 	lastName: text("lastName").notNull(),
@@ -19,8 +19,5 @@ export const usersRelations = relations(usersTable, ({ one, many }) => ({
 		fields: [usersTable.fieldOfStudyId],
 		references: [fieldsOfStudyTable.id],
 	}),
-	reciepts: many(recieptsTable),
+	expenses: many(expensesTable),
 }));
-
-export type User = typeof usersTable.$inferSelect;
-export type NewUser = typeof usersTable.$inferInsert;

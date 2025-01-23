@@ -1,6 +1,8 @@
+# Database prototype
+
 ```mermaid
 ---
-title: Database reciept prototype
+title: Database prototype
 ---
 erDiagram
     USER {
@@ -9,7 +11,7 @@ erDiagram
         string lastName 
         int fieldOfStudyId FK
     }
-    RECIEPT {
+    EXPENSE {
         int id PK
         int userId FK
         string title
@@ -79,7 +81,7 @@ erDiagram
         int thursday
         int friday
     }
-    USER ||--o{ RECIEPT : "pays"
+    USER ||--o{ EXPENSE : "pays"
     USER ||--o{ FIELD_OF_STUDY : studys
     VEKTOR_DEPARTMENT ||--o{ FIELD_OF_STUDY : oversee
     TEAM ||--o{ TEAM_APPLICATION : hasTeamapplication
@@ -90,4 +92,3 @@ erDiagram
     TEAM }o--o{ ASSISTENT_APPLICATION : interest
     VEKTOR_DEPARTMENT ||--O{ TEAM : belongsTo
 ```
-
