@@ -10,7 +10,7 @@ import {
 } from "@src/error/ormError";
 import type { QueryParameters } from "@src/request-handling/common";
 import type { Expense, ExpenseKey } from "@src/response-handling/expenses";
-import { asc, desc, isNull, isNotNull, inArray } from "drizzle-orm";
+import { asc, desc, isNull, isNotNull, inArray, and } from "drizzle-orm";
 import { z } from "zod";
 
 export async function insertExpenses(
@@ -91,7 +91,7 @@ export async function selectExpenses(
 export async function getSumUnprocessed(): Promise<DatabaseResult<number>> {
 	return database
 		.transaction(async (tx) => {
-			return (await tx.select().from(expensesTable).where(isNull(expensesTable.payBackDate))).reduce(
+			return (await tx.select().from(expensesTable).where(and(isNull(expensesTable.payBackDate), isNull(expensesTable.rejectedDate)))).reduce(
 				(accumulator, currentValue) => {
 					const moneyParseResult = z.coerce.number().positive().safeParse(currentValue.moneyAmount);
 					if (moneyParseResult.success){
@@ -106,12 +106,28 @@ export async function getSumUnprocessed(): Promise<DatabaseResult<number>> {
 		.then(handleDatabaseFullfillment, handleDatabaseRejection);
 }
 
-
-
 export async function getSumAccepted(): Promise<DatabaseResult<number>> {
 	return database
 		.transaction(async (tx) => {
 			return (await tx.select().from(expensesTable).where(isNotNull(expensesTable.payBackDate))).reduce(
+				(accumulator, currentValue) => {
+					const moneyParseResult = z.coerce.number().positive().safeParse(currentValue.moneyAmount);
+					if (moneyParseResult.success){
+						return accumulator + moneyParseResult.data;
+					}else{
+						throw ormError("Invalid money number from database.");
+					}
+				},
+				0
+			)
+		})
+		.then(handleDatabaseFullfillment, handleDatabaseRejection);
+}
+
+export async function getSumRejected(): Promise<DatabaseResult<number>> {
+	return database
+		.transaction(async (tx) => {
+			return (await tx.select().from(expensesTable).where(isNotNull(expensesTable.rejectedDate))).reduce(
 				(accumulator, currentValue) => {
 					const moneyParseResult = z.coerce.number().positive().safeParse(currentValue.moneyAmount);
 					if (moneyParseResult.success){

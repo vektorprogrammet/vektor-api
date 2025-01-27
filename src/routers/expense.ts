@@ -1,5 +1,6 @@
 import {
 	getSumAccepted,
+	getSumRejected,
 	getSumUnprocessed,
 	insertExpenses,
 	paybackExpenses,
@@ -187,6 +188,29 @@ expensesRouter.get("/unprocessed/", async (req, res, next) => {
  */
 expensesRouter.get("/accepted/", async (req, res, next) => {
 	const databaseResult = await getSumAccepted();
+	if (!databaseResult.success) {
+		return next(clientError(400, "Database error", databaseResult.error));
+	}
+	res.json(databaseResult.data);
+});
+
+/**
+ * @openapi
+ * /expenses/rejected/:
+ *  get:
+ *   tags: [expenses]
+ *   summary: Get total of rejected expences
+ *   description: Get total of rejected expences
+ *   parameters:
+ *   responses:
+ *    200:
+ *     description: Successfull response
+ *     content:
+ *      application/json:
+ *       schema:
+ */
+expensesRouter.get("/rejected/", async (req, res, next) => {
+	const databaseResult = await getSumRejected();
 	if (!databaseResult.success) {
 		return next(clientError(400, "Database error", databaseResult.error));
 	}
