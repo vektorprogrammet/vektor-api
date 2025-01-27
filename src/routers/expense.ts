@@ -1,4 +1,6 @@
 import {
+	getSumAccepted,
+	getSumUnprocessed,
 	insertExpenses,
 	paybackExpenses,
 	selectExpenses,
@@ -139,6 +141,52 @@ expensesRouter.get("/", async (req, res, next) => {
 		return next(clientError(400, "", queryParametersResult.error));
 	}
 	const databaseResult = await selectExpenses(queryParametersResult.data);
+	if (!databaseResult.success) {
+		return next(clientError(400, "Database error", databaseResult.error));
+	}
+	res.json(databaseResult.data);
+});
+
+/**
+ * @openapi
+ * /expenses/unprocessed/:
+ *  get:
+ *   tags: [expenses]
+ *   summary: Get total of un processed expences
+ *   description: Get total of un processed expences
+ *   parameters:
+ *   responses:
+ *    200:
+ *     description: Successfull response
+ *     content:
+ *      application/json:
+ *       schema:
+ */
+expensesRouter.get("/unprocessed/", async (req, res, next) => {
+	const databaseResult = await getSumUnprocessed();
+	if (!databaseResult.success) {
+		return next(clientError(400, "Database error", databaseResult.error));
+	}
+	res.json(databaseResult.data);
+});
+
+/**
+ * @openapi
+ * /expenses/accepted/:
+ *  get:
+ *   tags: [expenses]
+ *   summary: Get total of accepted expences
+ *   description: Get total of accepted expences
+ *   parameters:
+ *   responses:
+ *    200:
+ *     description: Successfull response
+ *     content:
+ *      application/json:
+ *       schema:
+ */
+expensesRouter.get("/accepted/", async (req, res, next) => {
+	const databaseResult = await getSumAccepted();
 	if (!databaseResult.success) {
 		return next(clientError(400, "Database error", databaseResult.error));
 	}
