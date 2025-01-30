@@ -1,4 +1,5 @@
 import {
+	getAgeragePaybackTime,
 	getSumAccepted,
 	getSumRejected,
 	getSumUnprocessed,
@@ -163,7 +164,7 @@ expensesRouter.get("/", async (req, res, next) => {
  *      application/json:
  *       schema:
  */
-expensesRouter.get("/unprocessed/", async (req, res, next) => {
+expensesRouter.get("/money-amount/unprocessed/", async (req, res, next) => {
 	const databaseResult = await getSumUnprocessed();
 	if (!databaseResult.success) {
 		return next(clientError(400, "Database error", databaseResult.error));
@@ -186,7 +187,7 @@ expensesRouter.get("/unprocessed/", async (req, res, next) => {
  *      application/json:
  *       schema:
  */
-expensesRouter.get("/accepted/", async (req, res, next) => {
+expensesRouter.get("/money-amount/accepted/", async (req, res, next) => {
 	const databaseResult = await getSumAccepted();
 	if (!databaseResult.success) {
 		return next(clientError(400, "Database error", databaseResult.error));
@@ -209,10 +210,33 @@ expensesRouter.get("/accepted/", async (req, res, next) => {
  *      application/json:
  *       schema:
  */
-expensesRouter.get("/rejected/", async (req, res, next) => {
+expensesRouter.get("/money-amount/rejected/", async (req, res, next) => {
 	const databaseResult = await getSumRejected();
 	if (!databaseResult.success) {
 		return next(clientError(400, "Database error", databaseResult.error));
 	}
 	res.json(databaseResult.data);
+});
+
+/**
+ * @openapi
+ * /expenses/payback-time/average/:
+ *  get:
+ *   tags: [expenses]
+ *   summary: Get average time for expences to get paid back
+ *   description: Get average time for expences to get paid back
+ *   parameters:
+ *   responses:
+ *    200:
+ *     description: Successfull response
+ *     content:
+ *      application/json:
+ *       schema:
+ */
+expensesRouter.get("/payback-time/average/", async (req, res, next) => {
+	const databaseResult = await getAgeragePaybackTime();
+	if (!databaseResult.success) {
+		return next(clientError(400, "Database error", databaseResult.error));
+	}
+	res.send(databaseResult.data);
 });

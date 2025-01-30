@@ -1,7 +1,7 @@
 import mainSchema from "@db/tables/schema";
 import { usersTable } from "@db/tables/users";
 import { relations } from "drizzle-orm";
-import { date, integer, numeric, serial, text } from "drizzle-orm/pg-core";
+import { date, integer, numeric, serial, text, boolean } from "drizzle-orm/pg-core";
 
 export const expensesTable = mainSchema.table("expenses", {
 	id: serial("id").primaryKey(),
@@ -14,8 +14,8 @@ export const expensesTable = mainSchema.table("expenses", {
 	accountNumber: text("accountNumber").notNull(),
 	purchaseDate: date("purchaseDate", { mode: "date" }).notNull(),
 	submitDate: date("submitDate", { mode: "date" }).defaultNow().notNull(),
-	payBackDate: date("payBackDate", { mode: "date" }),
-	rejectedDate: date("rejectedDate", { mode: "date"}),
+	isAccepted: boolean("isAccepted").default(true).notNull(),
+	handlingDate: date("payBackDate", { mode: "date" }),
 });
 
 export const expensesRelations = relations(expensesTable, ({ one }) => ({

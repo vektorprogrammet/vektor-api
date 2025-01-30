@@ -19,7 +19,7 @@ export const expenseInsertSchema = createInsertSchema(expensesTable, {
 }).omit({
 	id: true,
 	submitDate: true,
-	payBackDate: true,
+	handlingDate: true,
 });
 
 export type NewExpense = z.infer<typeof expenseInsertSchema>;
