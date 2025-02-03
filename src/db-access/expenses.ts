@@ -10,7 +10,7 @@ import {
 } from "@src/error/ormError";
 import type { QueryParameters } from "@src/request-handling/common";
 import type { Expense, ExpenseKey } from "@src/response-handling/expenses";
-import { asc, desc, isNull, isNotNull, inArray, and, not } from "drizzle-orm";
+import { and, asc, desc, inArray, isNotNull, isNull, not } from "drizzle-orm";
 import { z } from "zod";
 
 export async function insertExpenses(
@@ -91,17 +91,21 @@ export async function selectExpenses(
 export async function getSumUnprocessed(): Promise<DatabaseResult<number>> {
 	return database
 		.transaction(async (tx) => {
-			return (await tx.select().from(expensesTable).where(isNull(expensesTable.handlingDate))).reduce(
-				(accumulator, currentValue) => {
-					const moneyParseResult = z.coerce.number().positive().safeParse(currentValue.moneyAmount);
-					if (moneyParseResult.success){
-						return accumulator + moneyParseResult.data;
-					}else{
-						throw ormError("Invalid money number from database.");
-					}
-				},
-				0
-			)
+			return (
+				await tx
+					.select()
+					.from(expensesTable)
+					.where(isNull(expensesTable.handlingDate))
+			).reduce((accumulator, currentValue) => {
+				const moneyParseResult = z.coerce
+					.number()
+					.positive()
+					.safeParse(currentValue.moneyAmount);
+				if (moneyParseResult.success) {
+					return accumulator + moneyParseResult.data;
+				}
+				throw ormError("Invalid money number from database.");
+			}, 0);
 		})
 		.then(handleDatabaseFullfillment, handleDatabaseRejection);
 }
@@ -109,17 +113,26 @@ export async function getSumUnprocessed(): Promise<DatabaseResult<number>> {
 export async function getSumAccepted(): Promise<DatabaseResult<number>> {
 	return database
 		.transaction(async (tx) => {
-			return (await tx.select().from(expensesTable).where(and(expensesTable.isAccepted, isNotNull(expensesTable.handlingDate)))).reduce(
-				(accumulator, currentValue) => {
-					const moneyParseResult = z.coerce.number().positive().safeParse(currentValue.moneyAmount);
-					if (moneyParseResult.success){
-						return accumulator + moneyParseResult.data;
-					}else{
-						throw ormError("Invalid money number from database.");
-					}
-				},
-				0
-			)
+			return (
+				await tx
+					.select()
+					.from(expensesTable)
+					.where(
+						and(
+							expensesTable.isAccepted,
+							isNotNull(expensesTable.handlingDate),
+						),
+					)
+			).reduce((accumulator, currentValue) => {
+				const moneyParseResult = z.coerce
+					.number()
+					.positive()
+					.safeParse(currentValue.moneyAmount);
+				if (moneyParseResult.success) {
+					return accumulator + moneyParseResult.data;
+				}
+				throw ormError("Invalid money number from database.");
+			}, 0);
 		})
 		.then(handleDatabaseFullfillment, handleDatabaseRejection);
 }
@@ -127,17 +140,26 @@ export async function getSumAccepted(): Promise<DatabaseResult<number>> {
 export async function getSumRejected(): Promise<DatabaseResult<number>> {
 	return database
 		.transaction(async (tx) => {
-			return (await tx.select().from(expensesTable).where(and(not(expensesTable.isAccepted), (isNotNull(expensesTable.handlingDate))))).reduce(
-				(accumulator, currentValue) => {
-					const moneyParseResult = z.coerce.number().positive().safeParse(currentValue.moneyAmount);
-					if (moneyParseResult.success){
-						return accumulator + moneyParseResult.data;
-					}else{
-						throw ormError("Invalid money number from database.");
-					}
-				},
-				0
-			)
+			return (
+				await tx
+					.select()
+					.from(expensesTable)
+					.where(
+						and(
+							not(expensesTable.isAccepted),
+							isNotNull(expensesTable.handlingDate),
+						),
+					)
+			).reduce((accumulator, currentValue) => {
+				const moneyParseResult = z.coerce
+					.number()
+					.positive()
+					.safeParse(currentValue.moneyAmount);
+				if (moneyParseResult.success) {
+					return accumulator + moneyParseResult.data;
+				}
+				throw ormError("Invalid money number from database.");
+			}, 0);
 		})
 		.then(handleDatabaseFullfillment, handleDatabaseRejection);
 }
@@ -145,19 +167,26 @@ export async function getSumRejected(): Promise<DatabaseResult<number>> {
 export async function getAgeragePaybackTime(): Promise<DatabaseResult<number>> {
 	return database
 		.transaction(async (tx) => {
-			const result = (await tx.select().from(expensesTable).where(isNotNull(expensesTable.handlingDate)));
+			const result = await tx
+				.select()
+				.from(expensesTable)
+				.where(isNotNull(expensesTable.handlingDate));
 
-			if (result.length === 0){
+			if (result.length === 0) {
 				return 0;
 			}
 
-			const totalMilliseconds = result.reduce(
-				(accumulator, currentValue) => {
-					return accumulator + ((currentValue.handlingDate as Date).getTime() - currentValue.submitDate.getTime());
-				},
-				0
-			)
-			
+			const totalMilliseconds = result.reduce((accumulator, currentValue) => {
+				// handlingDate have already checked not to be null
+				const handlingDate = currentValue.handlingDate as Date;
+
+				return (
+					accumulator +
+					((handlingDate).getTime() -
+						currentValue.submitDate.getTime())
+				);
+			}, 0);
+
 			return totalMilliseconds / result.length;
 		})
 		.then(handleDatabaseFullfillment, handleDatabaseRejection);

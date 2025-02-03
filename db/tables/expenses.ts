@@ -1,7 +1,14 @@
 import mainSchema from "@db/tables/schema";
 import { usersTable } from "@db/tables/users";
 import { relations } from "drizzle-orm";
-import { date, integer, numeric, serial, text, boolean } from "drizzle-orm/pg-core";
+import {
+	boolean,
+	date,
+	integer,
+	numeric,
+	serial,
+	text,
+} from "drizzle-orm/pg-core";
 
 export const expensesTable = mainSchema.table("expenses", {
 	id: serial("id").primaryKey(),
