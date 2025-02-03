@@ -151,11 +151,11 @@ expensesRouter.get("/", async (req, res, next) => {
 
 /**
  * @openapi
- * /expenses/unprocessed/:
+ * /expenses/money-amount/unprocessed/:
  *  get:
  *   tags: [expenses]
- *   summary: Get total of un processed expences
- *   description: Get total of un processed expences
+ *   summary: Get total money amount of unprocessed expences
+ *   description: Get total money amount of unprocessed expences
  *   parameters:
  *   responses:
  *    200:
@@ -174,11 +174,11 @@ expensesRouter.get("/money-amount/unprocessed/", async (req, res, next) => {
 
 /**
  * @openapi
- * /expenses/accepted/:
+ * /expenses/money-amount/accepted/:
  *  get:
  *   tags: [expenses]
- *   summary: Get total of accepted expences
- *   description: Get total of accepted expences
+ *   summary: Get total money amount of accepted expences
+ *   description: Get total money amount of accepted expences
  *   parameters:
  *   responses:
  *    200:
@@ -197,11 +197,11 @@ expensesRouter.get("/money-amount/accepted/", async (req, res, next) => {
 
 /**
  * @openapi
- * /expenses/rejected/:
+ * /expenses/money-amount/rejected/:
  *  get:
  *   tags: [expenses]
- *   summary: Get total of rejected expences
- *   description: Get total of rejected expences
+ *   summary: Get total money amount of rejected expences
+ *   description: Get total money amount of rejected expences
  *   parameters:
  *   responses:
  *    200:
@@ -223,8 +223,8 @@ expensesRouter.get("/money-amount/rejected/", async (req, res, next) => {
  * /expenses/payback-time/average/:
  *  get:
  *   tags: [expenses]
- *   summary: Get average time for expences to get paid back
- *   description: Get average time for expences to get paid back
+ *   summary: Get average time for expences to get handled
+ *   description: Get average time for expences to get paid handled
  *   parameters:
  *   responses:
  *    200:
