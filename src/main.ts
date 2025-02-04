@@ -11,8 +11,11 @@ import { logger } from "@src/middleware/loggingMiddleware";
 import { customCors, customHelmetSecurity } from "@src/security";
 import { expenseRouter, expensesRouter } from "./routers/expense";
 
+import { teamApplicationRouter } from "./routers/team_application";
+
 import { openapiSpecification } from "@src/openapi/config";
 import openapiExpressHandler from "swagger-ui-express";
+
 
 const app = express();
 
@@ -29,6 +32,8 @@ app.use("/", logger);
 
 app.use("/expense", expenseRouter);
 app.use("/expenses", expensesRouter);
+
+app.use("/teamapplications", teamApplicationRouter);
 
 app.use("/", errorHandler);
 app.use("/", defaultErrorHandler);
