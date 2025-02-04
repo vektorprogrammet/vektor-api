@@ -16,7 +16,6 @@ import { teamApplicationRouter } from "./routers/team_application";
 import { openapiSpecification } from "@src/openapi/config";
 import openapiExpressHandler from "swagger-ui-express";
 
-
 const app = express();
 
 // Security

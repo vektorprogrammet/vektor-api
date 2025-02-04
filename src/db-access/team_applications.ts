@@ -37,13 +37,11 @@ export const selectTeamApplicationsByTeamId = async (
 				.from(teamApplicationsTable)
 				.where(inArray(teamApplicationsTable.teamId, teamId));
 			if (selectResult.length == teamId.length) {
-                return selectResult;
-				
+				return selectResult;
 			}
-            throw ormError(
-                "Couldn't select team applications, id's (team) didn't exist.",
-            );
-			
+			throw ormError(
+				"Couldn't select team applications, id's (team) didn't exist.",
+			);
 		})
 		.then(handleDatabaseFullfillment, handleDatabaseRejection);
 };
