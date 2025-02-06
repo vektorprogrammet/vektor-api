@@ -29,19 +29,17 @@ export const selectTeamApplications = async (
 
 export const selectTeamApplicationsByTeamId = async (
 	teamId: TeamKey[],
+	parameters: QueryParameters,
 ): Promise<DatabaseResult<TeamApplication[]>> => {
 	return database
 		.transaction(async (tx) => {
 			const selectResult = await tx
 				.select()
 				.from(teamApplicationsTable)
-				.where(inArray(teamApplicationsTable.teamId, teamId));
-			if (selectResult.length == teamId.length) {
-				return selectResult;
-			}
-			throw ormError(
-				"Couldn't select team applications, id's (team) didn't exist.",
-			);
+				.where(inArray(teamApplicationsTable.teamId, teamId))
+				.limit(parameters.limit)
+				.offset(parameters.offset);
+			return selectResult;
 		})
 		.then(handleDatabaseFullfillment, handleDatabaseRejection);
 };

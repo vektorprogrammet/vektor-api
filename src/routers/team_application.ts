@@ -29,9 +29,14 @@ teamApplicationRouter.get("/:teamID/", async (req, res, next) => {
 	if (!teamIdResult.success) {
 		return next(clientError(400, "", teamIdResult.error));
 	}
-	const databaseResult = await selectTeamApplicationsByTeamId([
-		teamIdResult.data,
-	]);
+	const queryParametersResult = queryValidator.safeParse(req.query);
+	if (!queryParametersResult.success) {
+		return next(clientError(400, "", queryParametersResult.error));
+	}
+	const databaseResult = await selectTeamApplicationsByTeamId(
+		[teamIdResult.data],
+		queryParametersResult.data,
+	);
 	if (!databaseResult.success) {
 		return next(clientError(400, "Database error", databaseResult.error));
 	}
