@@ -4,7 +4,6 @@ import {
 } from "@src/db-access/team_applications";
 import { clientError } from "@src/error/httpErrors";
 import { idValidator, queryValidator } from "@src/request-handling/common";
-import { teamApplicationValidator } from "@src/request-handling/team_application";
 import { Router, urlencoded } from "express";
 
 export const teamApplicationRouter = Router();
