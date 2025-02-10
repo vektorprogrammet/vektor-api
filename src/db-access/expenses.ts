@@ -1,7 +1,6 @@
 import { database } from "@db/setup/queryPostgres";
 import { expensesTable } from "@db/tables/expenses";
 import { usersTable } from "@db/tables/users";
-import type { NewExpense } from "@src/db-validation/expenses";
 import {
 	type DatabaseResult,
 	handleDatabaseFullfillment,
@@ -9,6 +8,7 @@ import {
 	ormError,
 } from "@src/error/ormError";
 import type { QueryParameters } from "@src/request-handling/common";
+import type { NewExpense } from "@src/request-handling/expenses";
 import type { Expense, ExpenseKey } from "@src/response-handling/expenses";
 import {
 	and,

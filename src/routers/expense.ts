@@ -9,8 +9,11 @@ import {
 	selectExpensesById,
 } from "@src/db-access/expenses";
 import { clientError } from "@src/error/httpErrors";
-import { idValidator, queryValidator } from "@src/request-handling/common";
-import { expenseRequestTransformer } from "@src/request-handling/expenses";
+import {
+	toListQueryParser,
+	toSerialIdParser,
+} from "@src/request-handling/common";
+import { expenseRequestToInsertParser } from "@src/request-handling/expenses";
 import { Router, urlencoded } from "express";
 
 export const expenseRouter = Router();
@@ -39,7 +42,7 @@ expenseRouter.use(urlencoded({ extended: true }));
  *        $ref: "#/components/schemas/expense"
  */
 expenseRouter.post("/", async (req, res, next) => {
-	const expenseRequest = expenseRequestTransformer.safeParse(req.body);
+	const expenseRequest = expenseRequestToInsertParser.safeParse(req.body);
 	if (!expenseRequest.success) {
 		const error = clientError(
 			400,
@@ -76,7 +79,7 @@ expensesRouter.use(urlencoded({ extended: true }));
  *        $ref: "#/components/schemas/expense"
  */
 expenseRouter.put("/:id/payback/", async (req, res, next) => {
-	const paybackRequest = idValidator.safeParse(req.params.id);
+	const paybackRequest = toSerialIdParser.safeParse(req.params.id);
 	if (!paybackRequest.success) {
 		return next(
 			clientError(400, "Failed parsing paybackrequest", paybackRequest.error),
@@ -107,7 +110,7 @@ expenseRouter.put("/:id/payback/", async (req, res, next) => {
  *        $ref: "#/components/schemas/expense"
  */
 expenseRouter.get("/:expenseId/", async (req, res, next) => {
-	const expenseIdResult = idValidator.safeParse(req.params.expenseId);
+	const expenseIdResult = toSerialIdParser.safeParse(req.params.expenseId);
 	if (!expenseIdResult.success) {
 		return next(clientError(400, "", expenseIdResult.error));
 	}
@@ -138,7 +141,7 @@ expenseRouter.get("/:expenseId/", async (req, res, next) => {
  *        $ref: "#/components/schemas/expense"
  */
 expensesRouter.get("/", async (req, res, next) => {
-	const queryParametersResult = queryValidator.safeParse(req.query);
+	const queryParametersResult = toListQueryParser.safeParse(req.query);
 	if (!queryParametersResult.success) {
 		return next(clientError(400, "", queryParametersResult.error));
 	}

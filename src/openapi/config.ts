@@ -1,12 +1,12 @@
 import "zod-openapi/extend";
 import { hostOptions } from "@src/enviroment";
 import {
-	idValidator,
-	limitValidator,
-	offsetValidator,
-	sortValidator,
+	limitParser,
+	offsetParser,
+	serialIdParser,
+	sortParser,
 } from "@src/request-handling/common";
-import { expenseRequestValidator } from "@src/request-handling/expenses";
+import { expenseRequestParser } from "@src/request-handling/expenses";
 import { expensesSelectSchema } from "@src/response-handling/expenses";
 import openapiFromJsdoc from "swagger-jsdoc";
 import { createDocument } from "zod-openapi";
@@ -52,14 +52,14 @@ const openapiDocument = createDocument({
 	paths: {},
 	components: {
 		schemas: {
-			expenseRequest: expenseRequestValidator,
+			expenseRequest: expenseRequestParser,
 			expense: expensesSelectSchema,
 		},
 		parameters: {
-			id: idValidator.openapi({ param: { in: "path", name: "id" } }),
-			limit: limitValidator.openapi({ param: { in: "query", name: "limit" } }),
-			sort: sortValidator.openapi({ param: { in: "query", name: "sort" } }),
-			offset: offsetValidator.openapi({
+			id: serialIdParser.openapi({ param: { in: "path", name: "id" } }),
+			limit: limitParser.openapi({ param: { in: "query", name: "limit" } }),
+			sort: sortParser.openapi({ param: { in: "query", name: "sort" } }),
+			offset: offsetParser.openapi({
 				param: { in: "query", name: "offset" },
 			}),
 		},

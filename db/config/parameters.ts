@@ -1,18 +1,20 @@
 import { env } from "node:process";
 import type { ConnectionOptions } from "node:tls";
+import { hostingStringParser, toPortParser } from "@lib/networkParsers";
 import { z } from "zod";
+import { fromZodError } from "zod-validation-error";
 
 function getCaCert(): string | Buffer | Array<string | Buffer> | undefined {
 	return env.CA_CERT;
 }
 
-export const databaseConnectionParameters = z
+const parametersResult = z
 	.object({
-		DATABASE_HOST: z.string().min(1),
+		DATABASE_HOST: hostingStringParser,
 		DATABASE_NAME: z.string().min(1),
 		DATABASE_USER: z.string().min(1),
 		DATABASE_PASSWORD: z.string().min(1),
-		DATABASE_PORT: z.coerce.number().positive().finite().safe().int(),
+		DATABASE_PORT: toPortParser,
 		DATABASE_SSL_OPTION: z
 			.union([
 				z.literal("prod").transform((_, ctx) => {
@@ -61,7 +63,14 @@ export const databaseConnectionParameters = z
 			ssl: schema.DATABASE_SSL_OPTION,
 		};
 	})
-	.parse(env);
+	.safeParse(env);
+
+if (!parametersResult.success) {
+	console.error("Error when parsing enviroment variables.");
+	console.error(fromZodError(parametersResult.error).message);
+	process.exit(1);
+}
+export const databaseConnectionParameters = parametersResult.data;
 
 if (env.LOG_DATABASE_CREDENTIALS_ON_STARTUP === "true") {
 	console.log("Database parameters:", databaseConnectionParameters);
