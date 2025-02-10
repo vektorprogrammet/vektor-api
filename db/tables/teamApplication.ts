@@ -13,7 +13,7 @@ export const teamApplicationsTable = mainSchema.table("teamApplications", {
 	name: text("name").notNull(),
 	email: text("email").notNull(),
 	motivationText: text("motivationText").notNull(),
-	fieldOfStudyId: integer("fieldOfStudy")
+	fieldOfStudyId: integer("fieldOfStudyId")
 		.notNull()
 		.references(() => fieldsOfStudyTable.id),
 	yearOfStudy: integer("yearOfStudy").notNull(),
