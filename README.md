@@ -25,6 +25,7 @@ Deretter må du sette opp databasetilkoblingene.
 ### Med lokal database
 
 Start med å sette opp et postgres bilde i docker.
+F.eks. med kommandoen `docker run --name vektorPostgres -p 5432:5432 -e POSTGRES_PASSWORD=pass123 -d postgres`
 Lag en database i bilet du satte opp.
 Husk url(mest sannsynlig `localhost`), port, database navn, bruker(`postgres` om du ikke har spesifisert det) og passord.
 Lokale databaser pleier ikke støtte SSL-tilkoblinger. Derfor må du nok sette opp denne instillingen i `.env`-filen:

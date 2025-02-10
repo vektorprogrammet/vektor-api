@@ -1,11 +1,11 @@
 import { z } from "zod";
 
-export const sortValidator = z
+export const sortParser = z
 	.enum(["desc", "asc"])
 	.optional()
 	.default("desc")
 	.describe("Sort descending or acending");
-export const limitValidator = z.coerce
+export const limitParser = z
 	.number()
 	.finite()
 	.safe()
@@ -13,7 +13,11 @@ export const limitValidator = z.coerce
 	.int()
 	.default(10)
 	.describe("Amount of items requested");
-export const offsetValidator = z.coerce
+export const toLimitParser = z
+	.union([z.number(), z.string()])
+	.pipe(z.coerce.number())
+	.pipe(limitParser);
+export const offsetParser = z
 	.number()
 	.finite()
 	.safe()
@@ -21,19 +25,27 @@ export const offsetValidator = z.coerce
 	.int()
 	.default(0)
 	.describe("Offset for pagination");
-
-export const queryValidator = z.object({
-	sort: sortValidator,
-	limit: limitValidator,
-	offset: offsetValidator,
+export const toOffsetParser = z
+	.union([z.number(), z.string()])
+	.pipe(z.coerce.number())
+	.pipe(offsetParser);
+export const listQueryParser = z.object({
+	sort: sortParser,
+	limit: limitParser,
+	offset: offsetParser,
 });
+export const toListQueryParser = z
+	.object({
+		sort: sortParser,
+		limit: toLimitParser,
+		offset: toOffsetParser,
+	})
+	.pipe(listQueryParser);
 
-export type QueryParameters = z.infer<typeof queryValidator>;
+export type QueryParameters = z.infer<typeof listQueryParser>;
 
-export const idValidator = z.coerce
-	.number()
-	.finite()
-	.safe()
-	.positive()
-	.int()
-	.describe("Identity of element");
+export const serialIdParser = z.number().finite().safe().positive().int();
+export const toSerialIdParser = z
+	.union([z.number(), z.string()])
+	.pipe(z.coerce.number())
+	.pipe(serialIdParser);

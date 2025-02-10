@@ -1,15 +1,13 @@
+import { hostingStringParser, toPortParser } from "@lib/networkParsers";
 import "dotenv/config";
 import { env } from "node:process";
 import { z } from "zod";
+import { fromZodError } from "zod-validation-error";
 
-export const hostOptions = z
+const hostOptionsResult = z
 	.object({
-		PORT: z.coerce.number(),
-		HOSTING_URL: z.union([
-			z.literal("localhost"),
-			z.string().url(),
-			z.string().ip(),
-		]),
+		PORT: toPortParser,
+		HOSTING_URL: hostingStringParser,
 	})
 	.transform((schema) => {
 		return {
@@ -17,4 +15,12 @@ export const hostOptions = z
 			hosting_url: schema.HOSTING_URL,
 		};
 	})
-	.parse(env);
+	.safeParse(env);
+
+if (!hostOptionsResult.success) {
+	console.error("Error when parsing enviroment variables.");
+	console.error(fromZodError(hostOptionsResult.error).message);
+	process.exit(1);
+}
+
+export const hostOptions = hostOptionsResult.data;
