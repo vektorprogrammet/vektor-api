@@ -1,5 +1,5 @@
 import {
-	getAgeragePaybackTime,
+	getAveragePaybackTime,
 	getSumAccepted,
 	getSumRejected,
 	getSumUnprocessed,
@@ -234,9 +234,9 @@ expensesRouter.get("/money-amount/rejected/", async (req, res, next) => {
  *       schema:
  */
 expensesRouter.get("/payback-time/average/", async (req, res, next) => {
-	const databaseResult = await getAgeragePaybackTime();
+	const databaseResult = await getAveragePaybackTime();
 	if (!databaseResult.success) {
 		return next(clientError(400, "Database error", databaseResult.error));
 	}
-	res.send(databaseResult.data);
+	res.json(databaseResult.data);
 });
