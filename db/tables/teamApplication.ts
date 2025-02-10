@@ -3,6 +3,7 @@ import { relations } from "drizzle-orm";
 import { integer, serial, text } from "drizzle-orm/pg-core";
 
 import { teamsTable } from "@db/tables/team";
+import { fieldsOfStudyTable } from "./fieldsOfStudy";
 
 export const teamApplicationsTable = mainSchema.table("teamApplications", {
 	id: serial("id").primaryKey(),
@@ -12,7 +13,9 @@ export const teamApplicationsTable = mainSchema.table("teamApplications", {
 	name: text("name").notNull(),
 	email: text("email").notNull(),
 	motivationText: text("motivationText").notNull(),
-	fieldOfStudy: text("fieldOfStudy").notNull(),
+	fieldOfStudyId: integer("fieldOfStudyId")
+		.notNull()
+		.references(() => fieldsOfStudyTable.id),
 	yearOfStudy: integer("yearOfStudy").notNull(),
 	biography: text("biography").notNull(),
 	phonenumber: text("phonenumber").notNull(),
@@ -24,6 +27,10 @@ export const teamApplicationsRelations = relations(
 		team: one(teamsTable, {
 			fields: [teamApplicationsTable.teamId],
 			references: [teamsTable.id],
+		}),
+		fieldOfStudy: one(fieldsOfStudyTable, {
+			fields: [teamApplicationsTable.fieldOfStudyId],
+			references: [fieldsOfStudyTable.id],
 		}),
 	}),
 );
