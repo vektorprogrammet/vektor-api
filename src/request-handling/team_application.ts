@@ -19,10 +19,7 @@ export const teamApplicationParser = z.object({
 		.int()
 		.describe("Id of team applied for"),
 	name: z.string().min(1).describe("Name of user applying for a team"),
-	email: z
-		.string()
-		.email()
-		.describe("Email of user applying for a team"),
+	email: z.string().email().describe("Email of user applying for a team"),
 	motivationText: z
 		.string()
 		.max(maxTextLength)
@@ -51,12 +48,13 @@ export const teamApplicationParser = z.object({
 		.describe("The phonenumber of the user applying for a team"),
 });
 
-export const teamApplicationToInsertParser = teamApplicationParser.extend({
-	email: teamApplicationParser.shape.email.trim().toLowerCase(),
-	motivationText: teamApplicationParser.shape.motivationText.trim(),
-	biography: teamApplicationParser.shape.biography.trim(),
-}
+export const teamApplicationToInsertParser = teamApplicationParser
+	.extend({
+		email: teamApplicationParser.shape.email.trim().toLowerCase(),
+		motivationText: teamApplicationParser.shape.motivationText.trim(),
+		biography: teamApplicationParser.shape.biography.trim(),
+	})
+	.pipe(createInsertSchema(teamApplicationsTable))
+	.readonly();
 
-).pipe(createInsertSchema(teamApplicationsTable)).readonly()
-
-export type NewTeamApplication = z.infer<typeof teamApplicationToInsertParser>
+export type NewTeamApplication = z.infer<typeof teamApplicationToInsertParser>;
