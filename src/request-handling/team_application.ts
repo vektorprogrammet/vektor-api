@@ -1,4 +1,3 @@
-import { fieldsOfStudyTable } from "@db/tables/fieldsOfStudy";
 import { teamApplicationsTable } from "@db/tables/teamApplication";
 import { maxTextLength } from "@lib/globalVariables";
 import { createInsertSchema } from "drizzle-zod";
@@ -28,9 +27,12 @@ export const teamApplicationParser = z.object({
 		.string()
 		.max(maxTextLength)
 		.describe("The motivation text of user applying for a team"),
-	fieldOfStudy: z
-		.string()
-		.max(maxTextLength)
+	fieldOfStudyId: z
+		.number()
+		.finite()
+		.safe()
+		.positive()
+		.int()
 		.describe("Studyfield of user applying for a team"),
 	yearOfStudy: z
 		.number()
@@ -52,7 +54,6 @@ export const teamApplicationParser = z.object({
 export const teamApplicationToInsertParser = teamApplicationParser.extend({
 	email: teamApplicationParser.shape.email.trim().toLowerCase(),
 	motivationText: teamApplicationParser.shape.motivationText.trim(),
-	fieldsOfStudy: teamApplicationParser.shape.fieldOfStudy.trim(),
 	biography: teamApplicationParser.shape.biography.trim(),
 }
 
