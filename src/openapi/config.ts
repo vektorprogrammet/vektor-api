@@ -1,6 +1,7 @@
 import "zod-openapi/extend";
 import { hostOptions } from "@src/enviroment";
 import {
+	datePeriodParser,
 	limitParser,
 	offsetParser,
 	serialIdParser,
@@ -54,6 +55,7 @@ const openapiDocument = createDocument({
 		schemas: {
 			expenseRequest: expenseRequestParser,
 			expense: expensesSelectSchema,
+			period: datePeriodParser,
 		},
 		parameters: {
 			id: serialIdParser.openapi({ param: { in: "path", name: "id" } }),

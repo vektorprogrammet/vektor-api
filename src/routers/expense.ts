@@ -10,6 +10,7 @@ import {
 } from "@src/db-access/expenses";
 import { clientError } from "@src/error/httpErrors";
 import {
+	toDatePeriodParser,
 	toListQueryParser,
 	toSerialIdParser,
 } from "@src/request-handling/common";
@@ -168,7 +169,11 @@ expensesRouter.get("/", async (req, res, next) => {
  *       schema:
  */
 expensesRouter.get("/money-amount/unprocessed/", async (req, res, next) => {
-	const databaseResult = await getSumUnprocessed();
+	const bodyParameterResult = toDatePeriodParser.safeParse(req.body);
+	if (!bodyParameterResult.success) {
+		return next(clientError(400, "", bodyParameterResult.error));
+	}
+	const databaseResult = await getSumUnprocessed(bodyParameterResult.data);
 	if (!databaseResult.success) {
 		return next(clientError(400, "Database error", databaseResult.error));
 	}
@@ -191,7 +196,11 @@ expensesRouter.get("/money-amount/unprocessed/", async (req, res, next) => {
  *       schema:
  */
 expensesRouter.get("/money-amount/accepted/", async (req, res, next) => {
-	const databaseResult = await getSumAccepted();
+	const bodyParameterResult = toDatePeriodParser.safeParse(req.body);
+	if (!bodyParameterResult.success) {
+		return next(clientError(400, "", bodyParameterResult.error));
+	}
+	const databaseResult = await getSumAccepted(bodyParameterResult.data);
 	if (!databaseResult.success) {
 		return next(clientError(400, "Database error", databaseResult.error));
 	}
@@ -214,7 +223,11 @@ expensesRouter.get("/money-amount/accepted/", async (req, res, next) => {
  *       schema:
  */
 expensesRouter.get("/money-amount/rejected/", async (req, res, next) => {
-	const databaseResult = await getSumRejected();
+	const bodyParameterResult = toDatePeriodParser.safeParse(req.body);
+	if (!bodyParameterResult.success) {
+		return next(clientError(400, "", bodyParameterResult.error));
+	}
+	const databaseResult = await getSumRejected(bodyParameterResult.data);
 	if (!databaseResult.success) {
 		return next(clientError(400, "Database error", databaseResult.error));
 	}
@@ -237,7 +250,13 @@ expensesRouter.get("/money-amount/rejected/", async (req, res, next) => {
  *       schema:
  */
 expensesRouter.get("/payback-time/average/", async (req, res, next) => {
-	const databaseResult = await getAveragePaybackTime();
+	const bodyParameterResult = toDatePeriodParser.safeParse(req.body);
+	if (!bodyParameterResult.success) {
+		return next(
+			clientError(400, "Body parse error", bodyParameterResult.error),
+		);
+	}
+	const databaseResult = await getAveragePaybackTime(bodyParameterResult.data);
 	if (!databaseResult.success) {
 		return next(clientError(400, "Database error", databaseResult.error));
 	}

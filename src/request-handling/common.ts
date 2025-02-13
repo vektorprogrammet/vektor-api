@@ -49,3 +49,21 @@ export const toSerialIdParser = z
 	.union([z.number(), z.string()])
 	.pipe(z.coerce.number())
 	.pipe(serialIdParser);
+
+export const dateParser = z.date();
+export const toDateParser = z
+	.union([z.string().date(), z.date()])
+	.pipe(z.coerce.date())
+	.pipe(dateParser);
+
+export const datePeriodParser = z.object({
+	startDate: dateParser,
+	endDate: dateParser,
+});
+
+export const toDatePeriodParser = z.object({
+	startDate: toDateParser,
+	endDate: toDateParser,
+});
+
+export type datePeriod = z.infer<typeof datePeriodParser>;
