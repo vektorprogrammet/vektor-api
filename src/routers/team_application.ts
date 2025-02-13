@@ -3,7 +3,7 @@ import {
 	selectTeamApplicationsByTeamId,
 } from "@src/db-access/team_applications";
 import { clientError } from "@src/error/httpErrors";
-import { idValidator, queryValidator } from "@src/request-handling/common";
+import { listQueryParser, serialIdParser } from "@src/request-handling/common";
 import { Router, urlencoded } from "express";
 
 export const teamApplicationRouter = Router();
@@ -11,7 +11,7 @@ export const teamApplicationRouter = Router();
 teamApplicationRouter.use(urlencoded({ extended: true }));
 
 teamApplicationRouter.get("/", async (req, res, next) => {
-	const queryParametersResult = queryValidator.safeParse(req.query);
+	const queryParametersResult = listQueryParser.safeParse(req.query);
 	if (!queryParametersResult.success) {
 		return next(clientError(400, "", queryParametersResult.error));
 	}
@@ -24,11 +24,11 @@ teamApplicationRouter.get("/", async (req, res, next) => {
 });
 
 teamApplicationRouter.get("/:teamID/", async (req, res, next) => {
-	const teamIdResult = idValidator.safeParse(req.params.teamID);
+	const teamIdResult = serialIdParser.safeParse(req.params.teamID);
 	if (!teamIdResult.success) {
 		return next(clientError(400, "", teamIdResult.error));
 	}
-	const queryParametersResult = queryValidator.safeParse(req.query);
+	const queryParametersResult = listQueryParser.safeParse(req.query);
 	if (!queryParametersResult.success) {
 		return next(clientError(400, "", queryParametersResult.error));
 	}
