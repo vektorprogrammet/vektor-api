@@ -1,4 +1,8 @@
 import {
+	getAveragePaybackTime,
+	getSumAccepted,
+	getSumRejected,
+	getSumUnprocessed,
 	insertExpenses,
 	paybackExpenses,
 	selectExpenses,
@@ -142,6 +146,98 @@ expensesRouter.get("/", async (req, res, next) => {
 		return next(clientError(400, "", queryParametersResult.error));
 	}
 	const databaseResult = await selectExpenses(queryParametersResult.data);
+	if (!databaseResult.success) {
+		return next(clientError(400, "Database error", databaseResult.error));
+	}
+	res.json(databaseResult.data);
+});
+
+/**
+ * @openapi
+ * /expenses/money-amount/unprocessed/:
+ *  get:
+ *   tags: [expenses]
+ *   summary: Get total money amount of unprocessed expences
+ *   description: Get total money amount of unprocessed expences
+ *   parameters:
+ *   responses:
+ *    200:
+ *     description: Successfull response
+ *     content:
+ *      application/json:
+ *       schema:
+ */
+expensesRouter.get("/money-amount/unprocessed/", async (req, res, next) => {
+	const databaseResult = await getSumUnprocessed();
+	if (!databaseResult.success) {
+		return next(clientError(400, "Database error", databaseResult.error));
+	}
+	res.json(databaseResult.data);
+});
+
+/**
+ * @openapi
+ * /expenses/money-amount/accepted/:
+ *  get:
+ *   tags: [expenses]
+ *   summary: Get total money amount of accepted expences
+ *   description: Get total money amount of accepted expences
+ *   parameters:
+ *   responses:
+ *    200:
+ *     description: Successfull response
+ *     content:
+ *      application/json:
+ *       schema:
+ */
+expensesRouter.get("/money-amount/accepted/", async (req, res, next) => {
+	const databaseResult = await getSumAccepted();
+	if (!databaseResult.success) {
+		return next(clientError(400, "Database error", databaseResult.error));
+	}
+	res.json(databaseResult.data);
+});
+
+/**
+ * @openapi
+ * /expenses/money-amount/rejected/:
+ *  get:
+ *   tags: [expenses]
+ *   summary: Get total money amount of rejected expences
+ *   description: Get total money amount of rejected expences
+ *   parameters:
+ *   responses:
+ *    200:
+ *     description: Successfull response
+ *     content:
+ *      application/json:
+ *       schema:
+ */
+expensesRouter.get("/money-amount/rejected/", async (req, res, next) => {
+	const databaseResult = await getSumRejected();
+	if (!databaseResult.success) {
+		return next(clientError(400, "Database error", databaseResult.error));
+	}
+	res.json(databaseResult.data);
+});
+
+/**
+ * @openapi
+ * /expenses/payback-time/average/:
+ *  get:
+ *   tags: [expenses]
+ *   summary: Get average time for expences to get handled
+ *   description: Get average time for expences to get paid handled
+ *   parameters:
+ *   responses:
+ *    200:
+ *     description: Successfull response
+ *     content:
+ *      application/json:
+ *       schema:
+ */
+expensesRouter.get("/payback-time/average/", async (req, res, next) => {
+	const databaseResult = await getAveragePaybackTime();
 	if (!databaseResult.success) {
 		return next(clientError(400, "Database error", databaseResult.error));
 	}

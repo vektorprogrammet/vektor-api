@@ -10,7 +10,18 @@ import {
 import type { QueryParameters } from "@src/request-handling/common";
 import type { NewExpense } from "@src/request-handling/expenses";
 import type { Expense, ExpenseKey } from "@src/response-handling/expenses";
-import { asc, desc, inArray } from "drizzle-orm";
+import {
+	and,
+	asc,
+	desc,
+	inArray,
+	isNotNull,
+	isNull,
+	not,
+	sum,
+	avg,
+} from "drizzle-orm";
+import { z } from "zod";
 
 export async function insertExpenses(
 	expenses: NewExpense[],
@@ -33,7 +44,7 @@ export async function paybackExpenses(
 		.transaction(async (tx) => {
 			const updateResult = await database
 				.update(expensesTable)
-				.set({ payBackDate: new Date() })
+				.set({ handlingDate: new Date() })
 				.where(inArray(expensesTable.id, expenseIds))
 				.returning();
 			if (updateResult.length !== expenseIds.length) {
@@ -83,6 +94,105 @@ export async function selectExpenses(
 					.orderBy(desc(expensesTable.submitDate));
 			}
 			return selectResult;
+		})
+		.then(handleDatabaseFullfillment, handleDatabaseRejection);
+}
+
+export async function getSumUnprocessed(): Promise<DatabaseResult<string>> {
+	return database
+		.transaction(async (tx) => {
+			const unprocessedExpences = await tx
+				.select({ value: sum(expensesTable.moneyAmount) })
+				.from(expensesTable)
+				.where(isNull(expensesTable.handlingDate));
+
+			if (unprocessedExpences.length != 1) {
+				throw ormError("Invalid money numbers from database.");
+			}
+
+			let sumOfValues = unprocessedExpences[0];
+
+			if (sumOfValues.value === null){
+				// An empty database made sumOfValues.value null
+				return "0";
+			}
+
+			return sumOfValues.value;
+		})
+		.then(handleDatabaseFullfillment, handleDatabaseRejection);
+}
+
+export async function getSumAccepted(): Promise<DatabaseResult<string>> {
+	return database
+		.transaction(async (tx) => {
+			const acceptedExpences = await tx
+				.select({ value: sum(expensesTable.moneyAmount) })
+				.from(expensesTable)
+				.where(and(expensesTable.isAccepted, isNotNull(expensesTable.handlingDate)));
+
+			if (acceptedExpences.length != 1) {
+				throw ormError("Invalid money numbers from database.");
+			}
+
+			let sumOfValues = acceptedExpences[0];
+
+			if (sumOfValues.value === null){
+				// An empty database made sumOfValues.value null
+				return "0";
+			}
+
+			return sumOfValues.value;
+		})
+		.then(handleDatabaseFullfillment, handleDatabaseRejection);
+}
+
+export async function getSumRejected(): Promise<DatabaseResult<string>> {
+	return database
+		.transaction(async (tx) => {
+			const rejectedExpences = await tx
+				.select({ value: sum(expensesTable.moneyAmount) })
+				.from(expensesTable)
+				.where(and(not(expensesTable.isAccepted), isNotNull(expensesTable.handlingDate)));
+
+			if (rejectedExpences.length != 1) {
+				throw ormError("Invalid money numbers from database.");
+			}
+
+			let sumOfValues = rejectedExpences[0];
+
+			if (sumOfValues.value === null){
+				// An empty database made sumOfValues.value null
+				return "0";
+			}
+
+			return sumOfValues.value;
+		})
+		.then(handleDatabaseFullfillment, handleDatabaseRejection);
+}
+
+export async function getAveragePaybackTime(): Promise<DatabaseResult<number>> {
+	return database
+		.transaction(async (tx) => {
+			const result = await tx
+				.select()
+				.from(expensesTable)
+				.where(isNotNull(expensesTable.handlingDate));
+
+			if (result.length === 0) {
+				return 0;
+			}
+
+			const totalMilliseconds = result.reduce((accumulator, currentValue) => {
+				// handlingDate have already checked not to be null
+				const handlingDate = currentValue.handlingDate as Date;
+
+				return (
+					accumulator +
+					(handlingDate.getTime() - currentValue.submitDate.getTime())
+				);
+			}, 0);
+
+			return totalMilliseconds / result.length;
 		})
 		.then(handleDatabaseFullfillment, handleDatabaseRejection);
 }
