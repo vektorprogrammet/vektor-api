@@ -1,6 +1,5 @@
 import { database } from "@db/setup/queryPostgres";
 import { expensesTable } from "@db/tables/expenses";
-import { usersTable } from "@db/tables/users";
 import {
 	type DatabaseResult,
 	handleDatabaseFullfillment,
@@ -19,9 +18,7 @@ import {
 	isNull,
 	not,
 	sum,
-	avg,
 } from "drizzle-orm";
-import { z } from "zod";
 
 export async function insertExpenses(
 	expenses: NewExpense[],
@@ -106,13 +103,13 @@ export async function getSumUnprocessed(): Promise<DatabaseResult<string>> {
 				.from(expensesTable)
 				.where(isNull(expensesTable.handlingDate));
 
-			if (unprocessedExpences.length != 1) {
+			if (unprocessedExpences.length !== 1) {
 				throw ormError("Invalid money numbers from database.");
 			}
 
-			let sumOfValues = unprocessedExpences[0];
+			const sumOfValues = unprocessedExpences[0];
 
-			if (sumOfValues.value === null){
+			if (sumOfValues.value === null) {
 				// An empty database made sumOfValues.value null
 				return "0";
 			}
@@ -128,15 +125,17 @@ export async function getSumAccepted(): Promise<DatabaseResult<string>> {
 			const acceptedExpences = await tx
 				.select({ value: sum(expensesTable.moneyAmount) })
 				.from(expensesTable)
-				.where(and(expensesTable.isAccepted, isNotNull(expensesTable.handlingDate)));
+				.where(
+					and(expensesTable.isAccepted, isNotNull(expensesTable.handlingDate)),
+				);
 
-			if (acceptedExpences.length != 1) {
+			if (acceptedExpences.length !== 1) {
 				throw ormError("Invalid money numbers from database.");
 			}
 
-			let sumOfValues = acceptedExpences[0];
+			const sumOfValues = acceptedExpences[0];
 
-			if (sumOfValues.value === null){
+			if (sumOfValues.value === null) {
 				// An empty database made sumOfValues.value null
 				return "0";
 			}
@@ -152,15 +151,20 @@ export async function getSumRejected(): Promise<DatabaseResult<string>> {
 			const rejectedExpences = await tx
 				.select({ value: sum(expensesTable.moneyAmount) })
 				.from(expensesTable)
-				.where(and(not(expensesTable.isAccepted), isNotNull(expensesTable.handlingDate)));
+				.where(
+					and(
+						not(expensesTable.isAccepted),
+						isNotNull(expensesTable.handlingDate),
+					),
+				);
 
-			if (rejectedExpences.length != 1) {
+			if (rejectedExpences.length !== 1) {
 				throw ormError("Invalid money numbers from database.");
 			}
 
-			let sumOfValues = rejectedExpences[0];
+			const sumOfValues = rejectedExpences[0];
 
-			if (sumOfValues.value === null){
+			if (sumOfValues.value === null) {
 				// An empty database made sumOfValues.value null
 				return "0";
 			}
