@@ -1,6 +1,6 @@
 import mainSchema from "@db/tables/schema";
 import { relations } from "drizzle-orm";
-import { integer, serial, text } from "drizzle-orm/pg-core";
+import { date, integer, serial, text } from "drizzle-orm/pg-core";
 
 import { teamsTable } from "@db/tables/team";
 import { fieldsOfStudyTable } from "./fieldsOfStudy";
@@ -19,6 +19,7 @@ export const teamApplicationsTable = mainSchema.table("teamApplications", {
 	yearOfStudy: integer("yearOfStudy").notNull(),
 	biography: text("biography").notNull(),
 	phonenumber: text("phonenumber").notNull(),
+	submitDate: date("submitDate", { mode: "date" }).defaultNow().notNull(),
 });
 
 export const teamApplicationsRelations = relations(
