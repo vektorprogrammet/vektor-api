@@ -20,7 +20,6 @@ import {
 	not,
 	sum,
 } from "drizzle-orm";
-import { boolean } from "drizzle-orm/mysql-core";
 
 export async function insertExpenses(
 	expenses: NewExpense[],
