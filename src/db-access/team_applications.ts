@@ -8,6 +8,7 @@ import {
 	ormError,
 } from "@src/error/ormError";
 import type { QueryParameters } from "@src/request-handling/common";
+import { NewTeamApplication } from "@src/request-handling/team_application";
 import type {
 	TeamApplication,
 	TeamKey,
@@ -43,3 +44,18 @@ export const selectTeamApplicationsByTeamId = async (
 		})
 		.then(handleDatabaseFullfillment, handleDatabaseRejection);
 };
+
+
+export async function insertTeamApplication(
+	teamApplication: NewTeamApplication[],
+): Promise<DatabaseResult<TeamApplication[]>> {
+	return database
+		.transaction(async (tx) => {
+			const insertResult = await tx
+				.insert(teamApplicationsTable)
+				.values(teamApplication)
+				.returning();
+			return insertResult;
+		})
+		.then(handleDatabaseFullfillment, handleDatabaseRejection);
+}
