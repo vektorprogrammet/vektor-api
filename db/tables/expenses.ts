@@ -22,7 +22,7 @@ export const expensesTable = mainSchema.table("expenses", {
 	purchaseDate: date("purchaseDate", { mode: "date" }).notNull(),
 	submitDate: date("submitDate", { mode: "date" }).defaultNow().notNull(),
 	isAccepted: boolean("isAccepted").default(true).notNull(),
-	handlingDate: date("payBackDate", { mode: "date" }),
+	handlingDate: date("handlingDate", { mode: "date" }),
 });
 
 export const expensesRelations = relations(expensesTable, ({ one }) => ({

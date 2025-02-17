@@ -20,6 +20,7 @@ import {
 	not,
 	sum,
 } from "drizzle-orm";
+import { boolean } from "drizzle-orm/mysql-core";
 
 export async function insertExpenses(
 	expenses: NewExpense[],
@@ -40,9 +41,53 @@ export async function paybackExpenses(
 ): Promise<DatabaseResult<Expense[]>> {
 	return database
 		.transaction(async (tx) => {
+			const handledExpenses = await tx
+				.select()
+				.from(expensesTable)
+				.where(
+					and(
+						isNotNull(expensesTable.handlingDate),
+						inArray(expensesTable.id, expenseIds),
+					),
+				);
+			if (handledExpenses.length !== 0) {
+				throw ormError("Couldn't pay back expense, already handled.");
+			}
+
 			const updateResult = await database
 				.update(expensesTable)
-				.set({ handlingDate: new Date() })
+				.set({ handlingDate: new Date(), isAccepted: true })
+				.where(inArray(expensesTable.id, expenseIds))
+				.returning();
+			if (updateResult.length !== expenseIds.length) {
+				throw ormError("Couldn't update, some id's didn't exist.");
+			}
+			return updateResult;
+		})
+		.then(handleDatabaseFullfillment, handleDatabaseRejection);
+}
+
+export async function rejectExpense(
+	expenseIds: ExpenseKey[],
+): Promise<DatabaseResult<Expense[]>> {
+	return database
+		.transaction(async (tx) => {
+			const handledExpenses = await tx
+				.select()
+				.from(expensesTable)
+				.where(
+					and(
+						isNotNull(expensesTable.handlingDate),
+						inArray(expensesTable.id, expenseIds),
+					),
+				);
+			if (handledExpenses.length !== 0) {
+				throw ormError("Couldn't reject expense, already handled.");
+			}
+
+			const updateResult = await database
+				.update(expensesTable)
+				.set({ handlingDate: new Date(), isAccepted: false })
 				.where(inArray(expensesTable.id, expenseIds))
 				.returning();
 			if (updateResult.length !== expenseIds.length) {

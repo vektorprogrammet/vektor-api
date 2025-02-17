@@ -5,6 +5,7 @@ import {
 	getSumUnprocessed,
 	insertExpenses,
 	paybackExpenses,
+	rejectExpense,
 	selectExpenses,
 	selectExpensesById,
 } from "@src/db-access/expenses";
@@ -91,6 +92,37 @@ expenseRouter.put("/:id/payback/", async (req, res, next) => {
 		return next(clientError(400, "Database error", databaseResult.error));
 	}
 	res.json(paybackRequest.data);
+});
+
+/**
+ * @openapi
+ * /expense/{id}/reject/:
+ *  put:
+ *   tags: [expenses]
+ *   summary: Reject expense with ID
+ *   description: Reject expense with ID
+ *   parameters:
+ *    - $ref: "#/components/parameters/id"
+ *   responses:
+ *    200:
+ *     description: Successfull response
+ *     content:
+ *      application/json:
+ *       schema:
+ *        $ref: "#/components/schemas/expense"
+ */
+expenseRouter.put("/:id/reject/", async (req, res, next) => {
+	const rejectRequest = toSerialIdParser.safeParse(req.params.id);
+	if (!rejectRequest.success) {
+		return next(
+			clientError(400, "Failed parsing rejectrequest", rejectRequest.error),
+		);
+	}
+	const databaseResult = await rejectExpense([rejectRequest.data]);
+	if (!databaseResult.success) {
+		return next(clientError(400, "Database error", databaseResult.error));
+	}
+	res.json(rejectRequest.data);
 });
 
 /**
