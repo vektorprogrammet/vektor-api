@@ -8,7 +8,7 @@ import {
 	ormError,
 } from "@src/error/ormError";
 import type { QueryParameters } from "@src/request-handling/common";
-import { NewTeamApplication } from "@src/request-handling/team_application";
+import type { NewTeamApplication } from "@src/request-handling/team_application";
 import type {
 	TeamApplication,
 	TeamKey,
@@ -44,7 +44,6 @@ export const selectTeamApplicationsByTeamId = async (
 		})
 		.then(handleDatabaseFullfillment, handleDatabaseRejection);
 };
-
 
 export async function insertTeamApplication(
 	teamApplication: NewTeamApplication[],

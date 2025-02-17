@@ -5,16 +5,16 @@ import { z } from "zod";
 import { serialIdParser } from "./common";
 
 export const teamApplicationParser = z.object({
-	teamId: serialIdParser
-		.describe("Id of team applied for"),
+	teamId: serialIdParser.describe("Id of team applied for"),
 	name: z.string().min(1).describe("Name of user applying for a team"),
 	email: z.string().email().describe("Email of user applying for a team"),
 	motivationText: z
 		.string()
 		.max(maxTextLength)
 		.describe("The motivation text of user applying for a team"),
-	fieldOfStudyId: serialIdParser
-		.describe("Studyfield of user applying for a team"),
+	fieldOfStudyId: serialIdParser.describe(
+		"Studyfield of user applying for a team",
+	),
 	yearOfStudy: z
 		.number()
 		.finite()

@@ -6,13 +6,11 @@ import {
 import { clientError } from "@src/error/httpErrors";
 import { listQueryParser, serialIdParser } from "@src/request-handling/common";
 import { teamApplicationToInsertParser } from "@src/request-handling/team_application";
-import { json, Router, urlencoded } from "express";
+import { Router, json, urlencoded } from "express";
 
 export const teamApplicationRouter = Router();
 
 teamApplicationRouter.use(json());
-
-
 
 teamApplicationRouter.get("/", async (req, res, next) => {
 	const queryParametersResult = listQueryParser.safeParse(req.query);
