@@ -8,6 +8,11 @@ import {
 	sortParser,
 } from "@src/request-handling/common";
 import { expenseRequestParser } from "@src/request-handling/expenses";
+import {
+	assistantUserRequestParser,
+	teamUserRequestParser,
+	userRequestParser,
+} from "@src/request-handling/users";
 import { expensesSelectSchema } from "@src/response-handling/expenses";
 import {
 	assistantUserSelectSchema,
@@ -51,7 +56,7 @@ const openapiDocument = createDocument({
 			description: "",
 		},
 		{
-			name: "expenses",
+			name: "users",
 			description: "",
 		},
 	],
@@ -63,6 +68,9 @@ const openapiDocument = createDocument({
 			user: userSelectSchema,
 			teamUser: teamUserSelectSchema,
 			assistantUser: assistantUserSelectSchema,
+			userRequest: userRequestParser,
+			teamUserRequest: teamUserRequestParser,
+			assistantUserRequest: assistantUserRequestParser,
 		},
 		parameters: {
 			id: serialIdParser.openapi({ param: { in: "path", name: "id" } }),
