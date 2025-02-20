@@ -16,11 +16,11 @@ import {
 	toSerialIdParser,
 } from "@src/request-handling/common";
 import { expenseRequestToInsertParser } from "@src/request-handling/expenses";
-import { Router, urlencoded } from "express";
+import { Router, json } from "express";
 
 export const expenseRouter = Router();
 export const expensesRouter = Router();
-expenseRouter.use(urlencoded({ extended: true }));
+expenseRouter.use(json());
 
 /**
  * @openapi
@@ -32,7 +32,7 @@ expenseRouter.use(urlencoded({ extended: true }));
  *   requestBody:
  *    required: true
  *    content:
- *     application/x-www-form-urlencoded:
+ *     json:
  *      schema:
  *       $ref: "#/components/schemas/expenseRequest"
  *   responses:
@@ -61,7 +61,7 @@ expenseRouter.post("/", async (req, res, next) => {
 	res.status(201).json(expenseRequest.data);
 });
 
-expensesRouter.use(urlencoded({ extended: true }));
+expensesRouter.use(json());
 
 /**
  * @openapi

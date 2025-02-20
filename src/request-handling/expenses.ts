@@ -21,7 +21,9 @@ export const expenseRequestToInsertParser = expenseRequestParser
 	.extend({
 		title: expenseRequestParser.shape.title.trim(),
 		description: expenseRequestParser.shape.description.trim(),
-		purchaseDate: expenseRequestParser.shape.purchaseDate.pipe(z.coerce.date()),
+		purchaseDate: expenseRequestParser.shape.purchaseDate.pipe(
+			z.coerce.date().max(new Date()),
+		),
 	})
 	.pipe(createInsertSchema(expensesTable))
 	.readonly();
