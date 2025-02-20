@@ -58,7 +58,7 @@ expenseRouter.post("/", async (req, res, next) => {
 		const error = clientError(400, "Database error", databaseResult.error);
 		return next(error);
 	}
-	res.status(201).json(expenseRequest.data);
+	res.status(201).json(databaseResult.data);
 });
 
 expensesRouter.use(urlencoded({ extended: true }));
