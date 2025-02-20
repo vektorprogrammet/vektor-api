@@ -1,9 +1,8 @@
 import { z } from "zod";
-import isIBAN from "validator/lib/isIBAN";
-import isCurrency from "validator/lib/isCurrency";
+import validator from "validator";
 
 export const currencyParser = z.string().refine((input) => {
-	return isCurrency(input, {
+	return validator.isCurrency(input, {
 		symbol: "kr",
 		require_symbol: false,
 		allow_space_after_symbol: true,
@@ -19,7 +18,7 @@ export const currencyParser = z.string().refine((input) => {
 }, "is not a valid NOK currency");
 
 export const accountNumberParser = z.string().refine((input) => {
-	return isIBAN(input, {
+	return validator.isIBAN(input, {
 		whitelist: ["NO"],
 	});
 }, "is not a valid norwegian account number");

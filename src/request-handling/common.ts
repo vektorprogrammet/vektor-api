@@ -56,14 +56,20 @@ export const toDateParser = z
 	.pipe(z.coerce.date())
 	.pipe(dateParser);
 
-export const datePeriodParser = z.object({
-	startDate: dateParser,
-	endDate: dateParser,
-});
+export const datePeriodParser = z
+	.object({
+		startDate: dateParser,
+		endDate: dateParser,
+	})
+	.refine((datePeriod) => {
+		return datePeriod.startDate.getTime() <= datePeriod.endDate.getTime();
+	}, "Invalid date period. StartDate must be before or equal to endDate.");
 
-export const toDatePeriodParser = z.object({
-	startDate: toDateParser,
-	endDate: toDateParser,
-});
+export const toDatePeriodParser = z
+	.object({
+		startDate: toDateParser,
+		endDate: toDateParser,
+	})
+	.pipe(datePeriodParser);
 
 export type datePeriod = z.infer<typeof datePeriodParser>;
