@@ -190,6 +190,12 @@ expensesRouter.get("/", async (req, res, next) => {
  * /expenses/money-amount/unprocessed/:
  *  get:
  *   tags: [expenses]
+ *   requestBody:
+ *    required: true
+ *    content:
+ *     json:
+ *      schema:
+ *       $ref: "#/components/schemas/datePeriod"
  *   summary: Get total money amount of unprocessed expences
  *   description: Get total money amount of unprocessed expences
  *   parameters:
@@ -217,6 +223,12 @@ expensesRouter.get("/money-amount/unprocessed/", async (req, res, next) => {
  * /expenses/money-amount/accepted/:
  *  get:
  *   tags: [expenses]
+ *   requestBody:
+ *    required: true
+ *    content:
+ *     json:
+ *      schema:
+ *       $ref: "#/components/schemas/datePeriod"
  *   summary: Get total money amount of accepted expences
  *   description: Get total money amount of accepted expences
  *   parameters:
@@ -244,6 +256,12 @@ expensesRouter.get("/money-amount/accepted/", async (req, res, next) => {
  * /expenses/money-amount/rejected/:
  *  get:
  *   tags: [expenses]
+ *   requestBody:
+ *    required: true
+ *    content:
+ *     json:
+ *      schema:
+ *       $ref: "#/components/schemas/datePeriod"
  *   summary: Get total money amount of rejected expences
  *   description: Get total money amount of rejected expences
  *   parameters:
@@ -271,6 +289,12 @@ expensesRouter.get("/money-amount/rejected/", async (req, res, next) => {
  * /expenses/payback-time/average/:
  *  get:
  *   tags: [expenses]
+ *   requestBody:
+ *    required: true
+ *    content:
+ *     json:
+ *      schema:
+ *       $ref: "#/components/schemas/datePeriod"
  *   summary: Get average time for expences to get handled
  *   description: Get average time for expences to get paid handled
  *   parameters:

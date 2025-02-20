@@ -55,7 +55,7 @@ const openapiDocument = createDocument({
 		schemas: {
 			expenseRequest: expenseRequestParser,
 			expense: expensesSelectSchema,
-			period: datePeriodParser,
+			datePeriod: datePeriodParser,
 		},
 		parameters: {
 			id: serialIdParser.openapi({ param: { in: "path", name: "id" } }),
