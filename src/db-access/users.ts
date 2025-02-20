@@ -12,6 +12,11 @@ import {
 } from "@src/error/ormError";
 import type { QueryParameters } from "@src/request-handling/common";
 import type {
+	NewAssistantUser,
+	NewTeamUser,
+	NewUser,
+} from "@src/request-handling/users";
+import type {
 	AssistantUser,
 	TeamUser,
 	User,
@@ -154,6 +159,61 @@ export async function selectAssistantUsers(
 				.offset(queryParameters.offset);
 
 			return users;
+		})
+		.then(handleDatabaseFullfillment, handleDatabaseRejection);
+}
+
+export async function insertUsers(
+	user: NewUser[],
+): Promise<DatabaseResult<User[]>> {
+	return database
+		.transaction(async (tx) => {
+			return await tx.insert(usersTable).values(user).returning();
+		})
+		.then(handleDatabaseFullfillment, handleDatabaseRejection);
+}
+
+export async function insertTeamUsers(
+	teamUser: NewTeamUser[],
+): Promise<DatabaseResult<TeamUser[]>> {
+	return database
+		.transaction(async (tx) => {
+			const newTeamUserTables = await tx
+				.insert(teamUsersTable)
+				.values(teamUser)
+				.returning();
+			const newTeamUserIds = newTeamUserTables.map((user) => user.id);
+			const newTeamUsersResult = await selectTeamUsersById(newTeamUserIds);
+			if (!newTeamUsersResult.success) {
+				throw ormError(
+					"Error when inserting team users",
+					newTeamUsersResult.error,
+				);
+			}
+			return newTeamUsersResult.data;
+		})
+		.then(handleDatabaseFullfillment, handleDatabaseRejection);
+}
+
+export async function insertAssistantUsers(
+	assistantUser: NewAssistantUser[],
+): Promise<DatabaseResult<NewAssistantUser[]>> {
+	return database
+		.transaction(async (tx) => {
+			const newAssistantUserTables = await tx
+				.insert(assistantUsersTable)
+				.values(assistantUser)
+				.returning();
+			const newAssistantUserIds = newAssistantUserTables.map((user) => user.id);
+			const newAssistantUsersResult =
+				await selectAssistantUsersById(newAssistantUserIds);
+			if (!newAssistantUsersResult.success) {
+				throw ormError(
+					"Error when inserting assistant users",
+					newAssistantUsersResult.error,
+				);
+			}
+			return newAssistantUsersResult.data;
 		})
 		.then(handleDatabaseFullfillment, handleDatabaseRejection);
 }

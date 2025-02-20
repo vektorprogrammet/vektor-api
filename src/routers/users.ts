@@ -1,4 +1,7 @@
 import {
+	insertAssistantUsers,
+	insertTeamUsers,
+	insertUsers,
 	selectAssistantUsers,
 	selectAssistantUsersById,
 	selectTeamUsers,
@@ -7,11 +10,22 @@ import {
 	selectUsersById,
 } from "@src/db-access/users";
 import { clientError } from "@src/error/httpErrors";
-import { serialIdParser, toListQueryParser, toSerialIdParser } from "@src/request-handling/common";
-import { Router } from "express";
+import {
+	toListQueryParser,
+	toSerialIdParser,
+} from "@src/request-handling/common";
+import {
+	assistantUserRequestToInsertParser,
+	teamUserRequestToInsertParser,
+	userRequestToInsertParser,
+} from "@src/request-handling/users";
+import { Router, json } from "express";
 
 export const userRouter = Router();
 export const usersRouter = Router();
+
+userRouter.use(json());
+usersRouter.use(json());
 
 /**
  * @openapi
@@ -181,12 +195,111 @@ usersRouter.get("/team", async (req, res, next) => {
  *       schema:
  *        $ref: "#/components/schemas/assistantUser"
  */
-usersRouter.get("/team", async (req, res, next) => {
+usersRouter.get("/assistant", async (req, res, next) => {
 	const queryParameterResult = toListQueryParser.safeParse(req.query);
 	if (!queryParameterResult.success) {
 		return next(clientError(400, "", queryParameterResult.error));
 	}
 	const databaseResult = await selectAssistantUsers(queryParameterResult.data);
+	if (!databaseResult.success) {
+		return next(clientError(400, "Database error", databaseResult.error));
+	}
+	res.json(databaseResult.data);
+});
+
+/**
+ * @openapi
+ * /user/:
+ *  post:
+ *   tags: [users]
+ *   summary: Add new user
+ *   description: Add new user
+ *   requestBody:
+ *    required: true
+ *    content:
+ *     application/json:
+ *      schema:
+ *       $ref: "#/components/schemas/userRequest"
+ *   responses:
+ *    200:
+ *     description: Successfull response
+ *     content:
+ *      application/json:
+ *       schema:
+ *        $ref: "#/components/schemas/user"
+ */
+userRouter.post("/", async (req, res, next) => {
+	const newUserResult = userRequestToInsertParser.safeParse(req.body);
+	if (!newUserResult.success) {
+		return next(clientError(400, "", newUserResult.error));
+	}
+	const databaseResult = await insertUsers([newUserResult.data]);
+	if (!databaseResult.success) {
+		return next(clientError(400, "Database error", databaseResult.error));
+	}
+	res.json(databaseResult.data);
+});
+
+/**
+ * @openapi
+ * /user/team:
+ *  post:
+ *   tags: [users]
+ *   summary: Add new team user, based on an existing user
+ *   description: Add new team user, based on an existing user
+ *   requestBody:
+ *    required: true
+ *    content:
+ *     application/json:
+ *      schema:
+ *       $ref: "#/components/schemas/teamUserRequest"
+ *   responses:
+ *    200:
+ *     description: Successfull response
+ *     content:
+ *      application/json:
+ *       schema:
+ *        $ref: "#/components/schemas/teamUser"
+ */
+userRouter.post("/team", async (req, res, next) => {
+	const newUserResult = teamUserRequestToInsertParser.safeParse(req.body);
+	if (!newUserResult.success) {
+		return next(clientError(400, "", newUserResult.error));
+	}
+	const databaseResult = await insertTeamUsers([newUserResult.data]);
+	if (!databaseResult.success) {
+		return next(clientError(400, "Database error", databaseResult.error));
+	}
+	res.json(databaseResult.data);
+});
+
+/**
+ * @openapi
+ * /user/assistant:
+ *  post:
+ *   tags: [users]
+ *   summary: Add new assistant user, based on an existing user
+ *   description: Add new assistant user, based on an existing user
+ *   requestBody:
+ *    required: true
+ *    content:
+ *     application/json:
+ *      schema:
+ *       $ref: "#/components/schemas/assistantUserRequest"
+ *   responses:
+ *    200:
+ *     description: Successfull response
+ *     content:
+ *      application/json:
+ *       schema:
+ *        $ref: "#/components/schemas/assistantUser"
+ */
+userRouter.post("/assistant", async (req, res, next) => {
+	const newUserResult = assistantUserRequestToInsertParser.safeParse(req.body);
+	if (!newUserResult.success) {
+		return next(clientError(400, "", newUserResult.error));
+	}
+	const databaseResult = await insertAssistantUsers([newUserResult.data]);
 	if (!databaseResult.success) {
 		return next(clientError(400, "Database error", databaseResult.error));
 	}
