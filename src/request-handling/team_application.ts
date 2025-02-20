@@ -21,6 +21,7 @@ export const teamApplicationParser = z.object({
 		.safe()
 		.positive()
 		.int()
+		.max(7)
 		.describe("The year of study the user applying for a team is in"),
 	biography: z
 		.string()
