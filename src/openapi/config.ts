@@ -1,4 +1,5 @@
 import "zod-openapi/extend";
+import { teamUsersTable } from "@db/tables/users";
 import { hostOptions } from "@src/enviroment";
 import {
 	limitParser,
@@ -8,6 +9,11 @@ import {
 } from "@src/request-handling/common";
 import { expenseRequestParser } from "@src/request-handling/expenses";
 import { expensesSelectSchema } from "@src/response-handling/expenses";
+import {
+	assistantUserSelectSchema,
+	teamUserSelectSchema,
+	userSelectSchema,
+} from "@src/response-handling/users";
 import openapiFromJsdoc from "swagger-jsdoc";
 import { createDocument } from "zod-openapi";
 
@@ -54,6 +60,9 @@ const openapiDocument = createDocument({
 		schemas: {
 			expenseRequest: expenseRequestParser,
 			expense: expensesSelectSchema,
+			user: userSelectSchema,
+			teamUser: teamUserSelectSchema,
+			assistantUser: assistantUserSelectSchema,
 		},
 		parameters: {
 			id: serialIdParser.openapi({ param: { in: "path", name: "id" } }),
