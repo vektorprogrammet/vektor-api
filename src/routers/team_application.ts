@@ -6,7 +6,7 @@ import {
 import { clientError } from "@src/error/httpErrors";
 import { listQueryParser, serialIdParser } from "@src/request-handling/common";
 import { teamApplicationToInsertParser } from "@src/request-handling/team_application";
-import { Router, json, urlencoded } from "express";
+import { Router, json} from "express";
 
 export const teamApplicationRouter = Router();
 
@@ -45,19 +45,19 @@ teamApplicationRouter.get("/:teamID/", async (req, res, next) => {
 });
 
 teamApplicationRouter.post("/", async (req, res, next) => {
-	const teamApplicationReq = teamApplicationToInsertParser.safeParse(req.body);
-	if (!teamApplicationReq.success) {
+	const teamApplicationBodyResult = teamApplicationToInsertParser.safeParse(req.body);
+	if (!teamApplicationBodyResult.success) {
 		const error = clientError(
 			400,
 			"Failed parsing teamapplication request.",
-			teamApplicationReq.error,
+			teamApplicationBodyResult.error,
 		);
 		return next(error);
 	}
-	const databaseResult = await insertTeamApplication([teamApplicationReq.data]);
+	const databaseResult = await insertTeamApplication([teamApplicationBodyResult.data]);
 	if (!databaseResult.success) {
 		const error = clientError(400, "Database error", databaseResult.error);
 		return next(error);
 	}
-	res.status(201).json(teamApplicationReq.data);
+	res.status(201).json(databaseResult.data);
 });
