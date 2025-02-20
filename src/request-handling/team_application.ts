@@ -18,7 +18,7 @@ export const teamApplicationParser = z.object({
 		.positive()
 		.int()
 		.describe("Id of team applied for"),
-	name: z.string().min(1).describe("Name of user applying for a team"),
+	name: z.string().nonempty().describe("Name of user applying for a team"),
 	email: z.string().email().describe("Email of user applying for a team"),
 	motivationText: z
 		.string()
@@ -54,7 +54,6 @@ export const teamApplicationToInsertParser = teamApplicationParser
 		motivationText: teamApplicationParser.shape.motivationText.trim(),
 		biography: teamApplicationParser.shape.biography.trim(),
 	})
-	.pipe(createInsertSchema(teamApplicationsTable))
-	.readonly();
+	.pipe(createInsertSchema(teamApplicationsTable).strict().readonly());
 
 export type NewTeamApplication = z.infer<typeof teamApplicationToInsertParser>;

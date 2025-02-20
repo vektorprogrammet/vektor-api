@@ -6,8 +6,8 @@ import { teamApplicationsTable } from "./teamApplication";
 
 export const fieldsOfStudyTable = mainSchema.table("fieldsOfStudy", {
 	id: serial("id").primaryKey(),
-	studyCode: text("studyCode").notNull(),
-	name: text("name").notNull(),
+	studyCode: text("studyCode").notNull().unique(),
+	name: text("name").notNull().unique(),
 	departmentId: integer("departmentId")
 		.notNull()
 		.references(() => departmentsTable.id),

@@ -5,7 +5,7 @@ import { teamApplicationsTable } from "@db/tables/teamApplication";
 
 export const expensesSelectSchema = createSelectSchema(
 	teamApplicationsTable,
-).strict();
+).strict().readonly();
 
 export type TeamApplication = z.infer<typeof expensesSelectSchema>;
 export type TeamApplicationKey = TeamApplication["id"];

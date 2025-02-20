@@ -7,9 +7,9 @@ import { z } from "zod";
 export const expenseRequestParser = z
 	.object({
 		userId: serialIdParser.describe("Id of user requesting expense"),
-		title: z.string().min(1).describe("Title of expense"),
+		title: z.string().nonempty().describe("Title of expense"),
 		moneyAmount: currencyParser.describe("Amount of money used"),
-		description: z.string().min(1).describe("Description of expense"),
+		description: z.string().nonempty().describe("Description of expense"),
 		accountNumber: accountNumberParser.describe("Norwegian account number"),
 		purchaseDate: z
 			.string()
@@ -23,7 +23,7 @@ export const expenseRequestToInsertParser = expenseRequestParser
 		description: expenseRequestParser.shape.description.trim(),
 		purchaseDate: expenseRequestParser.shape.purchaseDate.pipe(z.coerce.date()),
 	})
-	.pipe(createInsertSchema(expensesTable))
-	.readonly();
+	.pipe(createInsertSchema(expensesTable).strict().readonly())
 
 export type NewExpense = z.infer<typeof expenseRequestToInsertParser>;
+type foo = NewExpense["handlingDate"];
