@@ -6,7 +6,7 @@ import {
 import { clientError } from "@src/error/httpErrors";
 import { listQueryParser, serialIdParser } from "@src/request-handling/common";
 import { teamApplicationToInsertParser } from "@src/request-handling/team_application";
-import { Router, json} from "express";
+import { Router, json } from "express";
 
 export const teamApplicationRouter = Router();
 
@@ -45,7 +45,9 @@ teamApplicationRouter.get("/:teamID/", async (req, res, next) => {
 });
 
 teamApplicationRouter.post("/", async (req, res, next) => {
-	const teamApplicationBodyResult = teamApplicationToInsertParser.safeParse(req.body);
+	const teamApplicationBodyResult = teamApplicationToInsertParser.safeParse(
+		req.body,
+	);
 	if (!teamApplicationBodyResult.success) {
 		const error = clientError(
 			400,
@@ -54,7 +56,9 @@ teamApplicationRouter.post("/", async (req, res, next) => {
 		);
 		return next(error);
 	}
-	const databaseResult = await insertTeamApplication([teamApplicationBodyResult.data]);
+	const databaseResult = await insertTeamApplication([
+		teamApplicationBodyResult.data,
+	]);
 	if (!databaseResult.success) {
 		const error = clientError(400, "Database error", databaseResult.error);
 		return next(error);
