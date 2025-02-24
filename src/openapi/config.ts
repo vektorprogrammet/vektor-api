@@ -22,6 +22,8 @@ import {
 } from "@src/response-handling/users";
 import openapiFromJsdoc from "swagger-jsdoc";
 import { createDocument } from "zod-openapi";
+import { teamApplicationSelectSchema } from "@src/response-handling/team_application";
+import { teamApplicationParser } from "@src/request-handling/team_application";
 
 const openapiDocument = createDocument({
 	openapi: "3.1.0",
@@ -74,6 +76,8 @@ const openapiDocument = createDocument({
 			teamUserRequest: teamUserRequestParser,
 			assistantUserRequest: assistantUserRequestParser,
 			datePeriod: datePeriodParser,
+			teamApplication: teamApplicationSelectSchema,
+			teamApplicationRequest: teamApplicationParser
 		},
 		parameters: {
 			id: serialIdParser.openapi({ param: { in: "path", name: "id" } }),
