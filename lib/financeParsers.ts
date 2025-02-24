@@ -17,7 +17,7 @@ export const currencyParser = z.string().refine((input) => {
 	});
 }, "is not a valid NOK currency");
 
-export const accountNumberParser = z.string().refine((input) => {
+export const norwegianIBANParser = z.string().refine((input) => {
 	return validator.isIBAN(input, {
 		whitelist: ["NO"],
 	});
