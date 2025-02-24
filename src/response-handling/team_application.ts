@@ -3,7 +3,9 @@ import type { z } from "zod";
 
 import { teamApplicationsTable } from "@db/tables/teamApplication";
 
-export const teamApplicationSelectSchema = createSelectSchema(teamApplicationsTable)
+export const teamApplicationSelectSchema = createSelectSchema(
+	teamApplicationsTable,
+)
 	.strict()
 	.readonly();
 
