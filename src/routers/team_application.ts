@@ -12,6 +12,25 @@ export const teamApplicationRouter = Router();
 
 teamApplicationRouter.use(json());
 
+/**
+ * @openapi
+ * /teamapplications:
+ *  get:
+ *   tags: [teamapplications]
+ *   summary: Get all teamapplications
+ *   description: Get all teamapplications
+ *   parameters:
+ *    - $ref: "#/components/parameters/offset"
+ *    - $ref: "#/components/parameters/limit"
+ *   responses:
+ *    201:
+ *     description: Successfull response
+ *     content:
+ *      application/json:
+ *       schema:
+ *        $ref: "#/components/schemas/teamApplication"
+ */
+
 teamApplicationRouter.get("/", async (req, res, next) => {
 	const queryParametersResult = listQueryParser.safeParse(req.query);
 	if (!queryParametersResult.success) {
@@ -25,6 +44,24 @@ teamApplicationRouter.get("/", async (req, res, next) => {
 	res.json(results.data);
 });
 
+/**
+ * @openapi
+ * /teamapplications/{teamId}/:
+ *  get:
+ *   tags: [teamapplications]
+ *   summary: Get teamapplication with teamid
+ *   description: Get teamapplication with teamid
+ *   parameters:
+ *    - $ref: "#/components/parameters/offset"
+ *    - $ref: "#/components/parameters/limit"
+ *   responses:
+ *    200:
+ *     description: Successfull response
+ *     content:
+ *      application/json:
+ *       schema:
+ *        $ref: "#/components/schemas/teamApplication"
+ */
 teamApplicationRouter.get("/:teamID/", async (req, res, next) => {
 	const teamIdResult = serialIdParser.safeParse(req.params.teamID);
 	if (!teamIdResult.success) {
@@ -44,6 +81,27 @@ teamApplicationRouter.get("/:teamID/", async (req, res, next) => {
 	res.json(databaseResult.data);
 });
 
+/**
+ * @openapi
+ * /teamapplications/:
+ *  post:
+ *   tags: [teamapplications]
+ *   summary: Add teamapplication
+ *   description: Add teamapplication
+ *   requestBody:
+ *    required: true
+ *    content:
+ *     json:
+ *      schema:
+ *       $ref: "#/components/schemas/teamApplicationRequest"
+ *   responses:
+ *    201:
+ *     description: Successfull response
+ *     content:
+ *      application/json:
+ *       schema:
+ *        $ref: "#/components/schemas/teamApplication"
+ */
 teamApplicationRouter.post("/", async (req, res, next) => {
 	const teamApplicationBodyResult = teamApplicationToInsertParser.safeParse(
 		req.body,
