@@ -22,3 +22,5 @@ export const accountNumberParser = z.string().refine((input) => {
 		whitelist: ["NO"],
 	});
 }, "is not a valid norwegian account number");
+
+export const norwegianBankAccountNumberParser = z.string().length(11).transform(string => "NO93" + string).pipe(norwegianIBANParser);

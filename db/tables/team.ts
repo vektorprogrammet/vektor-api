@@ -4,14 +4,15 @@ import { teamApplicationsTable } from "@db/tables/teamApplication";
 import { relations } from "drizzle-orm";
 import { boolean, date, serial, text } from "drizzle-orm/pg-core";
 import { integer } from "drizzle-orm/pg-core";
+import { teamUsersTable } from "./users";
 
 export const teamsTable = mainSchema.table("teams", {
 	id: serial("id").primaryKey(),
 	departmentId: integer("departmentId")
 		.notNull()
 		.references(() => departmentsTable.id),
-	name: text("name").notNull(),
-	email: text("email").notNull(),
+	name: text("name").notNull().unique(),
+	email: text("email").notNull().unique(),
 	description: text("description").notNull(),
 	shortDescription: text("shortDescription").notNull(),
 	acceptApplication: boolean("acceptApplication").notNull(),
@@ -24,5 +25,6 @@ export const teamRelations = relations(teamsTable, ({ one, many }) => ({
 		fields: [teamsTable.departmentId],
 		references: [departmentsTable.id],
 	}),
-	teamApplication: many(teamApplicationsTable),
+	teamApplications: many(teamApplicationsTable),
+	teamMembers: many(teamUsersTable),
 }));

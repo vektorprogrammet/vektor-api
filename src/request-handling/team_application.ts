@@ -39,7 +39,6 @@ export const teamApplicationToInsertParser = teamApplicationParser
 		motivationText: teamApplicationParser.shape.motivationText.trim(),
 		biography: teamApplicationParser.shape.biography.trim(),
 	})
-	.pipe(createInsertSchema(teamApplicationsTable))
-	.readonly();
+	.pipe(createInsertSchema(teamApplicationsTable).strict().readonly());
 
 export type NewTeamApplication = z.infer<typeof teamApplicationToInsertParser>;

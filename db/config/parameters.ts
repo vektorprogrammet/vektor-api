@@ -11,9 +11,9 @@ function getCaCert(): string | Buffer | Array<string | Buffer> | undefined {
 const parametersResult = z
 	.object({
 		DATABASE_HOST: hostingStringParser,
-		DATABASE_NAME: z.string().min(1),
-		DATABASE_USER: z.string().min(1),
-		DATABASE_PASSWORD: z.string().min(1),
+		DATABASE_NAME: z.string().nonempty(),
+		DATABASE_USER: z.string().nonempty(),
+		DATABASE_PASSWORD: z.string().nonempty(),
 		DATABASE_PORT: toPortParser,
 		DATABASE_SSL_OPTION: z
 			.union([
