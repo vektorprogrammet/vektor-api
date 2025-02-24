@@ -30,7 +30,9 @@ export const expenseRequestToInsertParser = expenseRequestParser
 		bankAccountNumber: expenseRequestParser.shape.bankAccountNumber.pipe(
 			norwegianBankAccountNumberParser,
 		),
-		purchaseDate: expenseRequestParser.shape.purchaseDate.pipe(z.coerce.date()),
+		purchaseDate: expenseRequestParser.shape.purchaseDate.pipe(
+			z.coerce.date().max(new Date()),
+		),
 	})
 	.pipe(createInsertSchema(expensesTable).strict().readonly());
 

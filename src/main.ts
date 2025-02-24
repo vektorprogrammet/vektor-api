@@ -9,7 +9,7 @@ import {
 import { logger } from "@src/middleware/loggingMiddleware";
 
 import { customCors, customHelmetSecurity } from "@src/security";
-import { expenseRouter, expensesRouter } from "./routers/expense";
+import { expenseRouter, expensesRouter } from "./routers/expenses";
 
 import { teamApplicationRouter } from "./routers/team_application";
 

@@ -2,6 +2,7 @@ import "zod-openapi/extend";
 import { teamUsersTable } from "@db/tables/users";
 import { hostOptions } from "@src/enviroment";
 import {
+	datePeriodParser,
 	limitParser,
 	offsetParser,
 	serialIdParser,
@@ -72,6 +73,7 @@ const openapiDocument = createDocument({
 			userRequest: userRequestParser,
 			teamUserRequest: teamUserRequestParser,
 			assistantUserRequest: assistantUserRequestParser,
+			datePeriod: datePeriodParser,
 		},
 		parameters: {
 			id: serialIdParser.openapi({ param: { in: "path", name: "id" } }),
