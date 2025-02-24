@@ -9,12 +9,14 @@ import {
 	sortParser,
 } from "@src/request-handling/common";
 import { expenseRequestParser } from "@src/request-handling/expenses";
+import { teamApplicationParser } from "@src/request-handling/team_application";
 import {
 	assistantUserRequestParser,
 	teamUserRequestParser,
 	userRequestParser,
 } from "@src/request-handling/users";
 import { expensesSelectSchema } from "@src/response-handling/expenses";
+import { teamApplicationSelectSchema } from "@src/response-handling/team_application";
 import {
 	assistantUserSelectSchema,
 	teamUserSelectSchema,
@@ -28,7 +30,8 @@ const openapiDocument = createDocument({
 	info: {
 		title: "Vektor API",
 		version: "0.0.1",
-		description: "No trailing slashes\nPlural path names\nPaths are described by nouns, not verbs\nHTTP Method works as described:\n- GET: Used to retrieve a representation of a resource, should return the resource\n- POST: Used to create new new resources and sub-resources, should provide the path to the resource in the location header of the response, and should return the added resource\n- PUT: Used to update existing resources, should return the modified resource- DELETE: Used to delete existing resources, should return the deleted resource"
+		description:
+			"No trailing slashes\nPlural path names\nPaths are described by nouns, not verbs\nHTTP Method works as described:\n- GET: Used to retrieve a representation of a resource, should return the resource\n- POST: Used to create new new resources and sub-resources, should provide the path to the resource in the location header of the response, and should return the added resource\n- PUT: Used to update existing resources, should return the modified resource- DELETE: Used to delete existing resources, should return the deleted resource",
 	},
 	servers: [
 		{
@@ -74,6 +77,8 @@ const openapiDocument = createDocument({
 			teamUserRequest: teamUserRequestParser,
 			assistantUserRequest: assistantUserRequestParser,
 			datePeriod: datePeriodParser,
+			teamApplication: teamApplicationSelectSchema,
+			teamApplicationRequest: teamApplicationParser,
 		},
 		parameters: {
 			id: serialIdParser.openapi({ param: { in: "path", name: "id" } }),
