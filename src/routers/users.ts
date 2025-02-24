@@ -21,15 +21,18 @@ import {
 } from "@src/request-handling/users";
 import { Router, json } from "express";
 
-export const userRouter = Router();
 export const usersRouter = Router();
+export const teamUsersRouter = Router();
+export const assistantUsersRouter = Router();
 
-userRouter.use(json());
+usersRouter.use("/team-members", teamUsersRouter);
+usersRouter.use("/assistants", assistantUsersRouter);
+
 usersRouter.use(json());
 
 /**
  * @openapi
- * /user/{id}/:
+ * /users/{id}:
  *  get:
  *   tags: [users]
  *   summary: Get user with id
@@ -44,7 +47,7 @@ usersRouter.use(json());
  *       schema:
  *        $ref: "#/components/schemas/user"
  */
-userRouter.get("/:userId/", async (req, res, next) => {
+usersRouter.get("/:userId", async (req, res, next) => {
 	const userIdResult = toSerialIdParser.safeParse(req.params.userId);
 	if (!userIdResult.success) {
 		return next(clientError(400, "", userIdResult.error));
@@ -58,7 +61,7 @@ userRouter.get("/:userId/", async (req, res, next) => {
 
 /**
  * @openapi
- * /user/{id}/team:
+ * /users/team-members/{id}:
  *  get:
  *   tags: [users]
  *   summary: Get teamuser with id
@@ -73,7 +76,7 @@ userRouter.get("/:userId/", async (req, res, next) => {
  *       schema:
  *        $ref: "#/components/schemas/teamUser"
  */
-userRouter.get("/:userId/team", async (req, res, next) => {
+teamUsersRouter.get("/:userId", async (req, res, next) => {
 	const userIdResult = toSerialIdParser.safeParse(req.params.userId);
 	if (!userIdResult.success) {
 		return next(clientError(400, "", userIdResult.error));
@@ -87,7 +90,7 @@ userRouter.get("/:userId/team", async (req, res, next) => {
 
 /**
  * @openapi
- * /user/{id}/assistant:
+ * /users/assistants/{id}/:
  *  get:
  *   tags: [users]
  *   summary: Get assistantuser with id
@@ -102,7 +105,7 @@ userRouter.get("/:userId/team", async (req, res, next) => {
  *       schema:
  *        $ref: "#/components/schemas/assistantUser"
  */
-userRouter.get("/:userId/assistant", async (req, res, next) => {
+assistantUsersRouter.get("/:userId", async (req, res, next) => {
 	const userIdResult = toSerialIdParser.safeParse(req.params.userId);
 	if (!userIdResult.success) {
 		return next(clientError(400, "", userIdResult.error));
@@ -116,7 +119,7 @@ userRouter.get("/:userId/assistant", async (req, res, next) => {
 
 /**
  * @openapi
- * /users/:
+ * /users:
  *  get:
  *   tags: [users]
  *   summary: Get users
@@ -133,7 +136,7 @@ userRouter.get("/:userId/assistant", async (req, res, next) => {
  *       schema:
  *        $ref: "#/components/schemas/user"
  */
-usersRouter.get("/", async (req, res, next) => {
+usersRouter.get("", async (req, res, next) => {
 	const queryParameterResult = toListQueryParser.safeParse(req.query);
 	if (!queryParameterResult.success) {
 		return next(clientError(400, "", queryParameterResult.error));
@@ -147,11 +150,11 @@ usersRouter.get("/", async (req, res, next) => {
 
 /**
  * @openapi
- * /users/team:
+ * /users/team-members:
  *  get:
  *   tags: [users]
- *   summary: Get teamusers
- *   description: Get teamusers
+ *   summary: Get team member users
+ *   description: Get team member users
  *   parameters:
  *    - $ref: "#/components/parameters/limit"
  *    - $ref: "#/components/parameters/offset"
@@ -164,7 +167,7 @@ usersRouter.get("/", async (req, res, next) => {
  *       schema:
  *        $ref: "#/components/schemas/teamUser"
  */
-usersRouter.get("/team", async (req, res, next) => {
+teamUsersRouter.get("", async (req, res, next) => {
 	const queryParameterResult = toListQueryParser.safeParse(req.query);
 	if (!queryParameterResult.success) {
 		return next(clientError(400, "", queryParameterResult.error));
@@ -178,7 +181,7 @@ usersRouter.get("/team", async (req, res, next) => {
 
 /**
  * @openapi
- * /users/assistant:
+ * /users/assistants:
  *  get:
  *   tags: [users]
  *   summary: Get assistantusers
@@ -195,7 +198,7 @@ usersRouter.get("/team", async (req, res, next) => {
  *       schema:
  *        $ref: "#/components/schemas/assistantUser"
  */
-usersRouter.get("/assistant", async (req, res, next) => {
+assistantUsersRouter.get("", async (req, res, next) => {
 	const queryParameterResult = toListQueryParser.safeParse(req.query);
 	if (!queryParameterResult.success) {
 		return next(clientError(400, "", queryParameterResult.error));
@@ -209,7 +212,7 @@ usersRouter.get("/assistant", async (req, res, next) => {
 
 /**
  * @openapi
- * /user/:
+ * /users:
  *  post:
  *   tags: [users]
  *   summary: Add new user
@@ -228,7 +231,7 @@ usersRouter.get("/assistant", async (req, res, next) => {
  *       schema:
  *        $ref: "#/components/schemas/user"
  */
-userRouter.post("/", async (req, res, next) => {
+usersRouter.post("", async (req, res, next) => {
 	const newUserResult = userRequestToInsertParser.safeParse(req.body);
 	if (!newUserResult.success) {
 		return next(clientError(400, "", newUserResult.error));
@@ -242,7 +245,7 @@ userRouter.post("/", async (req, res, next) => {
 
 /**
  * @openapi
- * /user/team:
+ * /users/team-members:
  *  post:
  *   tags: [users]
  *   summary: Add new team user, based on an existing user
@@ -261,7 +264,7 @@ userRouter.post("/", async (req, res, next) => {
  *       schema:
  *        $ref: "#/components/schemas/teamUser"
  */
-userRouter.post("/team", async (req, res, next) => {
+teamUsersRouter.post("", async (req, res, next) => {
 	const newUserResult = teamUserRequestToInsertParser.safeParse(req.body);
 	if (!newUserResult.success) {
 		return next(clientError(400, "", newUserResult.error));
@@ -275,7 +278,7 @@ userRouter.post("/team", async (req, res, next) => {
 
 /**
  * @openapi
- * /user/assistant:
+ * /users/assistants:
  *  post:
  *   tags: [users]
  *   summary: Add new assistant user, based on an existing user
@@ -294,7 +297,7 @@ userRouter.post("/team", async (req, res, next) => {
  *       schema:
  *        $ref: "#/components/schemas/assistantUser"
  */
-userRouter.post("/assistant", async (req, res, next) => {
+assistantUsersRouter.post("/assistants", async (req, res, next) => {
 	const newUserResult = assistantUserRequestToInsertParser.safeParse(req.body);
 	if (!newUserResult.success) {
 		return next(clientError(400, "", newUserResult.error));
