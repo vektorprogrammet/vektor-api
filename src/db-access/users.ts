@@ -5,7 +5,7 @@ import {
 	usersTable,
 } from "@db/tables/users";
 import {
-	type DatabaseResult,
+	type ORMResult,
 	handleDatabaseFullfillment,
 	handleDatabaseRejection,
 	ormError,
@@ -26,7 +26,7 @@ import { eq, inArray } from "drizzle-orm";
 
 export async function selectUsersById(
 	userIds: UserKey[],
-): Promise<DatabaseResult<User[]>> {
+): Promise<ORMResult<User[]>> {
 	return database
 		.transaction(async (tx) => {
 			const users = await tx
@@ -43,7 +43,7 @@ export async function selectUsersById(
 
 export async function selectTeamUsersById(
 	userIds: UserKey[],
-): Promise<DatabaseResult<TeamUser[]>> {
+): Promise<ORMResult<TeamUser[]>> {
 	return database
 		.transaction(async (tx) => {
 			const users = await tx
@@ -71,7 +71,7 @@ export async function selectTeamUsersById(
 
 export async function selectAssistantUsersById(
 	userIds: UserKey[],
-): Promise<DatabaseResult<AssistantUser[]>> {
+): Promise<ORMResult<AssistantUser[]>> {
 	return database
 		.transaction(async (tx) => {
 			const users = await tx
@@ -97,7 +97,7 @@ export async function selectAssistantUsersById(
 
 export async function selectUsers(
 	queryParameters: QueryParameters,
-): Promise<DatabaseResult<User[]>> {
+): Promise<ORMResult<User[]>> {
 	return database
 		.transaction(async (tx) => {
 			const users = await tx
@@ -113,7 +113,7 @@ export async function selectUsers(
 
 export async function selectTeamUsers(
 	queryParameters: QueryParameters,
-): Promise<DatabaseResult<TeamUser[]>> {
+): Promise<ORMResult<TeamUser[]>> {
 	return database
 		.transaction(async (tx) => {
 			const users = await tx
@@ -140,7 +140,7 @@ export async function selectTeamUsers(
 
 export async function selectAssistantUsers(
 	queryParameters: QueryParameters,
-): Promise<DatabaseResult<AssistantUser[]>> {
+): Promise<ORMResult<AssistantUser[]>> {
 	return database
 		.transaction(async (tx) => {
 			const users = await tx
@@ -163,9 +163,7 @@ export async function selectAssistantUsers(
 		.then(handleDatabaseFullfillment, handleDatabaseRejection);
 }
 
-export async function insertUsers(
-	user: NewUser[],
-): Promise<DatabaseResult<User[]>> {
+export async function insertUsers(user: NewUser[]): Promise<ORMResult<User[]>> {
 	return database
 		.transaction(async (tx) => {
 			return await tx.insert(usersTable).values(user).returning();
@@ -175,7 +173,7 @@ export async function insertUsers(
 
 export async function insertTeamUsers(
 	teamUser: NewTeamUser[],
-): Promise<DatabaseResult<TeamUser[]>> {
+): Promise<ORMResult<TeamUser[]>> {
 	return database
 		.transaction(async (tx) => {
 			const newTeamUserTables = await tx
@@ -197,7 +195,7 @@ export async function insertTeamUsers(
 
 export async function insertAssistantUsers(
 	assistantUser: NewAssistantUser[],
-): Promise<DatabaseResult<NewAssistantUser[]>> {
+): Promise<ORMResult<NewAssistantUser[]>> {
 	return database
 		.transaction(async (tx) => {
 			const newAssistantUserTables = await tx

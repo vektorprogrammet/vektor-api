@@ -1,26 +1,22 @@
 import "dotenv/config";
 import { databaseConnectionParameters } from "@db/config/parameters";
-import { getPgErrorName, isPgError, isValidPgCode } from "@db/errors/pgErrors";
+import {
+	getDatabaseErrorPrivateMessage,
+	postgresErrorParser,
+} from "@db/errors/postgresError";
 import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg"; // It does not work to import { Client } from "pg"
 
 export const postgresClient = new pg.Client(databaseConnectionParameters);
 try {
 	await postgresClient.connect();
-} catch (connectionError) {
+} catch (error) {
 	console.error("Failed to connect to database.");
-	if (isPgError(connectionError) && isValidPgCode(connectionError.code)) {
-		console.error(
-			connectionError.severity,
-			":",
-			connectionError.code,
-			":",
-			getPgErrorName(connectionError.code),
-			":",
-			connectionError.message,
-		);
+	const errorResult = postgresErrorParser.safeParse(error);
+	if (errorResult.success) {
+		console.error(getDatabaseErrorPrivateMessage(errorResult.data));
 	} else {
-		console.error(connectionError);
+		console.error(error);
 	}
 	process.exit(1);
 }

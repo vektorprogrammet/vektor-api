@@ -23,9 +23,6 @@ dependencies:
   pg:
     specifier: ^8.13.0
     version: 8.13.3
-  pg-protocol:
-    specifier: ^1.7.0
-    version: 1.7.1
   swagger-jsdoc:
     specifier: ^6.2.8
     version: 6.2.8(openapi-types@12.1.3)

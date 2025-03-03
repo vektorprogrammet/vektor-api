@@ -30,7 +30,10 @@ class HTTPError extends Error {
 			if (isHTTPError(this.cause)) {
 				causeString += this.cause.getResponseBodyText();
 			} else if (isORMError(this.cause)) {
-				causeString += this.cause.getResponse();
+				causeString += this.cause.message;
+				if (this.cause.getPublicDatabaseMessage() !== undefined) {
+					causeString += `: ${this.cause.getPublicDatabaseMessage()}`;
+				}
 			} else if (isZodErrorLike(this.cause)) {
 				causeString += fromZodError(this.cause);
 			} else if (this.cause instanceof Error) {
