@@ -1,5 +1,5 @@
 import { database } from "@db/setup/queryPostgres";
-import { teamApplicationsTable } from "@db/tables/teamApplication";
+import { teamApplicationsTable } from "@db/tables/applications";
 import {
 	type ORMResult,
 	handleDatabaseFullfillment,

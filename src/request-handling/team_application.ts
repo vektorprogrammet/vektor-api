@@ -1,4 +1,4 @@
-import { teamApplicationsTable } from "@db/tables/teamApplication";
+import { teamApplicationsTable } from "@db/tables/applications";
 import { maxTextLength } from "@lib/globalVariables";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
