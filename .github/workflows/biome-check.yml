@@ -8,6 +8,7 @@ env:
   DATABASE_HOST: localhost
   DATABASE_PORT: 5432
   DATABASE_SSL_OPTION: false
+  DATABASE_NAME: vektor-database
   PORT: 8080
   HOSTING_URL: localhost
 
@@ -32,6 +33,9 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          - 5432:${{ env.DATABASE_PORT }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
