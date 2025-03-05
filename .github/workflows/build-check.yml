@@ -1,0 +1,74 @@
+name: Build check
+env:
+  NODE_VERSION: 21.7.3
+  PNPM_VERSION: 10.2.0
+  DATABASE_PASSWORD: pass123
+  DATABASE_USER: postgres
+  DATABASE_HOST: localhost
+  DATABASE_PORT: 5432
+  DATABASE_SSL_OPTION: false
+  DATABASE_NAME: vektor-database
+  PORT: 8080
+  HOSTING_URL: localhost
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    services:
+      database:
+        image: postgres:latest
+        env:
+          POSTGRES_PASSWORD: ${{ env.DATABASE_PASSWORD }}
+        # Wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "pnpm"
+      - name: Install pnpm
+        run: pnpm install
+      - name: Generate migration files
+        run: pnpm db:generate
+      - name: Migrate database
+        run: pnpm db:migrate
+      - name: Build
+        run: pnpm build
+      - name: Store build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build
+          path: build
+      - name: Start
+        run: pnpm start &
+
+          
+  biome-lint-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup Biome
+        uses: biomejs/setup-biome@v2
+        with:
+          version: ${{ env.BIOME_VERSION }}
+      - name: Run Biome
+        run: biome ci .
