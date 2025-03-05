@@ -14,7 +14,7 @@ const postgresClient = new pg.Client({
 try {
 	await postgresClient.connect();
 	const databaseListResponse = await postgresClient.query(
-		`SELECT datname FROM pg_catalog.pg_database WHERE datname = '${databaseConnectionParameters.database}';`,
+		`SELECT datname FROM pg_catalog.pg_database WHERE datname = "${databaseConnectionParameters.database}";`,
 	);
 
 	if (databaseListResponse.rowCount === 0) {
@@ -22,7 +22,7 @@ try {
 			`${databaseConnectionParameters.database} database not found, creating it`,
 		);
 		await postgresClient.query(
-			`CREATE DATABASE '${databaseConnectionParameters.database}';`,
+			`CREATE DATABASE "${databaseConnectionParameters.database}";`,
 		);
 		console.log(`Created database ${databaseConnectionParameters.database}`);
 	} else {
