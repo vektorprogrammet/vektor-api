@@ -38,6 +38,6 @@ jobs:
       - name: Setup Biome
         uses: biomejs/setup-biome@v2
         with:
-          version: ${{ BIOME_VERSION }}
+          version: ${{ env.BIOME_VERSION }}
       - name: Run Biome
         run: biome ci .
