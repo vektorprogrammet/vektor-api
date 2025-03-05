@@ -1,5 +1,5 @@
 import { teamApplicationsTable } from "@db/tables/teamApplication";
-import { maxTextLength } from "@lib/globalVariables";
+import { MAX_TEXT_LENGTH } from "@lib/globalVariables";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { serialIdParser } from "./common";
@@ -10,7 +10,7 @@ export const teamApplicationParser = z.object({
 	email: z.string().email().describe("Email of user applying for a team"),
 	motivationText: z
 		.string()
-		.max(maxTextLength)
+		.max(MAX_TEXT_LENGTH)
 		.describe("The motivation text of user applying for a team"),
 	fieldOfStudyId: serialIdParser.describe(
 		"Studyfield of user applying for a team",
@@ -25,7 +25,7 @@ export const teamApplicationParser = z.object({
 		.describe("The year of study the user applying for a team is in"),
 	biography: z
 		.string()
-		.max(maxTextLength)
+		.max(MAX_TEXT_LENGTH)
 		.describe("The biography of the user applying for a team"),
 	phonenumber: z
 		.string()
