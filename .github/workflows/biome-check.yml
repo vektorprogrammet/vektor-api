@@ -64,6 +64,8 @@ jobs:
           path: build
       - name: Start
         run: pnpm start & START_PID=$!
+      - name: Echo test
+        run: echo $START_PID
       - name: Stop
         run: kill $START_PID || true
 
