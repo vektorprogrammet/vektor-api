@@ -32,6 +32,9 @@ jobs:
         with:
           name: build
           path: build
+      - name: Start
+        run: pnpm start
+
   biome-lint-check:
     runs-on: ubuntu-latest
     steps:
