@@ -62,8 +62,8 @@ jobs:
         with:
           name: build
           path: build
-      - name: Start
-        run: pnpm start
+      - name: Start for 5 seconds
+        run: timeout 5 pnpm start
 
   biome-lint-check:
     runs-on: ubuntu-latest
