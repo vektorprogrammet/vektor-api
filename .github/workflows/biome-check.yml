@@ -23,19 +23,16 @@ jobs:
     runs-on: ubuntu-latest
     services:
       database:
-        # Docker Hub image
-        image: postgres
-        # Provide the password for postgres
+        image: postgres:latest
         env:
           POSTGRES_PASSWORD: ${{ env.DATABASE_PASSWORD }}
-        # Set health checks to wait until postgres has started
+        # Wait until postgres has started
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
         ports:
-          # Maps tcp port 5432 on service container to the host
           - 5432:5432
     steps:
       - name: Checkout code
@@ -63,12 +60,7 @@ jobs:
           name: build
           path: build
       - name: Start
-        run: pnpm start & START_PID=$!
-      - name: Echo test
-        run: echo $START_PID
-      - name: Stop
-        run: kill $START_PID || true
-
+        run: pnpm start &
 
           
   biome-lint-check:
