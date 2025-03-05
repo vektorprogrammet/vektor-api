@@ -59,3 +59,42 @@ jobs:
           path: build
       - name: Start
         run: pnpm start &
+  test:
+    runs-on: ubuntu-latest
+    services:
+      database:
+        image: postgres:latest
+        env:
+          POSTGRES_PASSWORD: ${{ env.DATABASE_PASSWORD }}
+        # Wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "pnpm"
+      - name: Install pnpm
+        run: pnpm install
+      - name: Generate migration files
+        run: pnpm db:generate
+      - name: Migrate database
+        run: pnpm db:migrate
+      - name: Build
+        run: pnpm build
+      - name: Test
+        run: pnpm test
+
+
