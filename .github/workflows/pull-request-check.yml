@@ -1,7 +1,8 @@
-name: Build check
+name: Pull request to main
 env:
   NODE_VERSION: 21.7.3
   PNPM_VERSION: 10.2.0
+  BIOME_VERSION: 1.9.3
   DATABASE_PASSWORD: pass123
   DATABASE_USER: postgres
   DATABASE_HOST: localhost
@@ -17,6 +18,17 @@ on:
   pull_request:
     branches: [main]
 jobs:
+  biome-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup Biome
+        uses: biomejs/setup-biome@v2
+        with:
+          version: ${{ env.BIOME_VERSION }}
+      - name: Run Biome
+        run: biome ci .
   build:
     runs-on: ubuntu-latest
     services:
