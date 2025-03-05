@@ -4,9 +4,15 @@ import {
 	getDatabaseErrorPrivateMessage,
 	postgresErrorParser,
 } from "@db/errors/postgresError";
-import { postgresClient } from "@db/setup/queryPostgres";
+import pg from "pg"; // It does not work to import { Client } from "pg"
+
+const postgresClient = new pg.Client({
+	...databaseConnectionParameters,
+	database: undefined,
+});
 
 try {
+	await postgresClient.connect();
 	const databaseListResponse = await postgresClient.query(
 		`SELECT datname FROM pg_catalog.pg_database WHERE datname = '${databaseConnectionParameters.database}';`,
 	);
