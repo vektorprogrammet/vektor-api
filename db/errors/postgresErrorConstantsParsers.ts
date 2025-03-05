@@ -1,28 +1,28 @@
 import { zodEnumFromObjKeys } from "@lib/lib";
 import { z } from "zod";
 import {
-	postgresErrorClassToTitleMap,
-	postgresErrorCodeToMessageMap,
-	postgresErrorSeverities,
-	postgresNoticeSeverities,
-	publicPostgresErrorClasses,
+	POSTGRES_ERROR_CLASS_TO_TITLE_MAP,
+	POSTGRES_ERROR_SEVERITIES,
+	POSTGRES_NOTICE_SEVERITIES,
+	PUBLIC_POSTGRES_ERROR_CLASSES,
+	POSTGRES_ERROR_CODE_TO_MESSAGE_MAP,
 } from "./postgresErrorConstants";
 
 export const postgresErrorCodeParser = zodEnumFromObjKeys(
-	postgresErrorCodeToMessageMap,
+	POSTGRES_ERROR_CODE_TO_MESSAGE_MAP,
 );
 
 export const publicPostgresErrorClassParser = zodEnumFromObjKeys(
-	postgresErrorClassToTitleMap,
-).extract(publicPostgresErrorClasses);
+	POSTGRES_ERROR_CLASS_TO_TITLE_MAP,
+).extract(PUBLIC_POSTGRES_ERROR_CLASSES);
 
-type PostgresErrorCode = keyof typeof postgresErrorCodeToMessageMap;
+type PostgresErrorCode = keyof typeof POSTGRES_ERROR_CODE_TO_MESSAGE_MAP;
 type PostgresErrorMessage =
-	(typeof postgresErrorCodeToMessageMap)[PostgresErrorCode];
+	(typeof POSTGRES_ERROR_CODE_TO_MESSAGE_MAP)[PostgresErrorCode];
 
-type PostgresErrorClass = keyof typeof postgresErrorClassToTitleMap;
+type PostgresErrorClass = keyof typeof POSTGRES_ERROR_CLASS_TO_TITLE_MAP;
 type PostgresErrorTitle =
-	(typeof postgresErrorClassToTitleMap)[PostgresErrorClass];
+	(typeof POSTGRES_ERROR_CLASS_TO_TITLE_MAP)[PostgresErrorClass];
 
 export function generatePostgresErrorCodeInfo(code: PostgresErrorCode): {
 	code: PostgresErrorCode;
@@ -34,12 +34,12 @@ export function generatePostgresErrorCodeInfo(code: PostgresErrorCode): {
 	const errorClass = code.substring(0, 2) as PostgresErrorClass;
 	return {
 		code,
-		message: postgresErrorCodeToMessageMap[code],
+		message: POSTGRES_ERROR_CODE_TO_MESSAGE_MAP[code],
 		class: errorClass,
-		title: postgresErrorClassToTitleMap[errorClass],
+		title: POSTGRES_ERROR_CLASS_TO_TITLE_MAP[errorClass],
 	};
 }
 
 export const postgresSeverityParser = z
-	.enum(postgresErrorSeverities)
-	.or(z.enum(postgresNoticeSeverities));
+	.enum(POSTGRES_ERROR_SEVERITIES)
+	.or(z.enum(POSTGRES_NOTICE_SEVERITIES));

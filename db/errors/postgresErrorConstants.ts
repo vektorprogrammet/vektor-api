@@ -1,8 +1,8 @@
-export const publicPostgresErrorClasses = ["22", "23"] as const;
+export const PUBLIC_POSTGRES_ERROR_CLASSES = ["22", "23"] as const;
 
 // from https://www.postgresql.org/docs/9.3/protocol-error-fields.html
-export const postgresErrorSeverities = ["ERROR", "FATAL", "PANIC"] as const;
-export const postgresNoticeSeverities = [
+export const POSTGRES_ERROR_SEVERITIES = ["ERROR", "FATAL", "PANIC"] as const;
+export const POSTGRES_NOTICE_SEVERITIES = [
 	"WARNING",
 	"NOTICE",
 	"DEBUG",
@@ -10,7 +10,7 @@ export const postgresNoticeSeverities = [
 ] as const;
 
 // from https://www.postgresql.org/docs/current/errcodes-appendix.html
-export const postgresErrorClassToTitleMap = {
+export const POSTGRES_ERROR_CLASS_TO_TITLE_MAP = {
 	"00": "Successful Completion",
 	"01": "Warning",
 	"02": "No Data",
@@ -55,7 +55,7 @@ export const postgresErrorClassToTitleMap = {
 	XX: "Internal Error",
 } as const;
 
-export const postgresErrorCodeToMessageMap = {
+export const POSTGRES_ERROR_CODE_TO_MESSAGE_MAP = {
 	"00000": "successful_completion",
 
 	"01000": "warning",

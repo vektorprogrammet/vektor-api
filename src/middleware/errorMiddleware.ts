@@ -5,7 +5,9 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
 	if (!isHTTPError(err)) {
 		return next(err);
 	}
-	res.status(err.getErrorCode()).send(err.getResponseBodyJSON());
+	res
+		.status(err.getResponseCode())
+		.json({ error: true, message: err.getResponseString() });
 };
 
 export const defaultErrorHandler: ErrorRequestHandler = (
@@ -14,8 +16,6 @@ export const defaultErrorHandler: ErrorRequestHandler = (
 	res,
 	next,
 ) => {
-	console.warn(
-		"WARNING! DEFAULT EXPRESS ERRORHANDLER IS USED. SOMETHING IS WRONG.",
-	);
-	res.status(500).send("Unknown error.");
+	console.warn("WARNING! DEFAULT EXPRESS ERRORHANDLER IS USED.");
+	res.status(500).json({error: true, message: "Unknown error."});
 };

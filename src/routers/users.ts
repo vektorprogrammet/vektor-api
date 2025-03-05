@@ -50,11 +50,17 @@ usersRouter.use(json());
 usersRouter.get("/:userId", async (req, res, next) => {
 	const userIdResult = toSerialIdParser.safeParse(req.params.userId);
 	if (!userIdResult.success) {
-		return next(clientError(400, "", userIdResult.error));
+		return next(clientError(400, "Invalid request format", userIdResult.error));
 	}
 	const databaseResult = await selectUsersById([userIdResult.data]);
 	if (!databaseResult.success) {
-		return next(clientError(400, "Database error", databaseResult.error));
+		return next(
+			clientError(
+				400,
+				"Failed to retrieve data from the database",
+				databaseResult.error,
+			),
+		);
 	}
 	res.json(databaseResult.data);
 });
@@ -79,11 +85,17 @@ usersRouter.get("/:userId", async (req, res, next) => {
 teamUsersRouter.get("/:userId", async (req, res, next) => {
 	const userIdResult = toSerialIdParser.safeParse(req.params.userId);
 	if (!userIdResult.success) {
-		return next(clientError(400, "", userIdResult.error));
+		return next(clientError(400, "Invalid request format", userIdResult.error));
 	}
 	const databaseResult = await selectTeamUsersById([userIdResult.data]);
 	if (!databaseResult.success) {
-		return next(clientError(400, "Database error", databaseResult.error));
+		return next(
+			clientError(
+				400,
+				"Failed to retrieve data from the database",
+				databaseResult.error,
+			),
+		);
 	}
 	res.json(databaseResult.data);
 });
@@ -108,11 +120,17 @@ teamUsersRouter.get("/:userId", async (req, res, next) => {
 assistantUsersRouter.get("/:userId", async (req, res, next) => {
 	const userIdResult = toSerialIdParser.safeParse(req.params.userId);
 	if (!userIdResult.success) {
-		return next(clientError(400, "", userIdResult.error));
+		return next(clientError(400, "Invalid request format", userIdResult.error));
 	}
 	const databaseResult = await selectAssistantUsersById([userIdResult.data]);
 	if (!databaseResult.success) {
-		return next(clientError(400, "Database error", databaseResult.error));
+		return next(
+			clientError(
+				400,
+				"Failed to retrieve data from the database",
+				databaseResult.error,
+			),
+		);
 	}
 	res.json(databaseResult.data);
 });
@@ -139,11 +157,19 @@ assistantUsersRouter.get("/:userId", async (req, res, next) => {
 usersRouter.get("", async (req, res, next) => {
 	const queryParameterResult = toListQueryParser.safeParse(req.query);
 	if (!queryParameterResult.success) {
-		return next(clientError(400, "", queryParameterResult.error));
+		return next(
+			clientError(400, "Invalid request format", queryParameterResult.error),
+		);
 	}
 	const databaseResult = await selectUsers(queryParameterResult.data);
 	if (!databaseResult.success) {
-		return next(clientError(400, "Database error", databaseResult.error));
+		return next(
+			clientError(
+				400,
+				"Failed to retrieve data from the database",
+				databaseResult.error,
+			),
+		);
 	}
 	res.json(databaseResult.data);
 });
@@ -170,11 +196,19 @@ usersRouter.get("", async (req, res, next) => {
 teamUsersRouter.get("", async (req, res, next) => {
 	const queryParameterResult = toListQueryParser.safeParse(req.query);
 	if (!queryParameterResult.success) {
-		return next(clientError(400, "", queryParameterResult.error));
+		return next(
+			clientError(400, "Invalid request format", queryParameterResult.error),
+		);
 	}
 	const databaseResult = await selectTeamUsers(queryParameterResult.data);
 	if (!databaseResult.success) {
-		return next(clientError(400, "Database error", databaseResult.error));
+		return next(
+			clientError(
+				400,
+				"Failed to retrieve data from the database",
+				databaseResult.error,
+			),
+		);
 	}
 	res.json(databaseResult.data);
 });
@@ -201,11 +235,19 @@ teamUsersRouter.get("", async (req, res, next) => {
 assistantUsersRouter.get("", async (req, res, next) => {
 	const queryParameterResult = toListQueryParser.safeParse(req.query);
 	if (!queryParameterResult.success) {
-		return next(clientError(400, "", queryParameterResult.error));
+		return next(
+			clientError(400, "Invalid request format", queryParameterResult.error),
+		);
 	}
 	const databaseResult = await selectAssistantUsers(queryParameterResult.data);
 	if (!databaseResult.success) {
-		return next(clientError(400, "Database error", databaseResult.error));
+		return next(
+			clientError(
+				400,
+				"Failed to retrieve data from the database",
+				databaseResult.error,
+			),
+		);
 	}
 	res.json(databaseResult.data);
 });
@@ -234,11 +276,19 @@ assistantUsersRouter.get("", async (req, res, next) => {
 usersRouter.post("", async (req, res, next) => {
 	const newUserResult = userRequestToInsertParser.safeParse(req.body);
 	if (!newUserResult.success) {
-		return next(clientError(400, "", newUserResult.error));
+		return next(
+			clientError(400, "Invalid request format", newUserResult.error),
+		);
 	}
 	const databaseResult = await insertUsers([newUserResult.data]);
 	if (!databaseResult.success) {
-		return next(clientError(400, "Database error", databaseResult.error));
+		return next(
+			clientError(
+				400,
+				"Failed to execute the database command",
+				databaseResult.error,
+			),
+		);
 	}
 	res.json(databaseResult.data);
 });
@@ -267,11 +317,19 @@ usersRouter.post("", async (req, res, next) => {
 teamUsersRouter.post("", async (req, res, next) => {
 	const newUserResult = teamUserRequestToInsertParser.safeParse(req.body);
 	if (!newUserResult.success) {
-		return next(clientError(400, "", newUserResult.error));
+		return next(
+			clientError(400, "Invalid request format", newUserResult.error),
+		);
 	}
 	const databaseResult = await insertTeamUsers([newUserResult.data]);
 	if (!databaseResult.success) {
-		return next(clientError(400, "Database error", databaseResult.error));
+		return next(
+			clientError(
+				400,
+				"Failed to execute the database command",
+				databaseResult.error,
+			),
+		);
 	}
 	res.json(databaseResult.data);
 });
@@ -300,11 +358,19 @@ teamUsersRouter.post("", async (req, res, next) => {
 assistantUsersRouter.post("/assistants", async (req, res, next) => {
 	const newUserResult = assistantUserRequestToInsertParser.safeParse(req.body);
 	if (!newUserResult.success) {
-		return next(clientError(400, "", newUserResult.error));
+		return next(
+			clientError(400, "Invalid request format", newUserResult.error),
+		);
 	}
 	const databaseResult = await insertAssistantUsers([newUserResult.data]);
 	if (!databaseResult.success) {
-		return next(clientError(400, "Database error", databaseResult.error));
+		return next(
+			clientError(
+				400,
+				"Failed to execute the database command",
+				databaseResult.error,
+			),
+		);
 	}
 	res.json(databaseResult.data);
 });
