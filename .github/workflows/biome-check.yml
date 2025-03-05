@@ -11,6 +11,7 @@ env:
   DATABASE_NAME: vektor-database
   PORT: 8080
   HOSTING_URL: localhost
+  LOG_DATABASE_CREDENTIALS_ON_STARTUP: true
 
 on:
   push:
