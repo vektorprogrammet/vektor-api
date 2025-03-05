@@ -1,124 +1,122 @@
-import { STATUS_CODES } from "node:http";
 import type { Result } from "@lib/types";
-import { isORMError } from "@src/error/ormError";
 import { fromZodError, isZodErrorLike } from "zod-validation-error";
+import type {
+	HttpClientErrorMessage,
+	HttpErrorMessage,
+	HttpServerErrorMessage,
+} from "./errorMessages";
+import {
+	type HttpClientErrorCode,
+	type HttpClientErrorCodeInfo,
+	type HttpErrorCode,
+	type HttpErrorCodeInfo,
+	type HttpServerErrorCode,
+	type HttpServerErrorCodeInfo,
+	getHttpClientErrorCodeInfo,
+	getHttpErrorCodeInfo,
+	getHttpServerErrorCodeInfo,
+} from "./httpCodesManipulators";
+import { isORMError } from "./ormError";
 
-class HTTPError extends Error {
-	private errorCode: number;
-	private displayCause: boolean;
-	constructor(message: string, httpErrorCode: number, displayCause: boolean) {
-		super(message);
-		if (!Object.keys(STATUS_CODES).includes(httpErrorCode.toString())) {
-			throw new Error(`${httpErrorCode} is not a http statuscode.`);
+class HttpError extends Error {
+	declare message: HttpErrorMessage;
+	httpCodeInfo: HttpErrorCodeInfo;
+	constructor(
+		message: HttpErrorMessage,
+		httpCode: HttpErrorCode,
+		options?: ErrorOptions,
+	) {
+		super(message, options);
+		this.message = message;
+		this.name = "HTTPError";
+		this.httpCodeInfo = getHttpErrorCodeInfo(httpCode);
+	}
+	getResponseCode(): HttpErrorCode {
+		return this.httpCodeInfo.code;
+	}
+	getResponseString(): string {
+		let response = `${this.httpCodeInfo.title}\n${this.httpCodeInfo.code}: ${this.httpCodeInfo.message}\n${this.message}`;
+		if (this.cause === undefined || !(this.cause instanceof Error)) {
+			return response;
 		}
 		if (
-			Math.floor(httpErrorCode / 100) !== 4 &&
-			Math.floor(httpErrorCode / 100) !== 5
+			isORMError(this.cause) &&
+			this.cause.getPublicDatabaseMessage() !== undefined
 		) {
-			throw new Error(`${httpErrorCode} is not a http errorcode.`);
+			response += `\n${this.cause.getPublicDatabaseMessage()}`;
+		} else if (isZodErrorLike(this.cause)) {
+			response += `\n${fromZodError(this.cause).message}`;
+		} else if (this.cause instanceof HttpError) {
+			response += `\n${this.cause.getResponseString()}`;
+		} else if (this.cause instanceof Error) {
+			response += `\n${this.message}`;
 		}
-		this.name = "HTTPError";
-		this.errorCode = httpErrorCode;
-		this.displayCause = displayCause;
-	}
-	private getHTTPErrorLabel(): string {
-		return STATUS_CODES[this.errorCode.toString()] as string;
-	}
-	private getCauseString() {
-		let causeString = "";
-		if (this.displayCause && this.cause instanceof Error) {
-			if (isHTTPError(this.cause)) {
-				causeString += this.cause.getResponseBodyText();
-			} else if (isORMError(this.cause)) {
-				causeString += this.cause.message;
-				if (this.cause.getPublicDatabaseMessage() !== undefined) {
-					causeString += `: ${this.cause.getPublicDatabaseMessage()}`;
-				}
-			} else if (isZodErrorLike(this.cause)) {
-				causeString += fromZodError(this.cause);
-			} else if (this.cause instanceof Error) {
-				causeString += this.cause.message;
-			}
-		}
-		return causeString;
-	}
-	getResponseBodyText() {
-		return `${this.errorCode.toString()} ${this.getHTTPErrorLabel()}: ${this.message}\n\t${this.getCauseString()}`;
-	}
-	getResponseBodyJSON() {
-		return {
-			error: true,
-			message: this.message,
-			cause: this.getCauseString(),
-		};
-	}
-	getErrorCode(): number {
-		return this.errorCode;
+		return response;
 	}
 }
 
-class ServerError extends HTTPError {
-	constructor(message: string, httpErrorCode = 500, displayCause = false) {
-		super(message, httpErrorCode, displayCause);
-		if (Math.floor(httpErrorCode / 100) !== 5) {
-			throw new Error(
-				`${httpErrorCode} is not a valid servererrorcode. Must start with 5.`,
-			);
-		}
-		this.name = "ServerError";
-	}
-}
-
-class ClientError extends HTTPError {
-	constructor(message: string, httpErrorCode = 400, displayCause = true) {
-		super(message, httpErrorCode, displayCause);
-		if (Math.floor(httpErrorCode / 100) !== 4) {
-			throw new Error(
-				`${httpErrorCode}is not a valid clienterrorcode. Must start with 4.`,
-			);
-		}
+class ClientError extends HttpError {
+	declare message: HttpClientErrorMessage;
+	declare httpCodeInfo: HttpClientErrorCodeInfo;
+	constructor(
+		message: HttpClientErrorMessage,
+		httpCode: HttpClientErrorCode = 400,
+		options?: ErrorOptions,
+	) {
+		super(message, httpCode, options);
+		this.message = message;
 		this.name = "ClientError";
+		this.httpCodeInfo = getHttpClientErrorCodeInfo(httpCode);
+	}
+}
+
+class ServerError extends HttpError {
+	declare message: HttpServerErrorMessage;
+	declare httpCodeInfo: HttpServerErrorCodeInfo;
+	constructor(
+		message: HttpServerErrorMessage,
+		httpCode: HttpServerErrorCode = 500,
+		options?: ErrorOptions,
+	) {
+		super(message, httpCode, options);
+		this.message = message;
+		this.name = "ServerError";
+		this.httpCodeInfo = getHttpServerErrorCodeInfo(httpCode);
 	}
 }
 
 export const clientError = (
-	// biome-ignore lint/style/useDefaultParameterLast: To have code as first parameter
-	httpStatusCode = 400,
-	message: string,
-	cause?: Error,
-	displayCause = true,
+	httpStatusCode: HttpClientErrorCode,
+	message: HttpClientErrorMessage,
+	cause?: unknown,
+	options?: ErrorOptions,
 ): ClientError => {
-	const error = new ClientError(message, httpStatusCode, displayCause);
-	if (cause !== undefined) {
-		error.cause = cause;
+	if (cause === undefined || cause === null) {
+		return new ClientError(message, httpStatusCode, options);
 	}
-	Error.captureStackTrace(error, clientError);
-	return error;
+	return new ClientError(message, httpStatusCode, { ...options, cause: cause });
 };
 
 export const serverError = (
-	// biome-ignore lint/style/useDefaultParameterLast: To have code as first parameter
-	httpStatusCode = 500,
-	message: string,
-	cause?: Error,
-	displayCause = false,
+	httpStatusCode: HttpServerErrorCode,
+	message: HttpServerErrorMessage,
+	cause?: unknown,
+	options?: ErrorOptions,
 ): ServerError => {
-	const error = new ServerError(message, httpStatusCode, displayCause);
-	if (cause !== undefined) {
-		error.cause = cause;
+	if (cause === undefined || cause === null) {
+		return new ServerError(message, httpStatusCode, options);
 	}
-	Error.captureStackTrace(error, serverError);
-	return error;
+	return new ServerError(message, httpStatusCode, { ...options, cause: cause });
 };
 
 export function isHTTPError(
 	x: unknown,
-): x is ServerError | ClientError | HTTPError {
+): x is ServerError | ClientError | HttpError {
 	return (
 		x instanceof ServerError ||
 		x instanceof ClientError ||
-		x instanceof HTTPError
+		x instanceof HttpError
 	);
 }
 
-export type HTTPResult<T> = Result<T, HTTPError>;
+type HTTPResult<T> = Result<T, HttpError>;
