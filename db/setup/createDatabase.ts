@@ -8,7 +8,7 @@ import pg from "pg"; // It does not work to import { Client } from "pg"
 
 const postgresClient = new pg.Client({
 	...databaseConnectionParameters,
-	database: undefined,
+	database: "postgres",
 });
 
 try {
