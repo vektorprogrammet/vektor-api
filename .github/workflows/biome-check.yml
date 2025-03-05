@@ -3,6 +3,14 @@ env:
   NODE_VERSION: 21.7.3
   PNPM_VERSION: 10.2.0
   BIOME_VERSION: 1.9.3
+  DATABASE_PASSWORD: pass123
+  DATABASE_USER: postgres
+  DATABASE_HOST: localhost
+  DATABASE_PORT: 5432
+  DATABASE_SSL_OPTION: false
+  PORT: 8080
+  HOSTING_URL: localhost
+
 on:
   push:
     branches: [main]
@@ -11,6 +19,18 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    postgres:
+      # Docker Hub image
+      image: postgres
+      # Provide the password for postgres
+      env:
+        POSTGRES_PASSWORD: ${{ env.DATABASE_PASSWORD }}
+      # Set health checks to wait until postgres has started
+      options: >-
+        --health-cmd pg_isready
+        --health-interval 10s
+        --health-timeout 5s
+        --health-retries 5
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -25,6 +45,10 @@ jobs:
           cache: "pnpm"
       - name: Install pnpm
         run: pnpm install
+      - name: Generate migration files
+        run: pnpm db:generate
+      - name: Migrate database
+        run: pnpm db:migrate
       - name: Build
         run: pnpm build
       - name: Store build artifact
