@@ -14,7 +14,7 @@ const postgresClient = new pg.Client({
 try {
 	await postgresClient.connect();
 	const databaseListResponse = await postgresClient.query(
-		`SELECT pg_catalog.pg_database.datname FROM pg_catalog.pg_database WHERE pg_catalog.pg_database.datname = "${databaseConnectionParameters.database}";`,
+		`SELECT pg_catalog.pg_database.datname FROM pg_catalog.pg_database WHERE pg_catalog.pg_database.datname = '${databaseConnectionParameters.database}';`,
 	);
 
 	if (databaseListResponse.rowCount === 0) {
