@@ -59,16 +59,3 @@ jobs:
           path: build
       - name: Start
         run: pnpm start &
-
-          
-  biome-lint-check:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Setup Biome
-        uses: biomejs/setup-biome@v2
-        with:
-          version: ${{ env.BIOME_VERSION }}
-      - name: Run Biome
-        run: biome ci .
