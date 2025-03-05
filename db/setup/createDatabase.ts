@@ -32,6 +32,7 @@ try {
 } catch (error) {
 	const errorResult = postgresErrorParser.safeParse(error);
 	if (errorResult.success) {
+		console.debug(error);
 		console.error(getDatabaseErrorPrivateMessage(errorResult.data));
 	} else {
 		console.error(error);
