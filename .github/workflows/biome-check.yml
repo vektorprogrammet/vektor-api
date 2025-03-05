@@ -64,8 +64,6 @@ jobs:
           path: build
       - name: Start
         run: pnpm start & START_PID=$!
-      - name: Wait for 5 seconds
-        run: sleep 5
       - name: Stop
         run: kill $START_PID || true
 
