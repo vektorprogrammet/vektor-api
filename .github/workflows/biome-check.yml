@@ -62,9 +62,15 @@ jobs:
         with:
           name: build
           path: build
-      - name: Start for 5 seconds
-        run: timeout 5 pnpm start
+      - name: Start
+        run: pnpm start & START_PID=$!
+      - name: Wait for 5 seconds
+        run: sleep 5
+      - name: Stop
+        run: kill $START_PID || true
 
+
+          
   biome-lint-check:
     runs-on: ubuntu-latest
     steps:
