@@ -1,7 +1,7 @@
 import { database } from "@db/setup/queryPostgres";
 import { expensesTable } from "@db/tables/expenses";
 import {
-	type ORMResult,
+	type OrmResult,
 	handleDatabaseFullfillment,
 	handleDatabaseRejection,
 	ormError,
@@ -23,7 +23,7 @@ import {
 
 export async function insertExpenses(
 	expenses: NewExpense[],
-): Promise<ORMResult<Expense[]>> {
+): Promise<OrmResult<Expense[]>> {
 	return database
 		.transaction(async (tx) => {
 			const insertResult = await tx
@@ -37,7 +37,7 @@ export async function insertExpenses(
 
 export async function paybackExpenses(
 	expenseIds: ExpenseKey[],
-): Promise<ORMResult<Expense[]>> {
+): Promise<OrmResult<Expense[]>> {
 	return database
 		.transaction(async (tx) => {
 			const handledExpenses = await tx
@@ -50,7 +50,7 @@ export async function paybackExpenses(
 					),
 				);
 			if (handledExpenses.length !== 0) {
-				throw ormError("Couldn't pay back expense, already handled.");
+				throw ormError("Already handled");
 			}
 
 			const updateResult = await database
@@ -59,7 +59,7 @@ export async function paybackExpenses(
 				.where(inArray(expensesTable.id, expenseIds))
 				.returning();
 			if (updateResult.length !== expenseIds.length) {
-				throw ormError("Couldn't update, some id's didn't exist.");
+				throw ormError("Couln't find all entries");
 			}
 			return updateResult;
 		})
@@ -68,7 +68,7 @@ export async function paybackExpenses(
 
 export async function rejectExpense(
 	expenseIds: ExpenseKey[],
-): Promise<ORMResult<Expense[]>> {
+): Promise<OrmResult<Expense[]>> {
 	return database
 		.transaction(async (tx) => {
 			const handledExpenses = await tx
@@ -81,7 +81,7 @@ export async function rejectExpense(
 					),
 				);
 			if (handledExpenses.length !== 0) {
-				throw ormError("Couldn't reject expense, already handled.");
+				throw ormError("Already handled");
 			}
 
 			const updateResult = await database
@@ -90,7 +90,7 @@ export async function rejectExpense(
 				.where(inArray(expensesTable.id, expenseIds))
 				.returning();
 			if (updateResult.length !== expenseIds.length) {
-				throw ormError("Couldn't update, some id's didn't exist.");
+				throw ormError("Couln't find all entries");
 			}
 			return updateResult;
 		})
@@ -99,7 +99,7 @@ export async function rejectExpense(
 
 export async function selectExpensesById(
 	expenseIds: ExpenseKey[],
-): Promise<ORMResult<Expense[]>> {
+): Promise<OrmResult<Expense[]>> {
 	return database
 		.transaction(async (tx) => {
 			const selectResult = await tx
@@ -107,7 +107,7 @@ export async function selectExpensesById(
 				.from(expensesTable)
 				.where(inArray(expensesTable.id, expenseIds));
 			if (selectResult.length !== expenseIds.length) {
-				throw ormError("Couldn't select expenses, id's didn't exist.");
+				throw ormError("Couln't find all entries");
 			}
 			return selectResult;
 		})
@@ -116,7 +116,7 @@ export async function selectExpensesById(
 
 export async function selectExpenses(
 	parameters: QueryParameters,
-): Promise<ORMResult<Expense[]>> {
+): Promise<OrmResult<Expense[]>> {
 	return database
 		.transaction(async (tx) => {
 			let selectResult: Promise<Expense[]>;
@@ -142,7 +142,7 @@ export async function selectExpenses(
 
 export async function getSumUnprocessed(
 	timePeriod: datePeriod,
-): Promise<ORMResult<string>> {
+): Promise<OrmResult<string>> {
 	return database
 		.transaction(async (tx) => {
 			const unprocessedExpences = await tx
@@ -160,7 +160,7 @@ export async function getSumUnprocessed(
 				);
 
 			if (unprocessedExpences.length !== 1) {
-				throw ormError("Invalid money numbers from database.");
+				throw ormError("Wrong database response format");
 			}
 
 			const sumOfValues = unprocessedExpences[0];
@@ -177,7 +177,7 @@ export async function getSumUnprocessed(
 
 export async function getSumAccepted(
 	timePeriod: datePeriod,
-): Promise<ORMResult<string>> {
+): Promise<OrmResult<string>> {
 	return database
 		.transaction(async (tx) => {
 			const acceptedExpences = await tx
@@ -196,7 +196,7 @@ export async function getSumAccepted(
 				);
 
 			if (acceptedExpences.length !== 1) {
-				throw ormError("Invalid money numbers from database.");
+				throw ormError("Wrong database response format");
 			}
 
 			const sumOfValues = acceptedExpences[0];
@@ -213,7 +213,7 @@ export async function getSumAccepted(
 
 export async function getSumRejected(
 	timePeriod: datePeriod,
-): Promise<ORMResult<string>> {
+): Promise<OrmResult<string>> {
 	return database
 		.transaction(async (tx) => {
 			const rejectedExpences = await tx
@@ -232,7 +232,7 @@ export async function getSumRejected(
 				);
 
 			if (rejectedExpences.length !== 1) {
-				throw ormError("Invalid money numbers from database.");
+				throw ormError("Wrong database response format");
 			}
 
 			const sumOfValues = rejectedExpences[0];
@@ -249,7 +249,7 @@ export async function getSumRejected(
 
 export async function getAveragePaybackTime(
 	timePeriod: datePeriod,
-): Promise<ORMResult<number>> {
+): Promise<OrmResult<number>> {
 	return database
 		.transaction(async (tx) => {
 			const result = await tx

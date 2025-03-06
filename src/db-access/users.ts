@@ -5,7 +5,7 @@ import {
 	usersTable,
 } from "@db/tables/users";
 import {
-	type ORMResult,
+	type OrmResult,
 	handleDatabaseFullfillment,
 	handleDatabaseRejection,
 	ormError,
@@ -26,7 +26,7 @@ import { eq, inArray } from "drizzle-orm";
 
 export async function selectUsersById(
 	userIds: UserKey[],
-): Promise<ORMResult<User[]>> {
+): Promise<OrmResult<User[]>> {
 	return database
 		.transaction(async (tx) => {
 			const users = await tx
@@ -34,7 +34,7 @@ export async function selectUsersById(
 				.from(usersTable)
 				.where(inArray(usersTable.id, userIds));
 			if (users.length !== userIds.length) {
-				throw ormError("Couln't select all users, some id's didn't exist.");
+				throw ormError("Couln't find all entries");
 			}
 			return users;
 		})
@@ -43,7 +43,7 @@ export async function selectUsersById(
 
 export async function selectTeamUsersById(
 	userIds: UserKey[],
-): Promise<ORMResult<TeamUser[]>> {
+): Promise<OrmResult<TeamUser[]>> {
 	return database
 		.transaction(async (tx) => {
 			const users = await tx
@@ -62,7 +62,7 @@ export async function selectTeamUsersById(
 				.where(inArray(assistantUsersTable.id, userIds))
 				.innerJoin(usersTable, eq(teamUsersTable.id, usersTable.id));
 			if (users.length !== userIds.length) {
-				throw ormError("Couln't select all users, some id's didn't exist.");
+				throw ormError("Couln't find all entries");
 			}
 			return users;
 		})
@@ -71,7 +71,7 @@ export async function selectTeamUsersById(
 
 export async function selectAssistantUsersById(
 	userIds: UserKey[],
-): Promise<ORMResult<AssistantUser[]>> {
+): Promise<OrmResult<AssistantUser[]>> {
 	return database
 		.transaction(async (tx) => {
 			const users = await tx
@@ -88,7 +88,7 @@ export async function selectAssistantUsersById(
 				.where(inArray(assistantUsersTable.id, userIds))
 				.innerJoin(usersTable, eq(assistantUsersTable.id, usersTable.id));
 			if (users.length !== userIds.length) {
-				throw ormError("Couln't select all users, some id's didn't exist.");
+				throw ormError("Couln't find all entries");
 			}
 			return users;
 		})
@@ -97,7 +97,7 @@ export async function selectAssistantUsersById(
 
 export async function selectUsers(
 	queryParameters: QueryParameters,
-): Promise<ORMResult<User[]>> {
+): Promise<OrmResult<User[]>> {
 	return database
 		.transaction(async (tx) => {
 			const users = await tx
@@ -113,7 +113,7 @@ export async function selectUsers(
 
 export async function selectTeamUsers(
 	queryParameters: QueryParameters,
-): Promise<ORMResult<TeamUser[]>> {
+): Promise<OrmResult<TeamUser[]>> {
 	return database
 		.transaction(async (tx) => {
 			const users = await tx
@@ -140,7 +140,7 @@ export async function selectTeamUsers(
 
 export async function selectAssistantUsers(
 	queryParameters: QueryParameters,
-): Promise<ORMResult<AssistantUser[]>> {
+): Promise<OrmResult<AssistantUser[]>> {
 	return database
 		.transaction(async (tx) => {
 			const users = await tx
@@ -163,7 +163,7 @@ export async function selectAssistantUsers(
 		.then(handleDatabaseFullfillment, handleDatabaseRejection);
 }
 
-export async function insertUsers(user: NewUser[]): Promise<ORMResult<User[]>> {
+export async function insertUsers(user: NewUser[]): Promise<OrmResult<User[]>> {
 	return database
 		.transaction(async (tx) => {
 			return await tx.insert(usersTable).values(user).returning();
@@ -173,7 +173,7 @@ export async function insertUsers(user: NewUser[]): Promise<ORMResult<User[]>> {
 
 export async function insertTeamUsers(
 	teamUser: NewTeamUser[],
-): Promise<ORMResult<TeamUser[]>> {
+): Promise<OrmResult<TeamUser[]>> {
 	return database
 		.transaction(async (tx) => {
 			const newTeamUserTables = await tx
@@ -184,7 +184,7 @@ export async function insertTeamUsers(
 			const newTeamUsersResult = await selectTeamUsersById(newTeamUserIds);
 			if (!newTeamUsersResult.success) {
 				throw ormError(
-					"Error when inserting team users",
+					"Failed to insert all entries",
 					newTeamUsersResult.error,
 				);
 			}
@@ -195,7 +195,7 @@ export async function insertTeamUsers(
 
 export async function insertAssistantUsers(
 	assistantUser: NewAssistantUser[],
-): Promise<ORMResult<NewAssistantUser[]>> {
+): Promise<OrmResult<NewAssistantUser[]>> {
 	return database
 		.transaction(async (tx) => {
 			const newAssistantUserTables = await tx
@@ -207,7 +207,7 @@ export async function insertAssistantUsers(
 				await selectAssistantUsersById(newAssistantUserIds);
 			if (!newAssistantUsersResult.success) {
 				throw ormError(
-					"Error when inserting assistant users",
+					"Failed to insert all entries",
 					newAssistantUsersResult.error,
 				);
 			}

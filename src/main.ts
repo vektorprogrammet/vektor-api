@@ -15,6 +15,7 @@ import { teamApplicationRouter } from "./routers/team_application";
 
 import { openapiSpecification } from "@src/openapi/config";
 import openapiExpressHandler from "swagger-ui-express";
+import { sponsorsRouter } from "./routers/sponsors";
 import { usersRouter } from "./routers/users";
 
 const app = express();
@@ -32,6 +33,8 @@ app.use("/", logger);
 
 app.use("/expense", expenseRouter);
 app.use("/expenses", expensesRouter);
+
+app.use("/sponsors", sponsorsRouter);
 
 app.use("/users", usersRouter);
 
