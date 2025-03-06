@@ -10,9 +10,9 @@ import { z } from "zod";
 export const expenseRequestParser = z
 	.object({
 		userId: serialIdParser.describe("Id of user requesting expense"),
-		title: z.string().nonempty().describe("Title of expense"),
+		title: z.string().min(1).describe("Title of expense"),
 		moneyAmount: currencyParser.describe("Amount of money used"),
-		description: z.string().nonempty().describe("Description of expense"),
+		description: z.string().min(1).describe("Description of expense"),
 		bankAccountNumber: z
 			.string()
 			.length(11)
@@ -37,4 +37,3 @@ export const expenseRequestToInsertParser = expenseRequestParser
 	.pipe(createInsertSchema(expensesTable).strict().readonly());
 
 export type NewExpense = z.infer<typeof expenseRequestToInsertParser>;
-type foo = NewExpense["handlingDate"];
