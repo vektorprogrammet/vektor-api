@@ -1,5 +1,3 @@
-import { zodEnumFromObjKeys } from "@/lib/lib";
-import { z } from "zod";
 import {
 	POSTGRES_ERROR_CLASS_TO_TITLE_MAP,
 	POSTGRES_ERROR_CODE_TO_MESSAGE_MAP,
@@ -7,6 +5,8 @@ import {
 	POSTGRES_NOTICE_SEVERITIES,
 	PUBLIC_POSTGRES_ERROR_CLASSES,
 } from "@/db/errors/postgres-error-constants";
+import { zodEnumFromObjKeys } from "@/lib/lib";
+import { z } from "zod";
 
 export const postgresErrorCodeParser = zodEnumFromObjKeys(
 	POSTGRES_ERROR_CODE_TO_MESSAGE_MAP,

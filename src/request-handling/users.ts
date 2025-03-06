@@ -4,9 +4,9 @@ import {
 	usersTable,
 } from "@/db/tables/users";
 import { norwegianBankAccountNumberParser } from "@/lib/finance-parsers";
+import { serialIdParser } from "@/src/request-handling/common";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
-import { serialIdParser } from "@/src/request-handling/common";
 
 export const userRequestParser = z
 	.object({

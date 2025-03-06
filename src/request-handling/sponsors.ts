@@ -1,7 +1,7 @@
 import { sponsorsTable } from "@/db/tables/sponsors";
+import { serialIdParser } from "@/src/request-handling/common";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
-import { serialIdParser } from "@/src/request-handling/common";
 
 export const sponsorRequestParser = z
 	.object({

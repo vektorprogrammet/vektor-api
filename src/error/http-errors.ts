@@ -1,4 +1,3 @@
-import { fromZodError, isZodErrorLike } from "zod-validation-error";
 import type {
 	HttpClientErrorMessage,
 	HttpErrorMessage,
@@ -16,6 +15,7 @@ import {
 	getHttpServerErrorCodeInfo,
 } from "@/src/error/http-codes-manipulators";
 import { isORMError } from "@/src/error/orm-error";
+import { fromZodError, isZodErrorLike } from "zod-validation-error";
 
 class HttpError extends Error {
 	declare message: HttpErrorMessage;

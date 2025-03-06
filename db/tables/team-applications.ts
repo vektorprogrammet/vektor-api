@@ -2,8 +2,8 @@ import { mainSchema } from "@/db/tables/schema";
 import { relations } from "drizzle-orm";
 import { date, integer, serial, text } from "drizzle-orm/pg-core";
 
-import { teamsTable } from "@/db/tables/teams";
 import { fieldsOfStudyTable } from "@/db/tables/fields-of-study";
+import { teamsTable } from "@/db/tables/teams";
 
 export const teamApplicationsTable = mainSchema.table("teamApplications", {
 	id: serial("id").primaryKey(),

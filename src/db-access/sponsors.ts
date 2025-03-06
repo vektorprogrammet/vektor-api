@@ -1,10 +1,10 @@
 import { database } from "@/db/setup/query-postgres";
 import { sponsorsTable } from "@/db/tables/sponsors";
+import { newDatabaseTransaction } from "@/src/db-access/common";
 import { type OrmResult, ormError } from "@/src/error/orm-error";
 import type { NewSponsor } from "@/src/request-handling/sponsors";
 import type { Sponsor, SponsorKey } from "@/src/response-handling/sponsors";
 import { inArray } from "drizzle-orm";
-import { newDatabaseTransaction } from "@/src/db-access/common";
 
 export async function insertSponsors(
 	sponsors: NewSponsor[],

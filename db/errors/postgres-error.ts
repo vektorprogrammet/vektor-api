@@ -1,10 +1,10 @@
-import { z } from "zod";
 import {
 	generatePostgresErrorCodeInfo,
 	postgresErrorCodeParser,
 	postgresSeverityParser,
 	publicPostgresErrorClassParser,
 } from "@/db/errors/postgres-error-constants-parsers";
+import { z } from "zod";
 
 // Inspiration from
 // https://www.postgresql.org/docs/9.3/protocol-error-fields.html and

@@ -1,8 +1,8 @@
 import { teamApplicationsTable } from "@/db/tables/team-applications";
 import { MAX_TEXT_LENGTH } from "@/lib/global-variables";
+import { serialIdParser } from "@/src/request-handling/common";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
-import { serialIdParser } from "@/src/request-handling/common";
 
 export const teamApplicationParser = z.object({
 	teamId: serialIdParser.describe("Id of team applied for"),
