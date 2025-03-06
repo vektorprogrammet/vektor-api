@@ -4,7 +4,7 @@ import { teamsTable } from "@db/tables/team";
 import { relations } from "drizzle-orm";
 import { serial } from "drizzle-orm/pg-core";
 
-export const cities = mainSchema.enum("city", [
+export const citiesEnum = mainSchema.enum("city", [
 	"Trondheim",
 	"Ås",
 	"Bergen",
@@ -13,7 +13,7 @@ export const cities = mainSchema.enum("city", [
 
 export const departmentsTable = mainSchema.table("departments", {
 	id: serial("id").primaryKey(),
-	city: cities("city").notNull(),
+	city: citiesEnum("city").notNull(),
 });
 
 export const departmentsRelations = relations(departmentsTable, ({ many }) => ({

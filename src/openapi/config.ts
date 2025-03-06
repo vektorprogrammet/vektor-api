@@ -9,6 +9,7 @@ import {
 	sortParser,
 } from "@src/request-handling/common";
 import { expenseRequestParser } from "@src/request-handling/expenses";
+import { sponsorRequestParser } from "@src/request-handling/sponsors";
 import { teamApplicationParser } from "@src/request-handling/team_application";
 import {
 	assistantUserRequestParser,
@@ -16,6 +17,7 @@ import {
 	userRequestParser,
 } from "@src/request-handling/users";
 import { expensesSelectSchema } from "@src/response-handling/expenses";
+import { sponsorsSelectSchema } from "@src/response-handling/sponsors";
 import { teamApplicationSelectSchema } from "@src/response-handling/team_application";
 import {
 	assistantUserSelectSchema,
@@ -70,6 +72,8 @@ const openapiDocument = createDocument({
 		schemas: {
 			expenseRequest: expenseRequestParser,
 			expense: expensesSelectSchema,
+			sponsorRequest: sponsorRequestParser,
+			sponsor: sponsorsSelectSchema,
 			user: userSelectSchema,
 			teamUser: teamUserSelectSchema,
 			assistantUser: assistantUserSelectSchema,
