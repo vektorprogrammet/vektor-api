@@ -3,7 +3,7 @@ import type {
 	HttpClientErrorMessage,
 	HttpErrorMessage,
 	HttpServerErrorMessage,
-} from "./error-messages";
+} from "@/src/error/error-messages";
 import {
 	type HttpClientErrorCode,
 	type HttpClientErrorCodeInfo,
@@ -14,8 +14,8 @@ import {
 	getHttpClientErrorCodeInfo,
 	getHttpErrorCodeInfo,
 	getHttpServerErrorCodeInfo,
-} from "./http-codes-manipulators";
-import { isORMError } from "./orm-error";
+} from "@/src/error/http-codes-manipulators";
+import { isORMError } from "@/src/error/orm-error";
 
 class HttpError extends Error {
 	declare message: HttpErrorMessage;

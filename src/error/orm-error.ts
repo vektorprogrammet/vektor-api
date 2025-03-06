@@ -5,7 +5,7 @@ import {
 	postgresErrorParser,
 } from "@/db/errors/postgres-error";
 import type { Result } from "@/lib/types";
-import type { OrmErrorMessage } from "./error-messages";
+import type { OrmErrorMessage } from "@/src/error/error-messages";
 
 const defaultOrmErrorMessage: OrmErrorMessage = "Database access error";
 

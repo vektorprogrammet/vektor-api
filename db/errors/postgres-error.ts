@@ -4,7 +4,7 @@ import {
 	postgresErrorCodeParser,
 	postgresSeverityParser,
 	publicPostgresErrorClassParser,
-} from "./postgres-error-constants-parsers";
+} from "@/db/errors/postgres-error-constants-parsers";
 
 // Inspiration from
 // https://www.postgresql.org/docs/9.3/protocol-error-fields.html and

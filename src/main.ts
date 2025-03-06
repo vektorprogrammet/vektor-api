@@ -9,14 +9,14 @@ import {
 import { logger } from "@/src/middleware/logging-middleware";
 
 import { customCors, customHelmetSecurity } from "@/src/security";
-import { expenseRouter, expensesRouter } from "./routers/expenses";
+import { expenseRouter, expensesRouter } from "@/src/routers/expenses";
 
-import { teamApplicationRouter } from "./routers/team-applications";
+import { teamApplicationRouter } from "@/src/routers/team-applications";
 
 import { openapiSpecification } from "@/src/openapi/config";
 import openapiExpressHandler from "swagger-ui-express";
-import { sponsorsRouter } from "./routers/sponsors";
-import { usersRouter } from "./routers/users";
+import { sponsorsRouter } from "@/src/routers/sponsors";
+import { usersRouter } from "@/src/routers/users";
 
 const app = express();
 

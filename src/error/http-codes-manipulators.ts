@@ -1,4 +1,4 @@
-import { HTTP_STATUS_CODE_MAP } from "./http-codes";
+import { HTTP_STATUS_CODE_MAP } from "@/src/error/http-codes";
 
 export type HttpClientErrorCode =
 	keyof (typeof HTTP_STATUS_CODE_MAP)["Client error"];

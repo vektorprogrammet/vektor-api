@@ -8,7 +8,7 @@ import {
 	type OrmResult,
 	handleDatabaseFullfillment,
 	handleDatabaseRejection,
-} from "../error/orm-error";
+} from "@/src/error/orm-error";
 
 export async function newDatabaseTransaction<R>(
 	database: NodePgDatabase,

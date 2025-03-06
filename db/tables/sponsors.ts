@@ -1,7 +1,7 @@
 import { relations } from "drizzle-orm";
 import { date, integer, serial, text } from "drizzle-orm/pg-core";
-import { departmentsTable } from "./departments";
-import { mainSchema } from "./schema";
+import { departmentsTable } from "@/db/tables/departments";
+import { mainSchema } from "@/db/tables/schema";
 
 export const sponsorSizeEnum = mainSchema.enum("size", [
 	"small",

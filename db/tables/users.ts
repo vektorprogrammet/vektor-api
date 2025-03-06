@@ -4,7 +4,7 @@ import { integer, serial, text } from "drizzle-orm/pg-core";
 
 import { expensesTable } from "@/db/tables/expenses";
 import { fieldsOfStudyTable } from "@/db/tables/fields-of-study";
-import { teamsTable } from "./team";
+import { teamsTable } from "@/db/tables/teams";
 
 export const usersTable = mainSchema.table("users", {
 	id: serial("id").primaryKey(),

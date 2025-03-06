@@ -6,7 +6,7 @@ import {
 	POSTGRES_ERROR_SEVERITIES,
 	POSTGRES_NOTICE_SEVERITIES,
 	PUBLIC_POSTGRES_ERROR_CLASSES,
-} from "./postgres-error-constants";
+} from "@/db/errors/postgres-error-constants";
 
 export const postgresErrorCodeParser = zodEnumFromObjKeys(
 	POSTGRES_ERROR_CODE_TO_MESSAGE_MAP,

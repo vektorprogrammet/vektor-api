@@ -4,7 +4,7 @@ import { type OrmResult, ormError } from "@/src/error/orm-error";
 import type { NewSponsor } from "@/src/request-handling/sponsors";
 import type { Sponsor, SponsorKey } from "@/src/response-handling/sponsors";
 import { inArray } from "drizzle-orm";
-import { newDatabaseTransaction } from "./common";
+import { newDatabaseTransaction } from "@/src/db-access/common";
 
 export async function insertSponsors(
 	sponsors: NewSponsor[],
