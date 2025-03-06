@@ -28,7 +28,7 @@ try {
 } catch (error) {
 	const postgresErrorResult = postgresErrorParser.safeParse(error);
 	if (postgresErrorResult.success) {
-		console.error("Database error:")
+		console.error("Database error:");
 		console.error(getDatabaseErrorPrivateMessage(postgresErrorResult.data));
 	} else if (error instanceof Error) {
 		// The drizzle-seed library has awful errorhandling and just throws
