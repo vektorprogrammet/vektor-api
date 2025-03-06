@@ -1,1 +1,1 @@
-export const maxTextLength = 2500 as const;
+export const MAX_TEXT_LENGTH = 2500 as const;

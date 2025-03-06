@@ -115,6 +115,8 @@ Paste the following into `.vscode/settings.json`
   - Build server into /build
 - `start`
   - Run the built server in /build
+- `prod`
+  - Run build, then start
 
 ### Database
 

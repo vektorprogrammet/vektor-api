@@ -1,8 +1,61 @@
-import type { Result } from "@lib/types";
-import { DatabaseError } from "pg-protocol";
-import { z } from "zod";
+export const publicPostgresErrorClasses = ["22", "23"] as const;
 
-const pgErrorCodes = {
+// from https://www.postgresql.org/docs/9.3/protocol-error-fields.html
+export const postgresErrorSeverities = ["ERROR", "FATAL", "PANIC"] as const;
+export const postgresNoticeSeverities = [
+	"WARNING",
+	"NOTICE",
+	"DEBUG",
+	"LOG",
+] as const;
+
+// from https://www.postgresql.org/docs/current/errcodes-appendix.html
+export const postgresErrorClassToTitleMap = {
+	"00": "Successful Completion",
+	"01": "Warning",
+	"02": "No Data",
+	"03": "SQL Statement Not Yet Complete",
+	"08": "Connection Exception",
+	"09": "Triggered Action Exception",
+	"0A": "Feature Not Supported",
+	"0B": "Invalid Transaction Initiation",
+	"0F": "Locator Exception",
+	"0L": "Invalid Grantor",
+	"0P": "Invalid Role Specification",
+	"0Z": "Diagnostics Exception",
+	"20": "Case Not Found",
+	"21": "Cardinality Violation",
+	"22": "Data Exception",
+	"23": "Integrity Constraint Violation",
+	"24": "Invalid Cursor State",
+	"25": "Invalid Transaction State",
+	"26": "Invalid SQL Statement Name",
+	"27": "Triggered Data Change Violation",
+	"28": "Invalid Authorization Specification",
+	"2B": "Dependent Privilege Descriptors Still Exist",
+	"2D": "Invalid Transaction Termination",
+	"2F": "SQL Routine Exception",
+	"34": "Invalid Cursor Name",
+	"38": "External Routine Exception",
+	"39": "External Routine Invocation Exception",
+	"3B": "Savepoint Exception",
+	"3D": "Invalid Catalog Name",
+	"3F": "Invalid Schema Name",
+	"40": "Transaction Rollback",
+	"42": "Syntax Error or Access Rule Violation",
+	"44": "WITH CHECK OPTION Violation",
+	"53": "Insufficient Resources",
+	"54": "Program Limit Exceeded",
+	"55": "Object Not In Prerequisite State",
+	"57": "Operator Intervention",
+	"58": "System Error",
+	F0: "Configuration File Error",
+	HV: "Foreign Data Wrapper Error (SQL/MED)",
+	P0: "PL/pgSQL Error",
+	XX: "Internal Error",
+} as const;
+
+export const postgresErrorCodeToMessageMap = {
 	"00000": "successful_completion",
 
 	"01000": "warning",
@@ -519,51 +572,3 @@ const pgErrorCodes = {
 
 	XX002: "index_corrupted",
 } as const;
-
-export type pgErrorCode = keyof typeof pgErrorCodes;
-export type pgErrorName = (typeof pgErrorCodes)[pgErrorCode];
-
-export const pgErrorCodeSchema = z.enum(
-	Object.keys(pgErrorCodes) as [pgErrorCode],
-);
-export const pgErrorNamesSchema = z.enum(
-	Object.values(pgErrorCodes) as [(typeof pgErrorCodes)[pgErrorCode]],
-);
-
-export function isValidPgCode(code: string | undefined): code is pgErrorCode {
-	return pgErrorCodeSchema.safeParse(code).success;
-}
-
-export function getPgErrorName(code: pgErrorCode): pgErrorName {
-	return pgErrorCodes[code];
-}
-export function safeGetPgErrorName(
-	code: string,
-): Result<pgErrorName, z.ZodError> {
-	const result = pgErrorCodeSchema.safeParse(code);
-	if (result.success) {
-		return {
-			success: true,
-			data: getPgErrorName(result.data),
-		};
-	}
-	return {
-		success: false,
-		error: result.error,
-	};
-}
-export function isPgError(error: unknown): error is DatabaseError {
-	return error instanceof DatabaseError;
-}
-
-/* this function is possible to implement, but I would rather we didnt do it, since it demands code assertions
-
-export function getPgErrorCode(name: typeof pgErrorCodes[keyof typeof pgErrorCodes]): keyof typeof pgErrorCodes {
-	for (const [code, errorName] of Object.entries(pgErrorCodes)) {
-		if (errorName === name) {
-			return code as keyof typeof pgErrorCodes;
-		}
-	}
-	throw new Error(`Error name "${name}" not found in pgErrorCodes`);
-}
-*/

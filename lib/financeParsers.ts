@@ -1,5 +1,5 @@
-import { z } from "zod";
 import validator from "validator";
+import { z } from "zod";
 
 export const currencyParser = z.string().refine((input) => {
 	return validator.isCurrency(input, {
@@ -23,4 +23,8 @@ export const norwegianIBANParser = z.string().refine((input) => {
 	});
 }, "is not a valid norwegian account number");
 
-export const norwegianBankAccountNumberParser = z.string().length(11).transform(string => "NO93" + string).pipe(norwegianIBANParser);
+export const norwegianBankAccountNumberParser = z
+	.string()
+	.length(11)
+	.transform((string) => `NO93${string}`)
+	.pipe(norwegianIBANParser);
