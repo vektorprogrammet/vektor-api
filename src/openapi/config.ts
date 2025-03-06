@@ -24,6 +24,8 @@ import {
 } from "@src/response-handling/users";
 import openapiFromJsdoc from "swagger-jsdoc";
 import { createDocument } from "zod-openapi";
+import { sponsorsSelectSchema } from "@src/response-handling/sponsors";
+import { sponsorRequestParser } from "@src/request-handling/sponsors";
 
 const openapiDocument = createDocument({
 	openapi: "3.1.0",
@@ -70,6 +72,8 @@ const openapiDocument = createDocument({
 		schemas: {
 			expenseRequest: expenseRequestParser,
 			expense: expensesSelectSchema,
+			sponsorRequest: sponsorRequestParser,
+			sponsor: sponsorsSelectSchema,
 			user: userSelectSchema,
 			teamUser: teamUserSelectSchema,
 			assistantUser: assistantUserSelectSchema,

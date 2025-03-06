@@ -9,7 +9,7 @@ sponsorsRouter.use(json());
 
 /**
  * @openapi
- * /sponsor/:
+ * /sponsors/:
  *  post:
  *   tags: [sponsors]
  *   summary: Add sponsor
@@ -48,7 +48,7 @@ sponsorsRouter.post("/", async (req, res, next) => {
 
 /**
  * @openapi
- * /sponsor/{id}/:
+ * /sponsors/{id}/:
  *  get:
  *   tags: [sponsors]
  *   summary: Get sponsor with id
