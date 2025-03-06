@@ -30,6 +30,7 @@ jobs:
       - name: Run Biome
         run: biome ci .
   build:
+    needs: [biome-check]
     runs-on: ubuntu-latest
     services:
       database:
@@ -60,6 +61,8 @@ jobs:
         run: pnpm install
       - name: Generate migration files
         run: pnpm db:generate
+      - name: Create database
+        run: pnpm db:create
       - name: Migrate database
         run: pnpm db:migrate
       - name: Build
@@ -72,6 +75,7 @@ jobs:
       - name: Start
         run: pnpm start &
   test:
+    needs: [biome-check]
     runs-on: ubuntu-latest
     services:
       database:
@@ -102,11 +106,13 @@ jobs:
         run: pnpm install
       - name: Generate migration files
         run: pnpm db:generate
+      - name: Create database
+        run: pnpm db:create
       - name: Migrate database
         run: pnpm db:migrate
+      - name: Seed database
+        run: pnpm db:seed
       - name: Build
         run: pnpm build
       - name: Test
         run: pnpm test
-
-
