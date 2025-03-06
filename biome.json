@@ -6,14 +6,31 @@
 		"useIgnoreFile": true
 	},
 	"files": {
-		"ignore": ["package.json", ".vscode"]
+		"ignore": [
+			"package.json",
+			".vscode",
+			"db/error/postgres-error-constants.ts"
+		]
 	},
 	"linter": {
 		"enabled": true,
 		"rules": {
 			"all": true,
 			"style": {
-				"useNamingConvention": "off",
+				"useNamingConvention": {
+					"level": "error",
+					"options": {
+						"conventions": [
+							{
+								"selector": {
+									"kind": "objectLiteralProperty",
+									"scope": "any"
+								},
+								"formats": ["camelCase", "snake_case", "CONSTANT_CASE"]
+							}
+						]
+					}
+				},
 				"useFilenamingConvention": {
 					"level": "error",
 					"options": {
