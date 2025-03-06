@@ -5,7 +5,7 @@ import {
 	assistantUsersTable,
 	teamUsersTable,
 	usersTable,
-} from "@db/tables/users";
+} from "@/db/tables/users";
 
 export const userSelectSchema = createSelectSchema(usersTable)
 	.strict()

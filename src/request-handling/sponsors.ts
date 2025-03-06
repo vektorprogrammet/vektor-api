@@ -1,4 +1,4 @@
-import { sponsorsTable } from "@db/tables/sponsors";
+import { sponsorsTable } from "@/db/tables/sponsors";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { serialIdParser } from "./common";

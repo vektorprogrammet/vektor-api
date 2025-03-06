@@ -1,10 +1,9 @@
-import type { Result } from "@lib/types";
 import { fromZodError, isZodErrorLike } from "zod-validation-error";
 import type {
 	HttpClientErrorMessage,
 	HttpErrorMessage,
 	HttpServerErrorMessage,
-} from "./errorMessages";
+} from "./error-messages";
 import {
 	type HttpClientErrorCode,
 	type HttpClientErrorCodeInfo,
@@ -15,8 +14,8 @@ import {
 	getHttpClientErrorCodeInfo,
 	getHttpErrorCodeInfo,
 	getHttpServerErrorCodeInfo,
-} from "./httpCodesManipulators";
-import { isORMError } from "./ormError";
+} from "./http-codes-manipulators";
+import { isORMError } from "./orm-error";
 
 class HttpError extends Error {
 	declare message: HttpErrorMessage;
@@ -118,5 +117,3 @@ export function isHTTPError(
 		x instanceof HttpError
 	);
 }
-
-type HTTPResult<T> = Result<T, HttpError>;

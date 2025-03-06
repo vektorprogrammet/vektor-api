@@ -1,33 +1,33 @@
-import { database } from "@db/setup/queryPostgres";
+import { database } from "@/db/setup/query-postgres";
 import {
 	assistantUsersTable,
 	teamUsersTable,
 	usersTable,
-} from "@db/tables/users";
+} from "@/db/tables/users";
 import {
 	type OrmResult,
 	handleDatabaseFullfillment,
 	handleDatabaseRejection,
 	ormError,
-} from "@src/error/ormError";
-import type { QueryParameters } from "@src/request-handling/common";
+} from "@/src/error/orm-error";
+import type { QueryParameters } from "@/src/request-handling/common";
 import type {
 	NewAssistantUser,
 	NewTeamUser,
 	NewUser,
-} from "@src/request-handling/users";
+} from "@/src/request-handling/users";
 import type {
 	AssistantUser,
 	TeamUser,
 	User,
 	UserKey,
-} from "@src/response-handling/users";
+} from "@/src/response-handling/users";
 import { eq, inArray } from "drizzle-orm";
 
 export async function selectUsersById(
 	userIds: UserKey[],
 ): Promise<OrmResult<User[]>> {
-	return database
+	return await database
 		.transaction(async (tx) => {
 			const users = await tx
 				.select()
@@ -44,7 +44,7 @@ export async function selectUsersById(
 export async function selectTeamUsersById(
 	userIds: UserKey[],
 ): Promise<OrmResult<TeamUser[]>> {
-	return database
+	return await database
 		.transaction(async (tx) => {
 			const users = await tx
 				.select({
@@ -72,7 +72,7 @@ export async function selectTeamUsersById(
 export async function selectAssistantUsersById(
 	userIds: UserKey[],
 ): Promise<OrmResult<AssistantUser[]>> {
-	return database
+	return await database
 		.transaction(async (tx) => {
 			const users = await tx
 				.select({
@@ -98,7 +98,7 @@ export async function selectAssistantUsersById(
 export async function selectUsers(
 	queryParameters: QueryParameters,
 ): Promise<OrmResult<User[]>> {
-	return database
+	return await database
 		.transaction(async (tx) => {
 			const users = await tx
 				.select()
@@ -114,7 +114,7 @@ export async function selectUsers(
 export async function selectTeamUsers(
 	queryParameters: QueryParameters,
 ): Promise<OrmResult<TeamUser[]>> {
-	return database
+	return await database
 		.transaction(async (tx) => {
 			const users = await tx
 				.select({
@@ -141,7 +141,7 @@ export async function selectTeamUsers(
 export async function selectAssistantUsers(
 	queryParameters: QueryParameters,
 ): Promise<OrmResult<AssistantUser[]>> {
-	return database
+	return await database
 		.transaction(async (tx) => {
 			const users = await tx
 				.select({
@@ -164,7 +164,7 @@ export async function selectAssistantUsers(
 }
 
 export async function insertUsers(user: NewUser[]): Promise<OrmResult<User[]>> {
-	return database
+	return await database
 		.transaction(async (tx) => {
 			return await tx.insert(usersTable).values(user).returning();
 		})
@@ -174,7 +174,7 @@ export async function insertUsers(user: NewUser[]): Promise<OrmResult<User[]>> {
 export async function insertTeamUsers(
 	teamUser: NewTeamUser[],
 ): Promise<OrmResult<TeamUser[]>> {
-	return database
+	return await database
 		.transaction(async (tx) => {
 			const newTeamUserTables = await tx
 				.insert(teamUsersTable)
@@ -196,7 +196,7 @@ export async function insertTeamUsers(
 export async function insertAssistantUsers(
 	assistantUser: NewAssistantUser[],
 ): Promise<OrmResult<NewAssistantUser[]>> {
-	return database
+	return await database
 		.transaction(async (tx) => {
 			const newAssistantUserTables = await tx
 				.insert(assistantUsersTable)

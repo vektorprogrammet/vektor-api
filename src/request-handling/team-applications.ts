@@ -1,5 +1,5 @@
-import { teamApplicationsTable } from "@db/tables/teamApplication";
-import { MAX_TEXT_LENGTH } from "@lib/globalVariables";
+import { teamApplicationsTable } from "@/db/tables/team-applications";
+import { MAX_TEXT_LENGTH } from "@/lib/global-variables";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { serialIdParser } from "./common";

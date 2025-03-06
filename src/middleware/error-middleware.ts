@@ -1,7 +1,7 @@
-import { isHTTPError } from "@src/error/httpErrors";
+import { isHTTPError } from "@/src/error/http-errors";
 import type { ErrorRequestHandler } from "express";
 
-export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
+export const errorHandler: ErrorRequestHandler = (err, _req, res, next) => {
 	if (!isHTTPError(err)) {
 		return next(err);
 	}
@@ -11,10 +11,10 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
 };
 
 export const defaultErrorHandler: ErrorRequestHandler = (
-	err,
-	req,
+	_err,
+	_req,
 	res,
-	next,
+	_next,
 ) => {
 	console.warn("WARNING! DEFAULT EXPRESS ERRORHANDLER IS USED.");
 	res.status(500).json({ error: true, message: "Unknown error." });

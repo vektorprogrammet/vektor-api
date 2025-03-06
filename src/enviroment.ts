@@ -1,4 +1,4 @@
-import { hostingStringParser, toPortParser } from "@lib/networkParsers";
+import { hostingStringParser, toPortParser } from "@/lib/network-parsers";
 import "dotenv/config";
 import { env } from "node:process";
 import { z } from "zod";

@@ -1,9 +1,9 @@
-import { expensesTable } from "@db/tables/expenses";
+import { expensesTable } from "@/db/tables/expenses";
 import {
 	currencyParser,
 	norwegianBankAccountNumberParser,
-} from "@lib/financeParsers";
-import { serialIdParser } from "@src/request-handling/common";
+} from "@/lib/finance-parsers";
+import { serialIdParser } from "@/src/request-handling/common";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 

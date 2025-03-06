@@ -3,9 +3,9 @@ import {
 	getDatabaseErrorPrivateMessage,
 	getDatabaseErrorPublicMessage,
 	postgresErrorParser,
-} from "@db/errors/postgresError";
-import type { Result } from "@lib/types";
-import type { OrmErrorMessage } from "./errorMessages";
+} from "@/db/errors/postgres-error";
+import type { Result } from "@/lib/types";
+import type { OrmErrorMessage } from "./error-messages";
 
 const defaultOrmErrorMessage: OrmErrorMessage = "Database access error";
 

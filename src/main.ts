@@ -1,19 +1,19 @@
 import "dotenv/config";
 import express from "express";
 
-import { hostOptions } from "@src/enviroment";
+import { hostOptions } from "@/src/enviroment";
 import {
 	defaultErrorHandler,
 	errorHandler,
-} from "@src/middleware/errorMiddleware";
-import { logger } from "@src/middleware/loggingMiddleware";
+} from "@/src/middleware/error-middleware";
+import { logger } from "@/src/middleware/logging-middleware";
 
-import { customCors, customHelmetSecurity } from "@src/security";
+import { customCors, customHelmetSecurity } from "@/src/security";
 import { expenseRouter, expensesRouter } from "./routers/expenses";
 
-import { teamApplicationRouter } from "./routers/team_application";
+import { teamApplicationRouter } from "./routers/team-applications";
 
-import { openapiSpecification } from "@src/openapi/config";
+import { openapiSpecification } from "@/src/openapi/config";
 import openapiExpressHandler from "swagger-ui-express";
 import { sponsorsRouter } from "./routers/sponsors";
 import { usersRouter } from "./routers/users";
@@ -44,7 +44,7 @@ app.use("", errorHandler);
 app.use("", defaultErrorHandler);
 
 app.listen(hostOptions.port, () => {
-	console.log(
+	console.info(
 		`Listening on ${hostOptions.hosting_url}. May need to specify port ${hostOptions.port}.`,
 	);
 });
