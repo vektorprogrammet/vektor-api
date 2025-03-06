@@ -30,6 +30,7 @@ jobs:
       - name: Run Biome
         run: biome ci .
   build:
+    needs: [biome-check]
     runs-on: ubuntu-latest
     services:
       database:
@@ -74,6 +75,7 @@ jobs:
       - name: Start
         run: pnpm start &
   test:
+    needs: [biome-check]
     runs-on: ubuntu-latest
     services:
       database:
