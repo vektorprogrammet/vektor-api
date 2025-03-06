@@ -14,8 +14,8 @@ export const seedingTables = {
 	fieldsOfStudyTable,
 	teamsTable,
 	usersTable,
-	teamUsersTable,
-	assistantUsersTable,
+	//teamUsersTable, these two tables dont work currently
+	//assistantUsersTable,
 	teamApplicationsTable,
 	expensesTable,
 };

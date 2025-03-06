@@ -16,17 +16,19 @@ if (hasUnknownOption) {
 	process.exit(1);
 }
 
+if (doRevertSeeding) {
+	await reset(database, seedingTables);
+	console.log("Database seeding has been reverted");
+	process.exit(0);
+}
+
 try {
-	if (doRevertSeeding) {
-		await reset(database, seedingTables);
-		console.log("Database seeding has been reverted");
-	} else {
-		await seed(database, seedingTables);
-		console.log("Database has been seeded");
-	}
+	await seed(database, seedingTables);
+	console.log("Database has been seeded");
 } catch (error) {
 	const postgresErrorResult = postgresErrorParser.safeParse(error);
 	if (postgresErrorResult.success) {
+		console.error("Database error:")
 		console.error(getDatabaseErrorPrivateMessage(postgresErrorResult.data));
 	} else if (error instanceof Error) {
 		// The drizzle-seed library has awful errorhandling and just throws
@@ -39,6 +41,7 @@ try {
 		console.error("Failed to reset seeded database");
 	} else {
 		console.error("Failed to seed database");
+		await reset(database, seedingTables);
 	}
 	process.exit(1);
 }
