@@ -14,8 +14,9 @@
 		"format": "biome format --write",
 		"lint": "biome lint --write",
 		"check": "biome check --write",
+		"db:create": "tsx ./db/setup/createDatabase.ts",
 		"db:generate": "drizzle-kit generate --config=db/config/drizzle.config.ts",
-		"db:migrate": "tsx ./db/setup/createDatabase.ts && drizzle-kit migrate --config=db/config/drizzle.config.ts",
+		"db:migrate": "drizzle-kit migrate --config=db/config/drizzle.config.ts",
 		"db:studio": "drizzle-kit studio --config=db/config/drizzle.config.ts",
 		"db:seed": "tsx ./db/seeding/seeding.ts",
 		"docs:generate": "tsx ./src/openapi/generateDocument.ts"
