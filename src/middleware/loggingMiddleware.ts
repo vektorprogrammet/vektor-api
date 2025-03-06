@@ -7,7 +7,3 @@ export function logger(req: Request, res: Response, next: NextFunction) {
 	console.log(`Request nr. ${requestCounter} beeing processed...`);
 	next();
 }
-
-export function loggerSaver(req: Request, res: Response, next: NextFunction) {
-	// Not implemented....
-}
