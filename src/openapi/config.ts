@@ -9,6 +9,7 @@ import {
 	sortParser,
 } from "@src/request-handling/common";
 import { expenseRequestParser } from "@src/request-handling/expenses";
+import { sponsorRequestParser } from "@src/request-handling/sponsors";
 import { teamApplicationParser } from "@src/request-handling/team_application";
 import {
 	assistantUserRequestParser,
@@ -16,6 +17,7 @@ import {
 	userRequestParser,
 } from "@src/request-handling/users";
 import { expensesSelectSchema } from "@src/response-handling/expenses";
+import { sponsorsSelectSchema } from "@src/response-handling/sponsors";
 import { teamApplicationSelectSchema } from "@src/response-handling/team_application";
 import {
 	assistantUserSelectSchema,
@@ -24,8 +26,6 @@ import {
 } from "@src/response-handling/users";
 import openapiFromJsdoc from "swagger-jsdoc";
 import { createDocument } from "zod-openapi";
-import { sponsorsSelectSchema } from "@src/response-handling/sponsors";
-import { sponsorRequestParser } from "@src/request-handling/sponsors";
 
 const openapiDocument = createDocument({
 	openapi: "3.1.0",
