@@ -17,6 +17,7 @@
 		"db:generate": "drizzle-kit generate --config=db/config/drizzle.config.ts",
 		"db:migrate": "tsx ./db/setup/createDatabase.ts && drizzle-kit migrate --config=db/config/drizzle.config.ts",
 		"db:studio": "drizzle-kit studio --config=db/config/drizzle.config.ts",
+		"db:seed": "tsx ./db/seeding/seeding.ts",
 		"docs:generate": "tsx ./src/openapi/generateDocument.ts"
 	},
 	"license": "ISC",
@@ -24,6 +25,7 @@
 		"cors": "^2.8.5",
 		"dotenv": "^16.4.5",
 		"drizzle-orm": "^0.33.0",
+		"drizzle-seed": "^0.3.1",
 		"drizzle-zod": "^0.5.1",
 		"express": "^4.21.1",
 		"pg": "^8.13.0",
