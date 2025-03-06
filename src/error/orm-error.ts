@@ -48,7 +48,7 @@ class OrmError extends Error {
 	}
 }
 
-export function isORMError(error: unknown): error is OrmError {
+export function isOrmError(error: unknown): error is OrmError {
 	return error instanceof OrmError;
 }
 
@@ -83,7 +83,7 @@ export function customOrmError(
 export type OrmResult<T> = Result<T, OrmError>;
 
 export function handleDatabaseRejection(reason: unknown) {
-	if (isORMError(reason)) {
+	if (isOrmError(reason)) {
 		return { success: false as const, error: reason };
 	}
 	return {

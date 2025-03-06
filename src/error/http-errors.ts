@@ -14,7 +14,7 @@ import {
 	getHttpErrorCodeInfo,
 	getHttpServerErrorCodeInfo,
 } from "@/src/error/http-codes-manipulators";
-import { isORMError } from "@/src/error/orm-error";
+import { isOrmError } from "@/src/error/orm-error";
 import { fromZodError, isZodErrorLike } from "zod-validation-error";
 
 class HttpError extends Error {
@@ -39,7 +39,7 @@ class HttpError extends Error {
 			return response;
 		}
 		if (
-			isORMError(this.cause) &&
+			isOrmError(this.cause) &&
 			this.cause.getPublicDatabaseMessage() !== undefined
 		) {
 			response += `\n${this.cause.getPublicDatabaseMessage()}`;
@@ -108,7 +108,7 @@ export const serverError = (
 	return new ServerError(message, httpStatusCode, { ...options, cause: cause });
 };
 
-export function isHTTPError(
+export function isHttpError(
 	x: unknown,
 ): x is ServerError | ClientError | HttpError {
 	return (

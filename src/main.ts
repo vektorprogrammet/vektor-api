@@ -45,6 +45,6 @@ app.use("", defaultErrorHandler);
 
 app.listen(hostOptions.port, () => {
 	console.info(
-		`Listening on ${hostOptions.hosting_url}. May need to specify port ${hostOptions.port}.`,
+		`Listening on ${hostOptions.hostingUrl}. May need to specify port ${hostOptions.port}.`,
 	);
 });

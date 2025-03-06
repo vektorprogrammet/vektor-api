@@ -7,7 +7,7 @@ export const sponsorRequestParser = z
 	.object({
 		id: serialIdParser.describe("Id of sponsor"),
 		name: z.string().describe("Name of sponsor"),
-		homePageURL: z.string().url().describe("URL to homepage of sponsor"),
+		homePageUrl: z.string().url().describe("URL to homepage of sponsor"),
 		startDate: z
 			.string()
 			.date("Must be valid datestring (YYYY-MM-DD")

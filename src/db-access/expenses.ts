@@ -7,8 +7,8 @@ import {
 	ormError,
 } from "@/src/error/orm-error";
 import type {
+	DatePeriod,
 	QueryParameters,
-	datePeriod,
 } from "@/src/request-handling/common";
 import type { NewExpense } from "@/src/request-handling/expenses";
 import type { Expense, ExpenseKey } from "@/src/response-handling/expenses";
@@ -130,7 +130,7 @@ export async function selectExpenses(
 }
 
 export async function getSumUnprocessed(
-	timePeriod: datePeriod,
+	timePeriod: DatePeriod,
 ): Promise<OrmResult<string>> {
 	return await database
 		.transaction(async (tx) => {
@@ -165,7 +165,7 @@ export async function getSumUnprocessed(
 }
 
 export async function getSumAccepted(
-	timePeriod: datePeriod,
+	timePeriod: DatePeriod,
 ): Promise<OrmResult<string>> {
 	return await database
 		.transaction(async (tx) => {
@@ -201,7 +201,7 @@ export async function getSumAccepted(
 }
 
 export async function getSumRejected(
-	timePeriod: datePeriod,
+	timePeriod: DatePeriod,
 ): Promise<OrmResult<string>> {
 	return await database
 		.transaction(async (tx) => {
@@ -237,7 +237,7 @@ export async function getSumRejected(
 }
 
 export async function getAveragePaybackTime(
-	timePeriod: datePeriod,
+	timePeriod: DatePeriod,
 ): Promise<OrmResult<number>> {
 	return await database
 		.transaction(async (tx) => {

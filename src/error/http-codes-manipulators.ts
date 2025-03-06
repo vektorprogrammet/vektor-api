@@ -1,26 +1,26 @@
 import { HTTP_STATUS_CODE_MAP } from "@/src/error/http-codes";
 
 export type HttpClientErrorCode =
-	keyof (typeof HTTP_STATUS_CODE_MAP)["Client error"];
+	keyof (typeof HTTP_STATUS_CODE_MAP)["client error"];
 export type HttpServerErrorCode =
-	keyof (typeof HTTP_STATUS_CODE_MAP)["Server error"];
+	keyof (typeof HTTP_STATUS_CODE_MAP)["server error"];
 export type HttpErrorCode = HttpClientErrorCode | HttpServerErrorCode;
 
 function isHttpClientErrorCode(code: number): code is HttpClientErrorCode {
-	return Object.keys(HTTP_STATUS_CODE_MAP["Client error"])
+	return Object.keys(HTTP_STATUS_CODE_MAP["client error"])
 		.map(Number)
 		.includes(code);
 }
 
 export type HttpClientErrorCodeInfo = {
-	title: "Client error";
+	title: "client error";
 	code: HttpClientErrorCode;
-	message: (typeof HTTP_STATUS_CODE_MAP)["Client error"][HttpClientErrorCode];
+	message: (typeof HTTP_STATUS_CODE_MAP)["client error"][HttpClientErrorCode];
 };
 export type HttpServerErrorCodeInfo = {
-	title: "Server error";
+	title: "server error";
 	code: HttpServerErrorCode;
-	message: (typeof HTTP_STATUS_CODE_MAP)["Server error"][HttpServerErrorCode];
+	message: (typeof HTTP_STATUS_CODE_MAP)["server error"][HttpServerErrorCode];
 };
 export type HttpErrorCodeInfo =
 	| HttpClientErrorCodeInfo
@@ -30,18 +30,18 @@ export function getHttpClientErrorCodeInfo(
 	code: HttpClientErrorCode,
 ): HttpClientErrorCodeInfo {
 	return {
-		title: "Client error",
+		title: "client error",
 		code: code,
-		message: HTTP_STATUS_CODE_MAP["Client error"][code],
+		message: HTTP_STATUS_CODE_MAP["client error"][code],
 	};
 }
 export function getHttpServerErrorCodeInfo(
 	code: HttpServerErrorCode,
 ): HttpServerErrorCodeInfo {
 	return {
-		title: "Server error",
+		title: "server error",
 		code: code,
-		message: HTTP_STATUS_CODE_MAP["Server error"][code],
+		message: HTTP_STATUS_CODE_MAP["server error"][code],
 	};
 }
 export function getHttpErrorCodeInfo(code: HttpErrorCode): HttpErrorCodeInfo {

@@ -36,7 +36,7 @@ const openapiDocument = createDocument({
 	},
 	servers: [
 		{
-			url: `{protocol}${hostOptions.hosting_url}{port}`,
+			url: `{protocol}${hostOptions.hostingUrl}{port}`,
 			description: "Your local API",
 			variables: {
 				port: {

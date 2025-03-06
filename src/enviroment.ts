@@ -12,7 +12,7 @@ const hostOptionsResult = z
 	.transform((schema) => {
 		return {
 			port: schema.PORT,
-			hosting_url: schema.HOSTING_URL,
+			hostingUrl: schema.HOSTING_URL,
 		};
 	})
 	.safeParse(env);
