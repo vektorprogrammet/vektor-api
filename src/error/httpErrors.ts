@@ -60,7 +60,7 @@ class ClientError extends HttpError {
 	declare httpCodeInfo: HttpClientErrorCodeInfo;
 	constructor(
 		message: HttpClientErrorMessage,
-		httpCode: HttpClientErrorCode = 400,
+		httpCode: HttpClientErrorCode,
 		options?: ErrorOptions,
 	) {
 		super(message, httpCode, options);
@@ -75,7 +75,7 @@ class ServerError extends HttpError {
 	declare httpCodeInfo: HttpServerErrorCodeInfo;
 	constructor(
 		message: HttpServerErrorMessage,
-		httpCode: HttpServerErrorCode = 500,
+		httpCode: HttpServerErrorCode,
 		options?: ErrorOptions,
 	) {
 		super(message, httpCode, options);

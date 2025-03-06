@@ -40,7 +40,11 @@ sponsorsRouter.post("/", async (req, res, next) => {
 	}
 	const databaseResult = await insertSponsors([sponsorRequest.data]);
 	if (!databaseResult.success) {
-		const error = clientError(400, "Failed to execute the database command", databaseResult.error);
+		const error = clientError(
+			400,
+			"Failed to execute the database command",
+			databaseResult.error,
+		);
 		return next(error);
 	}
 	res.status(201).json(databaseResult.data);
@@ -66,11 +70,19 @@ sponsorsRouter.post("/", async (req, res, next) => {
 sponsorsRouter.get("/:sponsorId", async (req, res, next) => {
 	const sponsorIdResult = toSerialIdParser.safeParse(req.params.sponsorId);
 	if (!sponsorIdResult.success) {
-		return next(clientError(400, "Invalid request format", sponsorIdResult.error));
+		return next(
+			clientError(400, "Invalid request format", sponsorIdResult.error),
+		);
 	}
 	const databaseResult = await selectSponsorsById([sponsorIdResult.data]);
 	if (!databaseResult.success) {
-		return next(clientError(400, "Failed to retrieve data from the database", databaseResult.error));
+		return next(
+			clientError(
+				400,
+				"Failed to retrieve data from the database",
+				databaseResult.error,
+			),
+		);
 	}
 	res.json(databaseResult.data);
 });

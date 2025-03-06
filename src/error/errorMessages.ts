@@ -112,6 +112,8 @@ const HTTP_SERVER_ERROR_MESSAGES = [
 	"Error while fetching records from the database",
 ] as const;
 export type OrmErrorMessage = (typeof ORM_ERROR_MESSAGES)[number];
-export type HttpClientErrorMessage = (typeof HTTP_CLIENT_ERROR_MESSAGES)[number];
-export type HttpServerErrorMessage = (typeof HTTP_SERVER_ERROR_MESSAGES)[number];
+export type HttpClientErrorMessage =
+	(typeof HTTP_CLIENT_ERROR_MESSAGES)[number];
+export type HttpServerErrorMessage =
+	(typeof HTTP_SERVER_ERROR_MESSAGES)[number];
 export type HttpErrorMessage = HttpClientErrorMessage | HttpServerErrorMessage;

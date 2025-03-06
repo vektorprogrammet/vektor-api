@@ -17,5 +17,5 @@ export const defaultErrorHandler: ErrorRequestHandler = (
 	next,
 ) => {
 	console.warn("WARNING! DEFAULT EXPRESS ERRORHANDLER IS USED.");
-	res.status(500).json({error: true, message: "Unknown error."});
+	res.status(500).json({ error: true, message: "Unknown error." });
 };
