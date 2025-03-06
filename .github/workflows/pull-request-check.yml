@@ -1,7 +1,7 @@
 name: Pull request to main
 env:
   NODE_VERSION: 21.7.3
-  PNPM_VERSION: 10.2.0
+  PNPM_VERSION: 10.6.0
   BIOME_VERSION: 1.9.3
   DATABASE_PASSWORD: pass123
   DATABASE_USER: postgres

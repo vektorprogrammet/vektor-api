@@ -1,7 +1,7 @@
-import { insertSponsors, selectSponsorsById } from "@src/db-access/sponsors";
-import { clientError } from "@src/error/httpErrors";
-import { toSerialIdParser } from "@src/request-handling/common";
-import { sponsorRequestToInsertParser } from "@src/request-handling/sponsors";
+import { insertSponsors, selectSponsorsById } from "@/src/db-access/sponsors";
+import { clientError } from "@/src/error/http-errors";
+import { toSerialIdParser } from "@/src/request-handling/common";
+import { sponsorRequestToInsertParser } from "@/src/request-handling/sponsors";
 import { Router, json } from "express";
 
 export const sponsorsRouter = Router();

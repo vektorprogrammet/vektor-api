@@ -72,4 +72,4 @@ export const toDatePeriodParser = z
 	})
 	.pipe(datePeriodParser);
 
-export type datePeriod = z.infer<typeof datePeriodParser>;
+export type DatePeriod = z.infer<typeof datePeriodParser>;

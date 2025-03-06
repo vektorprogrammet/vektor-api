@@ -1,11 +1,11 @@
 // From https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
 export const HTTP_STATUS_CODE_MAP = {
-	Informational: {
+	informational: {
 		100: "Continue",
 		101: "Switching Protocols",
 		102: "Processing",
 	},
-	Successful: {
+	successful: {
 		200: "OK",
 		201: "Created",
 		202: "Accepted",
@@ -17,7 +17,7 @@ export const HTTP_STATUS_CODE_MAP = {
 		208: "Already Reported",
 		226: "IM Used",
 	},
-	Redirection: {
+	redirection: {
 		300: "Multiple Choices",
 		301: "Moved Permanently",
 		302: "Found",
@@ -28,7 +28,7 @@ export const HTTP_STATUS_CODE_MAP = {
 		307: "Temporary Redirect",
 		308: "Permanent Redirect",
 	},
-	"Client error": {
+	"client error": {
 		400: "Bad Request",
 		401: "Unauthorized",
 		402: "Payment Required",
@@ -58,7 +58,7 @@ export const HTTP_STATUS_CODE_MAP = {
 		431: "Request Header Fields Too Large",
 		451: "Unavailable For Legal Reasons",
 	},
-	"Server error": {
+	"server error": {
 		500: "Internal Server Error",
 		501: "Not Implemented",
 		502: "Bad Gateway",

@@ -1,9 +1,9 @@
 import "dotenv/config";
-import { databaseConnectionParameters } from "@db/config/parameters";
+import { databaseConnectionParameters } from "@/db/config/parameters";
 import {
 	getDatabaseErrorPrivateMessage,
 	postgresErrorParser,
-} from "@db/errors/postgresError";
+} from "@/db/errors/postgres-error";
 import pg from "pg"; // It does not work to import { Client } from "pg"
 
 const postgresClient = new pg.Client({
@@ -18,21 +18,20 @@ try {
 	);
 
 	if (databaseListResponse.rowCount === 0) {
-		console.log(
+		console.info(
 			`${databaseConnectionParameters.database} database not found, creating it`,
 		);
 		await postgresClient.query(
 			`CREATE DATABASE "${databaseConnectionParameters.database}";`,
 		);
-		console.log(`Created database ${databaseConnectionParameters.database}`);
+		console.info(`Created database ${databaseConnectionParameters.database}`);
 	} else {
-		console.log(`Database ${databaseConnectionParameters.database} exists`);
+		console.info(`Database ${databaseConnectionParameters.database} exists`);
 	}
 	await postgresClient.end();
 } catch (error) {
 	const errorResult = postgresErrorParser.safeParse(error);
 	if (errorResult.success) {
-		console.debug(error);
 		console.error(getDatabaseErrorPrivateMessage(errorResult.data));
 	} else {
 		console.error(error);

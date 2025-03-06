@@ -1,6 +1,6 @@
-import { fieldsOfStudyTable } from "@db/tables/fieldsOfStudy";
-import mainSchema from "@db/tables/schema";
-import { teamsTable } from "@db/tables/team";
+import { fieldsOfStudyTable } from "@/db/tables/fields-of-study";
+import { mainSchema } from "@/db/tables/schema";
+import { teamsTable } from "@/db/tables/teams";
 import { relations } from "drizzle-orm";
 import { serial } from "drizzle-orm/pg-core";
 

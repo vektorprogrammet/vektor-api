@@ -1,10 +1,10 @@
 import { env } from "node:process";
 import type { ConnectionOptions } from "node:tls";
-import { hostingStringParser, toPortParser } from "@lib/networkParsers";
+import { hostingStringParser, toPortParser } from "@/lib/network-parsers";
 import { z } from "zod";
 import { fromZodError } from "zod-validation-error";
 
-function getCaCert(): string | Buffer | Array<string | Buffer> | undefined {
+function getCaCert(): string | Buffer | (string | Buffer)[] | undefined {
 	return env.CA_CERT;
 }
 
@@ -17,15 +17,15 @@ const parametersResult = z
 		DATABASE_PORT: toPortParser,
 		DATABASE_SSL_OPTION: z
 			.union([
-				z.literal("prod").transform((_, ctx) => {
+				z.literal("prod").transform(() => {
 					return {
 						requestCert: true,
 						rejectUnauthorized: true,
 					} as ConnectionOptions;
 				}),
 				z.literal("prod-provide_ca_cert").transform((_, ctx) => {
-					const ca_cert = getCaCert();
-					if (ca_cert === undefined) {
+					const caCert = getCaCert();
+					if (caCert === undefined) {
 						ctx.addIssue({
 							code: z.ZodIssueCode.custom,
 							message: "Could not find ca certificate",
@@ -35,7 +35,7 @@ const parametersResult = z
 					return {
 						requestCert: true,
 						rejectUnauthorized: true,
-						ca: ca_cert,
+						ca: caCert,
 					} as ConnectionOptions;
 				}),
 				z.literal("dev").transform(() => {
@@ -73,5 +73,5 @@ if (!parametersResult.success) {
 export const databaseConnectionParameters = parametersResult.data;
 
 if (env.LOG_DATABASE_CREDENTIALS_ON_STARTUP === "true") {
-	console.log("Database parameters:", databaseConnectionParameters);
+	console.info("Database parameters:", databaseConnectionParameters);
 }

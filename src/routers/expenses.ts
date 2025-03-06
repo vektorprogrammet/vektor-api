@@ -8,14 +8,14 @@ import {
 	rejectExpense,
 	selectExpenses,
 	selectExpensesById,
-} from "@src/db-access/expenses";
-import { clientError } from "@src/error/httpErrors";
+} from "@/src/db-access/expenses";
+import { clientError } from "@/src/error/http-errors";
 import {
 	toDatePeriodParser,
 	toListQueryParser,
 	toSerialIdParser,
-} from "@src/request-handling/common";
-import { expenseRequestToInsertParser } from "@src/request-handling/expenses";
+} from "@/src/request-handling/common";
+import { expenseRequestToInsertParser } from "@/src/request-handling/expenses";
 import { Router, json } from "express";
 
 export const expenseRouter = Router();

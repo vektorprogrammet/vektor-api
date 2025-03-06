@@ -1,13 +1,13 @@
-import { sponsorsTable } from "@db/tables/sponsors";
+import { sponsorsTable } from "@/db/tables/sponsors";
+import { serialIdParser } from "@/src/request-handling/common";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
-import { serialIdParser } from "./common";
 
 export const sponsorRequestParser = z
 	.object({
 		id: serialIdParser.describe("Id of sponsor"),
 		name: z.string().describe("Name of sponsor"),
-		homePageURL: z.string().url().describe("URL to homepage of sponsor"),
+		homePageUrl: z.string().url().describe("URL to homepage of sponsor"),
 		startDate: z
 			.string()
 			.date("Must be valid datestring (YYYY-MM-DD")

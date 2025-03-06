@@ -26,9 +26,9 @@
 		//"baseUrl": "./",
 		// Path redirects
 		"paths": {
-			"@src/*": ["./src/*"],
-			"@db/*": ["./db/*"],
-			"@lib/*": ["./lib/*"]
+			"@/src/*": ["./src/*"],
+			"@/db/*": ["./db/*"],
+			"@/lib/*": ["./lib/*"]
 		}
 	}
 }

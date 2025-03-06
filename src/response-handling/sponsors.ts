@@ -1,4 +1,4 @@
-import { sponsorsTable } from "@db/tables/sponsors";
+import { sponsorsTable } from "@/db/tables/sponsors";
 import { createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
 
