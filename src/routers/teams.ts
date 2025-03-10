@@ -3,7 +3,6 @@ import { selectTeamsById } from "@src/db-access/teams";
 import { clientError } from "@src/error/httpErrors";
 import {
 	listQueryParser,
-	serialIdParser,
 	toSerialIdParser,
 } from "@src/request-handling/common";
 import { Router, json } from "express";

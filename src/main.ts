@@ -15,11 +15,9 @@ import { teamApplicationRouter } from "@/src/routers/team-applications";
 
 import { openapiSpecification } from "@/src/openapi/config";
 import { sponsorsRouter } from "@/src/routers/sponsors";
+import { teamsRouter } from "@/src/routers/teams";
 import { usersRouter } from "@/src/routers/users";
 import openapiExpressHandler from "swagger-ui-express";
-import { sponsorsRouter } from "./routers/sponsors";
-import { teamsRouter } from "./routers/teams";
-import { usersRouter } from "./routers/users";
 
 const app = express();
 
