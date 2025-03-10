@@ -1,7 +1,7 @@
 import { createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
 
-import { teamApplicationsTable } from "@db/tables/teamApplication";
+import { teamApplicationsTable } from "@/db/tables/team-applications";
 
 export const teamApplicationSelectSchema = createSelectSchema(
 	teamApplicationsTable,

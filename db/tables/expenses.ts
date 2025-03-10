@@ -1,5 +1,5 @@
-import mainSchema from "@db/tables/schema";
-import { usersTable } from "@db/tables/users";
+import { mainSchema } from "@/db/tables/schema";
+import { usersTable } from "@/db/tables/users";
 import { relations } from "drizzle-orm";
 import {
 	boolean,

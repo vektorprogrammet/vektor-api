@@ -1,10 +1,10 @@
-import { departmentsTable } from "@db/tables/departments";
-import mainSchema from "@db/tables/schema";
-import { teamApplicationsTable } from "@db/tables/teamApplication";
+import { departmentsTable } from "@/db/tables/departments";
+import { mainSchema } from "@/db/tables/schema";
+import { teamApplicationsTable } from "@/db/tables/team-applications";
+import { teamUsersTable } from "@/db/tables/users";
 import { relations } from "drizzle-orm";
 import { boolean, date, serial, text } from "drizzle-orm/pg-core";
 import { integer } from "drizzle-orm/pg-core";
-import { teamUsersTable } from "./users";
 
 export const teamsTable = mainSchema.table("teams", {
 	id: serial("id").primaryKey(),
