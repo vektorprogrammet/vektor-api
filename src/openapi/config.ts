@@ -9,14 +9,14 @@ import {
 	sortParser,
 } from "@src/request-handling/common";
 import { expenseRequestParser } from "@src/request-handling/expenses";
-import { teamApplicationParser } from "@src/request-handling/team_application";
+import { teamApplicationParser } from "@src/request-handling/applications";
 import {
 	assistantUserRequestParser,
 	teamUserRequestParser,
 	userRequestParser,
 } from "@src/request-handling/users";
 import { expensesSelectSchema } from "@src/response-handling/expenses";
-import { teamApplicationSelectSchema } from "@src/response-handling/team_application";
+import { teamApplicationSelectSchema } from "@src/response-handling/applications";
 import {
 	assistantUserSelectSchema,
 	teamUserSelectSchema,

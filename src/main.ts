@@ -11,7 +11,7 @@ import { logger } from "@src/middleware/loggingMiddleware";
 import { customCors, customHelmetSecurity } from "@src/security";
 import { expenseRouter, expensesRouter } from "./routers/expenses";
 
-import { teamApplicationRouter } from "./routers/team_application";
+import { teamApplicationRouter } from "./routers/applications";
 
 import { openapiSpecification } from "@src/openapi/config";
 import openapiExpressHandler from "swagger-ui-express";

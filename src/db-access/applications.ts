@@ -6,11 +6,11 @@ import {
 	handleDatabaseRejection,
 } from "@src/error/ormError";
 import type { QueryParameters } from "@src/request-handling/common";
-import type { NewTeamApplication } from "@src/request-handling/team_application";
+import type { NewTeamApplication } from "@src/request-handling/applications";
 import type {
 	TeamApplication,
 	TeamKey,
-} from "@src/response-handling/team_application";
+} from "@src/response-handling/applications";
 import { asc, inArray } from "drizzle-orm";
 
 export const selectTeamApplications = async (

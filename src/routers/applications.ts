@@ -2,10 +2,10 @@ import {
 	insertTeamApplication,
 	selectTeamApplications,
 	selectTeamApplicationsByTeamId,
-} from "@src/db-access/team_applications";
+} from "@src/db-access/applications";
 import { clientError } from "@src/error/httpErrors";
 import { listQueryParser, serialIdParser } from "@src/request-handling/common";
-import { teamApplicationToInsertParser } from "@src/request-handling/team_application";
+import { teamApplicationToInsertParser } from "@src/request-handling/applications";
 import { Router, json } from "express";
 
 export const teamApplicationRouter = Router();
