@@ -1,10 +1,10 @@
-import { selectTeamApplicationsByTeamId } from "@src/db-access/team_applications";
-import { selectTeamsById } from "@src/db-access/teams";
-import { clientError } from "@src/error/httpErrors";
+import { selectTeamApplicationsByTeamId } from "@/src/db-access/team-applications";
+import { selectTeamsById } from "@/src/db-access/teams";
+import { clientError } from "@/src/error/http-errors";
 import {
 	listQueryParser,
 	toSerialIdParser,
-} from "@src/request-handling/common";
+} from "@/src/request-handling/common";
 import { Router, json } from "express";
 
 export const teamsRouter = Router();
@@ -31,18 +31,26 @@ teamsRouter.use(json());
 teamsRouter.get("/:teamID/applications/", async (req, res, next) => {
 	const teamIdResult = toSerialIdParser.safeParse(req.params.teamID);
 	if (!teamIdResult.success) {
-		return next(clientError(400, "", teamIdResult.error));
+		return next(clientError(400, "Invalid request format", teamIdResult.error));
 	}
 	const queryParametersResult = listQueryParser.safeParse(req.query);
 	if (!queryParametersResult.success) {
-		return next(clientError(400, "", queryParametersResult.error));
+		return next(
+			clientError(400, "Invalid request format", queryParametersResult.error),
+		);
 	}
 	const databaseResult = await selectTeamApplicationsByTeamId(
 		[teamIdResult.data],
 		queryParametersResult.data,
 	);
 	if (!databaseResult.success) {
-		return next(clientError(400, "Database error", databaseResult.error));
+		return next(
+			clientError(
+				400,
+				"Failed to execute the database command",
+				databaseResult.error,
+			),
+		);
 	}
 	res.json(databaseResult.data);
 });
@@ -68,15 +76,23 @@ teamsRouter.get("/:teamID/applications/", async (req, res, next) => {
 teamsRouter.get("/:teamID/", async (req, res, next) => {
 	const teamIdResult = toSerialIdParser.safeParse(req.params.teamID);
 	if (!teamIdResult.success) {
-		return next(clientError(400, "", teamIdResult.error));
+		return next(clientError(400, "Invalid request format", teamIdResult.error));
 	}
 	const queryParametersResult = listQueryParser.safeParse(req.query);
 	if (!queryParametersResult.success) {
-		return next(clientError(400, "", queryParametersResult.error));
+		return next(
+			clientError(400, "Invalid request format", queryParametersResult.error),
+		);
 	}
 	const databaseResult = await selectTeamsById([teamIdResult.data]);
 	if (!databaseResult.success) {
-		return next(clientError(400, "Database error", databaseResult.error));
+		return next(
+			clientError(
+				400,
+				"Failed to execute the database command",
+				databaseResult.error,
+			),
+		);
 	}
 	res.json(databaseResult.data);
 });
