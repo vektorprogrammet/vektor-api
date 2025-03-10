@@ -1,9 +1,9 @@
 import "dotenv/config";
-import { databaseConnectionParameters } from "@db/config/parameters";
+import { databaseConnectionParameters } from "@/db/config/parameters";
 import {
 	getDatabaseErrorPrivateMessage,
 	postgresErrorParser,
-} from "@db/errors/postgresError";
+} from "@/db/errors/postgres-error";
 import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg"; // It does not work to import { Client } from "pg"
 
@@ -22,4 +22,4 @@ try {
 }
 export const database = drizzle(postgresClient);
 
-console.log("Successfully connected to database.");
+console.info("Successfully connected to database.");

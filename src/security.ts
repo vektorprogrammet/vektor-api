@@ -24,7 +24,7 @@ const SECURITY_HEADERS = {
 	"X-XSS-Protection": "0",
 };
 
-export const customHelmetSecurity: RequestHandler = (req, res, next) => {
+export const customHelmetSecurity: RequestHandler = (_req, res, next) => {
 	res.set(SECURITY_HEADERS);
 	next();
 };

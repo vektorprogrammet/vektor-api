@@ -8,14 +8,14 @@ import {
 	rejectExpense,
 	selectExpenses,
 	selectExpensesById,
-} from "@src/db-access/expenses";
-import { clientError } from "@src/error/httpErrors";
+} from "@/src/db-access/expenses";
+import { clientError } from "@/src/error/http-errors";
 import {
 	toDatePeriodParser,
 	toListQueryParser,
 	toSerialIdParser,
-} from "@src/request-handling/common";
-import { expenseRequestToInsertParser } from "@src/request-handling/expenses";
+} from "@/src/request-handling/common";
+import { expenseRequestToInsertParser } from "@/src/request-handling/expenses";
 import { Router, json } from "express";
 
 export const expenseRouter = Router();
@@ -48,14 +48,18 @@ expenseRouter.post("/", async (req, res, next) => {
 	if (!expenseRequest.success) {
 		const error = clientError(
 			400,
-			"Failed parsing expenserequest.",
+			"Invalid request format",
 			expenseRequest.error,
 		);
 		return next(error);
 	}
 	const databaseResult = await insertExpenses([expenseRequest.data]);
 	if (!databaseResult.success) {
-		const error = clientError(400, "Database error", databaseResult.error);
+		const error = clientError(
+			400,
+			"Failed to execute the database command",
+			databaseResult.error,
+		);
 		return next(error);
 	}
 	res.status(201).json(databaseResult.data);
@@ -84,12 +88,18 @@ expenseRouter.put("/:id/payback/", async (req, res, next) => {
 	const paybackRequest = toSerialIdParser.safeParse(req.params.id);
 	if (!paybackRequest.success) {
 		return next(
-			clientError(400, "Failed parsing paybackrequest", paybackRequest.error),
+			clientError(400, "Invalid request format", paybackRequest.error),
 		);
 	}
 	const databaseResult = await paybackExpenses([paybackRequest.data]);
 	if (!databaseResult.success) {
-		return next(clientError(400, "Database error", databaseResult.error));
+		return next(
+			clientError(
+				400,
+				"Failed to execute the database command",
+				databaseResult.error,
+			),
+		);
 	}
 	res.json(paybackRequest.data);
 });
@@ -115,12 +125,18 @@ expenseRouter.put("/:id/reject/", async (req, res, next) => {
 	const rejectRequest = toSerialIdParser.safeParse(req.params.id);
 	if (!rejectRequest.success) {
 		return next(
-			clientError(400, "Failed parsing rejectrequest", rejectRequest.error),
+			clientError(400, "Invalid request format", rejectRequest.error),
 		);
 	}
 	const databaseResult = await rejectExpense([rejectRequest.data]);
 	if (!databaseResult.success) {
-		return next(clientError(400, "Database error", databaseResult.error));
+		return next(
+			clientError(
+				400,
+				"Failed to execute the database command",
+				databaseResult.error,
+			),
+		);
 	}
 	res.json(rejectRequest.data);
 });
@@ -145,11 +161,19 @@ expenseRouter.put("/:id/reject/", async (req, res, next) => {
 expenseRouter.get("/:expenseId/", async (req, res, next) => {
 	const expenseIdResult = toSerialIdParser.safeParse(req.params.expenseId);
 	if (!expenseIdResult.success) {
-		return next(clientError(400, "", expenseIdResult.error));
+		return next(
+			clientError(400, "Invalid request format", expenseIdResult.error),
+		);
 	}
 	const databaseResult = await selectExpensesById([expenseIdResult.data]);
 	if (!databaseResult.success) {
-		return next(clientError(400, "Database error", databaseResult.error));
+		return next(
+			clientError(
+				400,
+				"Failed to retrieve data from the database",
+				databaseResult.error,
+			),
+		);
 	}
 	res.json(databaseResult.data);
 });
@@ -176,11 +200,19 @@ expenseRouter.get("/:expenseId/", async (req, res, next) => {
 expensesRouter.get("/", async (req, res, next) => {
 	const queryParametersResult = toListQueryParser.safeParse(req.query);
 	if (!queryParametersResult.success) {
-		return next(clientError(400, "", queryParametersResult.error));
+		return next(
+			clientError(400, "Invalid request format", queryParametersResult.error),
+		);
 	}
 	const databaseResult = await selectExpenses(queryParametersResult.data);
 	if (!databaseResult.success) {
-		return next(clientError(400, "Database error", databaseResult.error));
+		return next(
+			clientError(
+				400,
+				"Failed to retrieve data from the database",
+				databaseResult.error,
+			),
+		);
 	}
 	res.json(databaseResult.data);
 });
@@ -209,11 +241,19 @@ expensesRouter.get("/", async (req, res, next) => {
 expensesRouter.get("/money-amount/unprocessed/", async (req, res, next) => {
 	const bodyParameterResult = toDatePeriodParser.safeParse(req.body);
 	if (!bodyParameterResult.success) {
-		return next(clientError(400, "", bodyParameterResult.error));
+		return next(
+			clientError(400, "Invalid request format", bodyParameterResult.error),
+		);
 	}
 	const databaseResult = await getSumUnprocessed(bodyParameterResult.data);
 	if (!databaseResult.success) {
-		return next(clientError(400, "Database error", databaseResult.error));
+		return next(
+			clientError(
+				400,
+				"Failed to retrieve data from the database",
+				databaseResult.error,
+			),
+		);
 	}
 	res.json(databaseResult.data);
 });
@@ -242,11 +282,19 @@ expensesRouter.get("/money-amount/unprocessed/", async (req, res, next) => {
 expensesRouter.get("/money-amount/accepted/", async (req, res, next) => {
 	const bodyParameterResult = toDatePeriodParser.safeParse(req.body);
 	if (!bodyParameterResult.success) {
-		return next(clientError(400, "", bodyParameterResult.error));
+		return next(
+			clientError(400, "Invalid request format", bodyParameterResult.error),
+		);
 	}
 	const databaseResult = await getSumAccepted(bodyParameterResult.data);
 	if (!databaseResult.success) {
-		return next(clientError(400, "Database error", databaseResult.error));
+		return next(
+			clientError(
+				400,
+				"Failed to retrieve data from the database",
+				databaseResult.error,
+			),
+		);
 	}
 	res.json(databaseResult.data);
 });
@@ -275,11 +323,19 @@ expensesRouter.get("/money-amount/accepted/", async (req, res, next) => {
 expensesRouter.get("/money-amount/rejected/", async (req, res, next) => {
 	const bodyParameterResult = toDatePeriodParser.safeParse(req.body);
 	if (!bodyParameterResult.success) {
-		return next(clientError(400, "", bodyParameterResult.error));
+		return next(
+			clientError(400, "Invalid request format", bodyParameterResult.error),
+		);
 	}
 	const databaseResult = await getSumRejected(bodyParameterResult.data);
 	if (!databaseResult.success) {
-		return next(clientError(400, "Database error", databaseResult.error));
+		return next(
+			clientError(
+				400,
+				"Failed to retrieve data from the database",
+				databaseResult.error,
+			),
+		);
 	}
 	res.json(databaseResult.data);
 });
@@ -309,12 +365,18 @@ expensesRouter.get("/payback-time/average/", async (req, res, next) => {
 	const bodyParameterResult = toDatePeriodParser.safeParse(req.body);
 	if (!bodyParameterResult.success) {
 		return next(
-			clientError(400, "Body parse error", bodyParameterResult.error),
+			clientError(400, "Invalid request format", bodyParameterResult.error),
 		);
 	}
 	const databaseResult = await getAveragePaybackTime(bodyParameterResult.data);
 	if (!databaseResult.success) {
-		return next(clientError(400, "Database error", databaseResult.error));
+		return next(
+			clientError(
+				400,
+				"Failed to retrieve data from the database",
+				databaseResult.error,
+			),
+		);
 	}
 	res.json(databaseResult.data);
 });

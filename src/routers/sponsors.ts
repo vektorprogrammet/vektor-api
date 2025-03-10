@@ -1,7 +1,7 @@
-import { insertSponsors, selectSponsorsById } from "@src/db-access/sponsors";
-import { clientError } from "@src/error/httpErrors";
-import { toSerialIdParser } from "@src/request-handling/common";
-import { sponsorRequestToInsertParser } from "@src/request-handling/sponsors";
+import { insertSponsors, selectSponsorsById } from "@/src/db-access/sponsors";
+import { clientError } from "@/src/error/http-errors";
+import { toSerialIdParser } from "@/src/request-handling/common";
+import { sponsorRequestToInsertParser } from "@/src/request-handling/sponsors";
 import { Router, json } from "express";
 
 export const sponsorsRouter = Router();
@@ -33,14 +33,18 @@ sponsorsRouter.post("/", async (req, res, next) => {
 	if (!sponsorRequest.success) {
 		const error = clientError(
 			400,
-			"Failed parsing sponsorrequest.",
+			"Invalid request format",
 			sponsorRequest.error,
 		);
 		return next(error);
 	}
 	const databaseResult = await insertSponsors([sponsorRequest.data]);
 	if (!databaseResult.success) {
-		const error = clientError(400, "Database error", databaseResult.error);
+		const error = clientError(
+			400,
+			"Failed to execute the database command",
+			databaseResult.error,
+		);
 		return next(error);
 	}
 	res.status(201).json(databaseResult.data);
@@ -66,11 +70,19 @@ sponsorsRouter.post("/", async (req, res, next) => {
 sponsorsRouter.get("/:sponsorId", async (req, res, next) => {
 	const sponsorIdResult = toSerialIdParser.safeParse(req.params.sponsorId);
 	if (!sponsorIdResult.success) {
-		return next(clientError(400, "", sponsorIdResult.error));
+		return next(
+			clientError(400, "Invalid request format", sponsorIdResult.error),
+		);
 	}
 	const databaseResult = await selectSponsorsById([sponsorIdResult.data]);
 	if (!databaseResult.success) {
-		return next(clientError(400, "Database error", databaseResult.error));
+		return next(
+			clientError(
+				400,
+				"Failed to retrieve data from the database",
+				databaseResult.error,
+			),
+		);
 	}
 	res.json(databaseResult.data);
 });

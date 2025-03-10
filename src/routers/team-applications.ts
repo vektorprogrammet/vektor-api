@@ -2,10 +2,10 @@ import {
 	insertTeamApplication,
 	selectTeamApplications,
 	selectTeamApplicationsByTeamId,
-} from "@src/db-access/team_applications";
-import { clientError } from "@src/error/httpErrors";
-import { listQueryParser, serialIdParser } from "@src/request-handling/common";
-import { teamApplicationToInsertParser } from "@src/request-handling/team_application";
+} from "@/src/db-access/team-applications";
+import { clientError } from "@/src/error/http-errors";
+import { listQueryParser, serialIdParser } from "@/src/request-handling/common";
+import { teamApplicationToInsertParser } from "@/src/request-handling/team-applications";
 import { Router, json } from "express";
 
 export const teamApplicationRouter = Router();
@@ -34,12 +34,20 @@ teamApplicationRouter.use(json());
 teamApplicationRouter.get("/", async (req, res, next) => {
 	const queryParametersResult = listQueryParser.safeParse(req.query);
 	if (!queryParametersResult.success) {
-		return next(clientError(400, "", queryParametersResult.error));
+		return next(
+			clientError(400, "Invalid request format", queryParametersResult.error),
+		);
 	}
 
 	const results = await selectTeamApplications(queryParametersResult.data);
 	if (!results.success) {
-		return next(clientError(400, "Database error", results.error));
+		return next(
+			clientError(
+				400,
+				"Failed to retrieve data from the database",
+				results.error,
+			),
+		);
 	}
 	res.json(results.data);
 });
@@ -65,18 +73,26 @@ teamApplicationRouter.get("/", async (req, res, next) => {
 teamApplicationRouter.get("/:teamID/", async (req, res, next) => {
 	const teamIdResult = serialIdParser.safeParse(req.params.teamID);
 	if (!teamIdResult.success) {
-		return next(clientError(400, "", teamIdResult.error));
+		return next(clientError(400, "Invalid request format", teamIdResult.error));
 	}
 	const queryParametersResult = listQueryParser.safeParse(req.query);
 	if (!queryParametersResult.success) {
-		return next(clientError(400, "", queryParametersResult.error));
+		return next(
+			clientError(400, "Invalid request format", queryParametersResult.error),
+		);
 	}
 	const databaseResult = await selectTeamApplicationsByTeamId(
 		[teamIdResult.data],
 		queryParametersResult.data,
 	);
 	if (!databaseResult.success) {
-		return next(clientError(400, "Database error", databaseResult.error));
+		return next(
+			clientError(
+				400,
+				"Failed to retrieve data from the database",
+				databaseResult.error,
+			),
+		);
 	}
 	res.json(databaseResult.data);
 });
@@ -109,7 +125,7 @@ teamApplicationRouter.post("/", async (req, res, next) => {
 	if (!teamApplicationBodyResult.success) {
 		const error = clientError(
 			400,
-			"Failed parsing teamapplication request.",
+			"Invalid request format",
 			teamApplicationBodyResult.error,
 		);
 		return next(error);
@@ -118,7 +134,11 @@ teamApplicationRouter.post("/", async (req, res, next) => {
 		teamApplicationBodyResult.data,
 	]);
 	if (!databaseResult.success) {
-		const error = clientError(400, "Database error", databaseResult.error);
+		const error = clientError(
+			400,
+			"Failed to execute the database command",
+			databaseResult.error,
+		);
 		return next(error);
 	}
 	res.status(201).json(databaseResult.data);

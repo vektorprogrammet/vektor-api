@@ -3,26 +3,28 @@ import {
 	getDatabaseErrorPrivateMessage,
 	getDatabaseErrorPublicMessage,
 	postgresErrorParser,
-} from "@db/errors/postgresError";
-import type { Result } from "@lib/types";
+} from "@/db/errors/postgres-error";
+import type { Result } from "@/lib/types";
+import type { OrmErrorMessage } from "@/src/error/error-messages";
 
-const defaultORMErrorMessage = "Database access error" as const;
+const defaultOrmErrorMessage: OrmErrorMessage = "Database access error";
 
-class ORMError extends Error {
+type OrmErrorOptions = ErrorOptions & {
 	customMessage?: {
 		public: string;
 		private: string;
 	};
-	constructor(
-		message: string,
-		options?: ErrorOptions & {
-			customMessage?: {
-				public: string;
-				private: string;
-			};
-		},
-	) {
+};
+
+class OrmError extends Error {
+	declare message: OrmErrorMessage;
+	customMessage?: {
+		public: string;
+		private: string;
+	};
+	constructor(message: OrmErrorMessage, options?: OrmErrorOptions) {
 		super(message, options);
+		this.message = message;
 		this.name = "ORMError";
 		this.customMessage = options?.customMessage;
 	}
@@ -41,26 +43,36 @@ class ORMError extends Error {
 		}
 		return this.customMessage?.private;
 	}
-	private hasCustomMessage(): this is {
-		customMessage: { public: string; private: string };
-	} {
+	private hasCustomMessage(): this is { public: string; private: string } {
 		return this.customMessage !== undefined;
 	}
 }
 
-export function isORMError(error: unknown): error is ORMError {
-	return error instanceof ORMError;
+export function isOrmError(error: unknown): error is OrmError {
+	return error instanceof OrmError;
 }
 
-export function ormError(message: string, cause?: unknown): ORMError {
-	return new ORMError(message, { cause: cause });
+export function ormError(
+	message: OrmErrorMessage,
+	cause?: unknown,
+	options?: OrmErrorOptions,
+): OrmError {
+	if (cause === undefined || cause === null) {
+		return new OrmError(message, options);
+	}
+	return new OrmError(message, {
+		...options,
+		cause: cause,
+	});
 }
 export function customOrmError(
-	message: string,
+	message: OrmErrorMessage,
 	customPublicMessage: string,
 	customPrivateMessage: string,
-): ORMError {
-	return new ORMError(message, {
+	options?: ErrorOptions,
+): OrmError {
+	return new OrmError(message, {
+		...options,
 		customMessage: {
 			public: customPublicMessage,
 			private: customPrivateMessage,
@@ -68,18 +80,18 @@ export function customOrmError(
 	});
 }
 
-export type ORMResult<T> = Result<T, ORMError>;
+export type OrmResult<T> = Result<T, OrmError>;
 
 export function handleDatabaseRejection(reason: unknown) {
-	if (isORMError(reason)) {
+	if (isOrmError(reason)) {
 		return { success: false as const, error: reason };
 	}
 	return {
 		success: false as const,
-		error: ormError(defaultORMErrorMessage, reason),
+		error: ormError(defaultOrmErrorMessage, reason),
 	};
 }
-export function handleDatabaseFullfillment<T>(value: T): ORMResult<T> {
+export function handleDatabaseFullfillment<T>(value: T): OrmResult<T> {
 	return {
 		success: true as const,
 		data: value,
