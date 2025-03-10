@@ -1,4 +1,4 @@
-import { teamsTable } from "@db/tables/team";
+import { teamsTable } from "@/db/tables/teams";
 import { createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
 
