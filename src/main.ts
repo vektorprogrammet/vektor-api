@@ -15,6 +15,7 @@ import { teamApplicationRouter } from "@/src/routers/team-applications";
 
 import { openapiSpecification } from "@/src/openapi/config";
 import { sponsorsRouter } from "@/src/routers/sponsors";
+import { teamsRouter } from "@/src/routers/teams";
 import { usersRouter } from "@/src/routers/users";
 import openapiExpressHandler from "swagger-ui-express";
 
@@ -39,6 +40,7 @@ app.use("/sponsors", sponsorsRouter);
 app.use("/users", usersRouter);
 
 app.use("/teamapplications", teamApplicationRouter);
+app.use("/teams", teamsRouter);
 
 app.use("", errorHandler);
 app.use("", defaultErrorHandler);
