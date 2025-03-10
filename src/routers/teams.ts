@@ -28,8 +28,8 @@ teamsRouter.use(json());
  *       schema:
  *        $ref: "#/components/schemas/teamApplication"
  */
-teamsRouter.get("/:teamID/applications/", async (req, res, next) => {
-	const teamIdResult = toSerialIdParser.safeParse(req.params.teamID);
+teamsRouter.get("/:teamId/applications/", async (req, res, next) => {
+	const teamIdResult = toSerialIdParser.safeParse(req.params.teamId);
 	if (!teamIdResult.success) {
 		return next(clientError(400, "Invalid request format", teamIdResult.error));
 	}
@@ -73,8 +73,8 @@ teamsRouter.get("/:teamID/applications/", async (req, res, next) => {
  *       schema:
  *        $ref: "#/components/schemas/teamApplication"
  */
-teamsRouter.get("/:teamID/", async (req, res, next) => {
-	const teamIdResult = toSerialIdParser.safeParse(req.params.teamID);
+teamsRouter.get("/:teamId/", async (req, res, next) => {
+	const teamIdResult = toSerialIdParser.safeParse(req.params.teamId);
 	if (!teamIdResult.success) {
 		return next(clientError(400, "Invalid request format", teamIdResult.error));
 	}
