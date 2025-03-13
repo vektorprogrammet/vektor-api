@@ -3,15 +3,6 @@ env:
   NODE_VERSION: 21.7.3
   PNPM_VERSION: 10.6.0
   BIOME_VERSION: 1.9.3
-  DATABASE_PASSWORD: pass123
-  DATABASE_USER: postgres
-  DATABASE_HOST: localhost
-  DATABASE_PORT: 5432
-  DATABASE_SSL_OPTION: false
-  DATABASE_NAME: vektor-database
-  PORT: 8080
-  HOSTING_URL: localhost
-
 on:
   push:
     branches: [main]
