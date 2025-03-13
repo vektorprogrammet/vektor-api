@@ -1,7 +1,7 @@
 import "zod-openapi/extend";
+import { datePeriodParser } from "@/lib/time-parsers";
 import { hostOptions } from "@/src/enviroment";
 import {
-	datePeriodParser,
 	limitParser,
 	offsetParser,
 	serialIdParser,

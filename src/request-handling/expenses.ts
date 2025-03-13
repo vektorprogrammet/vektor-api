@@ -3,6 +3,7 @@ import {
 	currencyParser,
 	norwegianBankAccountNumberParser,
 } from "@/lib/finance-parsers";
+import { timeStringParser } from "@/lib/time-parsers";
 import { serialIdParser } from "@/src/request-handling/common";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
@@ -17,10 +18,7 @@ export const expenseRequestParser = z
 			.string()
 			.length(11)
 			.describe("Norwegian account number"),
-		purchaseDate: z
-			.string()
-			.date("Must be valid datestring (YYYY-MM-DD)")
-			.describe("Date of purcase"),
+		purchaseTime: timeStringParser.describe("Time of purcase"),
 	})
 	.strict();
 export const expenseRequestToInsertParser = expenseRequestParser
@@ -30,7 +28,7 @@ export const expenseRequestToInsertParser = expenseRequestParser
 		bankAccountNumber: expenseRequestParser.shape.bankAccountNumber.pipe(
 			norwegianBankAccountNumberParser,
 		),
-		purchaseDate: expenseRequestParser.shape.purchaseDate.pipe(
+		purchaseTime: expenseRequestParser.shape.purchaseTime.pipe(
 			z.coerce.date().max(new Date()),
 		),
 	})

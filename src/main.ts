@@ -8,7 +8,7 @@ import {
 } from "@/src/middleware/error-middleware";
 import { logger } from "@/src/middleware/logging-middleware";
 
-import { expenseRouter, expensesRouter } from "@/src/routers/expenses";
+import { expensesRouter } from "@/src/routers/expenses";
 import { customCors, customHelmetSecurity } from "@/src/security";
 
 import { teamApplicationRouter } from "@/src/routers/team-applications";
@@ -18,32 +18,31 @@ import { sponsorsRouter } from "@/src/routers/sponsors";
 import { usersRouter } from "@/src/routers/users";
 import openapiExpressHandler from "swagger-ui-express";
 
-const app = express();
+export const vektorApi = express();
 
 // Security
-app.use(customHelmetSecurity);
-app.disable("x-powered-by");
-app.use(customCors());
+vektorApi.use(customHelmetSecurity);
+vektorApi.disable("x-powered-by");
+vektorApi.use(customCors());
 
 // OpenAPI
-app.use("/docs/api", openapiExpressHandler.serve);
-app.get("/docs/api", openapiExpressHandler.setup(openapiSpecification));
+vektorApi.use("/docs/api", openapiExpressHandler.serve);
+vektorApi.get("/docs/api", openapiExpressHandler.setup(openapiSpecification));
 
-app.use("/", logger);
+vektorApi.use("", logger);
 
-app.use("/expense", expenseRouter);
-app.use("/expenses", expensesRouter);
+vektorApi.use("/expenses", expensesRouter);
 
-app.use("/sponsors", sponsorsRouter);
+vektorApi.use("/sponsors", sponsorsRouter);
 
-app.use("/users", usersRouter);
+vektorApi.use("/users", usersRouter);
 
-app.use("/teamapplications", teamApplicationRouter);
+vektorApi.use("/teamapplications", teamApplicationRouter);
 
-app.use("", errorHandler);
-app.use("", defaultErrorHandler);
+vektorApi.use("", errorHandler);
+vektorApi.use("", defaultErrorHandler);
 
-app.listen(hostOptions.port, () => {
+vektorApi.listen(hostOptions.port, () => {
 	console.info(
 		`Listening on ${hostOptions.hostingUrl}. May need to specify port ${hostOptions.port}.`,
 	);

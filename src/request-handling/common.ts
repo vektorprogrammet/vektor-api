@@ -1,3 +1,4 @@
+import { DEFAULT_QUERY_LIMIT } from "@/lib/global-variables";
 import { z } from "zod";
 
 export const sortParser = z
@@ -11,12 +12,13 @@ export const limitParser = z
 	.safe()
 	.positive()
 	.int()
-	.default(10)
+	.default(DEFAULT_QUERY_LIMIT)
 	.describe("Amount of items requested");
 export const toLimitParser = z
 	.union([z.number(), z.string()])
 	.pipe(z.coerce.number())
-	.pipe(limitParser);
+	.pipe(limitParser)
+	.default(DEFAULT_QUERY_LIMIT);
 export const offsetParser = z
 	.number()
 	.finite()
@@ -28,7 +30,8 @@ export const offsetParser = z
 export const toOffsetParser = z
 	.union([z.number(), z.string()])
 	.pipe(z.coerce.number())
-	.pipe(offsetParser);
+	.pipe(offsetParser)
+	.default(0);
 export const listQueryParser = z.object({
 	sort: sortParser,
 	limit: limitParser,
@@ -49,27 +52,3 @@ export const toSerialIdParser = z
 	.union([z.number(), z.string()])
 	.pipe(z.coerce.number())
 	.pipe(serialIdParser);
-
-export const dateParser = z.date();
-export const toDateParser = z
-	.union([z.string().date(), z.date()])
-	.pipe(z.coerce.date())
-	.pipe(dateParser);
-
-export const datePeriodParser = z
-	.object({
-		startDate: dateParser,
-		endDate: dateParser,
-	})
-	.refine((datePeriod) => {
-		return datePeriod.startDate.getTime() <= datePeriod.endDate.getTime();
-	}, "Invalid date period. StartDate must be before or equal to endDate.");
-
-export const toDatePeriodParser = z
-	.object({
-		startDate: toDateParser,
-		endDate: toDateParser,
-	})
-	.pipe(datePeriodParser);
-
-export type DatePeriod = z.infer<typeof datePeriodParser>;
