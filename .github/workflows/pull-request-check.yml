@@ -31,19 +31,6 @@ jobs:
         run: biome ci .
   build:
     runs-on: ubuntu-latest
-    services:
-      database:
-        image: postgres:latest
-        env:
-          POSTGRES_PASSWORD: ${{ env.DATABASE_PASSWORD }}
-        # Wait until postgres has started
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -58,6 +45,8 @@ jobs:
           cache: "pnpm"
       - name: Install pnpm
         run: pnpm install
+      - name: Docker compose
+        run: docker compose up
       - name: Generate migration files
         run: pnpm db:generate
       - name: Migrate database
@@ -73,19 +62,6 @@ jobs:
         run: pnpm start &
   test:
     runs-on: ubuntu-latest
-    services:
-      database:
-        image: postgres:latest
-        env:
-          POSTGRES_PASSWORD: ${{ env.DATABASE_PASSWORD }}
-        # Wait until postgres has started
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -100,6 +76,8 @@ jobs:
           cache: "pnpm"
       - name: Install pnpm
         run: pnpm install
+      - name: Docker compose
+        run: docker compose up
       - name: Generate migration files
         run: pnpm db:generate
       - name: Migrate database
