@@ -1,66 +1,111 @@
 # Vektorprogrammets API
 
-Kildekoden er på engelsk
+Kildekoden er på engelsk.
 
-## Folder structure
+## Innholdsfortegnelse
+
+- [Vektorprogrammets API](#vektorprogrammets-api)
+  - [Innholdsfortegnelse](#innholdsfortegnelse)
+  - [Mappestruktur](#mappestruktur)
+  - [Oppsett](#oppsett)
+    - [Med lokal database](#med-lokal-database)
+    - [Med dev-database på digital ocean](#med-dev-database-på-digital-ocean)
+  - [Recommended Extensions](#recommended-extensions)
+    - [Imports Autocomplete](#imports-autocomplete)
+    - [Formatting and Linting](#formatting-and-linting)
+      - [Configure format on save in VSCode](#configure-format-on-save-in-vscode)
+    - [Pretty TypeScript Errors](#pretty-typescript-errors)
+  - [Scripts](#scripts)
+    - [Development](#development)
+    - [Linting and formatting](#linting-and-formatting)
+    - [Production](#production)
+    - [Database](#database)
+  - [Info](#info)
+
+## Mappestruktur
 
 - `/`
   - `db/` database modul
   - `lib/` generell delt kode
   - `src/` serverkode (CORE og API samlet)
 
-## Setup
+## Oppsett
 
-Start med å kjøre `npm install` og pass på at du har fått installert alle avhengighetene riktig.
-Deretter lag en `.env`-fil for å lage egne miljøvariabler
+Start med å kjøre
+
+```sh
+pnpm install
+```
+
+og pass på at du har fått installert alle avhengighetene riktig.
+Deretter lag en `.env`-fil for å lage egne miljøvariabler.
 Start med å sette:
-> PORT=***porten du vil kjøre apien fra*** *f.eks. 8080*
->
-> HOSTING_URL=***urlen du kjører apiet fra*** *f.eks. localhost*
+
+```.env
+PORT=*porten du vil kjøre apien fra, f.eks. 8080*
+
+HOSTING_URL=*urlen du kjører apiet fra, f.eks. localhost*
+```
 
 Deretter må du sette opp databasetilkoblingene.
 
----
+Nå legger du inn databasetilkoblingsinnstillingene som miljøvariabler, anbefaler å bruke en `.env` fil. Du må legge inn alle disse innstillingene:
+
+```.env
+DATABASE_HOST=*f.eks. localhost*
+DATABASE_PORT=*f.eks. 5432*
+DATABASE_NAME=*f.eks. vektorpostgres*
+DATABASE_USER=*f.eks. postgres*
+DATABASE_PASSWORD=*f.eks. pass123*
+```
+
+Eventuelt kan du sette:
+
+```.env
+LOG_DATABASE_CREDENTIALS_ON_STARTUP=true
+```
+
+for å sjekke at tilkoblingsinstillingene til databasen ser bra ut når du kjører appen.
 
 ### Med lokal database
 
-Start med å sette opp et postgres bilde i docker.
-F.eks. med kommandoen `docker run --name vektorPostgres -p 5432:5432 -e POSTGRES_PASSWORD=pass123 -d postgres`
-Lag en database i bilet du satte opp.
-Husk url(mest sannsynlig `localhost`), port, database navn, bruker(`postgres` om du ikke har spesifisert det) og passord.
-Lokale databaser pleier ikke støtte SSL-tilkoblinger. Derfor må du nok sette opp denne instillingen i `.env`-filen:
-> DATABASE_SSL_OPTION=**false**
+Kjør:
+
+[`docker compose up` scriptet](#database)
+
+og databasen burde være oppe og gå med en gang.
+I `.env` sett
+
+```.env
+DATABASE_SSL_OPTION=false
+```
+
+fordi lokale databaser ikke tillater ssl-tilkoblinger.
 
 ### Med dev-database på digital ocean
 
 Du finner tilkoblingsinnstillingene på digital ocean.
 Siden databasen fortsatt er i utvilking og vi ikke har skaffet et CA-sertifikat til den enda, må du sette:
-> DATABASE_SSL_OPTION=**dev**
+
+```.env
+DATABASE_SSL_OPTION=dev
+```
 
 Eventuelt **kan** du kopiere CA-serifikatet til databasen fra digital ocean og sette dette i en miljøvariabel, men dette er unødvendig under utvilking. Om du uansett vil prøve må du sette:
-> DATABASE_SSL_OPTION=**prod-provide_ca_cert**
->
-> CA_CERT=***CA-sertifikatet***
 
----
+```.env
+DATABASE_SSL_OPTION=prod-provide_ca_cert
+```
 
-Nå legger du inn databaseinnstillingene som miljøvariabler:
-> DATABASE_HOST=***din host*** *f.eks. localhost*
->
-> DATABASE_PORT=***din port*** *f.eks. 5432*
->
-> DATABASE_NAME=***ditt databasenavn*** *f.eks. vektorpostgres*
->
-> DATABASE_USER=***din bruker*** *f.eks.postgres*
->
-> DATABASE_PASSWORD=***ditt passord*** *pass123*
+og
 
-Eventuelt kan du sette:
->LOG_DATABASE_CREDENTIALS_ON_STARTUP=**true**
+```.env
+CA_CERT=*CA-sertifikatet*
+```
 
-for å sjekke at tilkoblingsinstillingene til databasen ser bra ut når du kjører appen.
+i `.env`.
 
-For å kjøre appen og migrere databasen, se scripts lenger nede.
+For å kjøre appen og migrere databasen, se [scripts](#database).
 
 ## Recommended Extensions
 
@@ -93,46 +138,96 @@ Paste the following into `.vscode/settings.json`
 
 ### Development
 
-- `dev:once`
-  - Run server
-- `dev`
-  - Run server w/restart on changes
-- `test`
-  - Run tests
+Run server
+
+```sh
+pnpm dev:once
+```
+
+Run server, watch for changes:
+
+```sh
+pnpm dev
+```
+
+Run tests in `/src/tests`:
+
+```sh
+pnpm test
+```
 
 ### Linting and formatting
 
-- `format`
-  - Format files in `db` and `src`, safe fixes applied
-- `lint`
-  - Lint files in `db` and `src`, safe fixes applied
-- `check`
-  - Format and lint files in `db` and `src`, safe fixes applied
+Format files, safe fixes applied:
+
+```sh
+pnpm format
+```
+
+Lint files in, safe fixes applied:
+
+```sh
+pnpm lint
+```
+
+Format and lint files, safe fixes applied:
+
+```sh
+pnpm check
+```
 
 ### Production
 
-- `build`
-  - Build server into /build
-- `start`
-  - Run the built server in /build
-- `prod`
-  - Run build, then start
+Build into `/build`:
+
+```sh
+pnpm build
+```
+
+Run the built javascript in `/build`:
+
+```sh
+pnpm start
+```
+
+Build, then start:
+
+```sh
+pnpm prod
+```
 
 ### Database
 
-- `db:generate`
-  - Generate migration files to /db/migrations
-- `db:migrate`
-  - Migrate the database with the generated migrationfiles in /db/migrations
-- `db:studio`
-  - Open the database in the drizzle studio interface
+Start a postgres database in a docker container:
+
+```sh
+docker compose up
+```
+
+Generate migration files to `/db/migrations`:
+
+```sh
+pnpm db:generate
+```
+
+Migrate the database with the generated migrationfiles in `/db/migrations`:
+
+```sh
+pnpm db:migrate
+```
+
+Open the database in the drizzle studio interface:
+
+```sh
+pnpm db:studio
+```
+
+Seed the database with random, but deterministic values:
+
+```sh
+pnpm db:seed
+```
 
 ## Info
 
 Tabellnavn er i *flertall* (users > user)
-
-## TODO
-
-Undersøk om vi kan implementere noen sikkerhetsprosedyrer fra: <https://helmetjs.github.io/faq/see-also/>
-Implementer auth
-Lag ordentlige database schemas
