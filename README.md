@@ -93,39 +93,43 @@ Paste the following into `.vscode/settings.json`
 
 ### Development
 
-- `dev:once`
-  - Run server
-- `dev`
-  - Run server w/restart on changes
-- `test`
-  - Run tests
+- `pnpm dev:once`
+Run server
+- `pnpm dev`
+Run server with restart on changes
+- `pnpm test`
+Run tests in `/src/tests`
 
 ### Linting and formatting
 
-- `format`
-  - Format files in `db` and `src`, safe fixes applied
-- `lint`
-  - Lint files in `db` and `src`, safe fixes applied
-- `check`
-  - Format and lint files in `db` and `src`, safe fixes applied
+- `pnpm format`
+Format files, safe fixes applied
+- `pnpm lint`
+Lint files in, safe fixes applied
+- `pnpm check`
+Format and lint files, safe fixes applied
 
 ### Production
 
-- `build`
-  - Build server into /build
-- `start`
-  - Run the built server in /build
-- `prod`
-  - Run build, then start
+- `pnpm build`
+Build server into `/build`
+- `pnpm start`
+Run the built server in `/build`
+- `pnpm prod`
+Build, then start
 
 ### Database
 
-- `db:generate`
-  - Generate migration files to /db/migrations
-- `db:migrate`
-  - Migrate the database with the generated migrationfiles in /db/migrations
-- `db:studio`
-  - Open the database in the drizzle studio interface
+- `docker compose up`
+Start a postgres database in a docker container with the correct enviromentvariables
+- `pnpm db:generate`
+Generate migration files to `/db/migrations`
+- `pnpm db:migrate`
+Migrate the database with the generated migrationfiles in `/db/migrations`
+- `pnpm db:studio`
+Open the database in the drizzle studio interface
+- `pnpm db:seed`
+Seed the database with random, but deterministic values
 
 ## Info
 
