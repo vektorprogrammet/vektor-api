@@ -1,8 +1,28 @@
 # Vektorprogrammets API
 
-Kildekoden er på engelsk
+Kildekoden er på engelsk.
 
-## Folder structure
+## Innholdsfortegnelse
+
+- [Vektorprogrammets API](#vektorprogrammets-api)
+  - [Innholdsfortegnelse](#innholdsfortegnelse)
+  - [Mappestruktur](#mappestruktur)
+  - [Oppsett](#oppsett)
+    - [Med lokal database](#med-lokal-database)
+    - [Med dev-database på digital ocean](#med-dev-database-på-digital-ocean)
+  - [Recommended Extensions](#recommended-extensions)
+    - [Imports Autocomplete](#imports-autocomplete)
+    - [Formatting and Linting](#formatting-and-linting)
+      - [Configure format on save in VSCode](#configure-format-on-save-in-vscode)
+    - [Pretty TypeScript Errors](#pretty-typescript-errors)
+  - [Scripts](#scripts)
+    - [Development](#development)
+    - [Linting and formatting](#linting-and-formatting)
+    - [Production](#production)
+    - [Database](#database)
+  - [Info](#info)
+
+## Mappestruktur
 
 - `/`
   - `db/` database modul
