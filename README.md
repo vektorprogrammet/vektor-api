@@ -34,13 +34,10 @@ Kildekoden er på engelsk.
 Start med å kjøre `npm install` og pass på at du har fått installert alle avhengighetene riktig.
 Deretter lag en `.env`-fil for å lage egne miljøvariabler
 Start med å sette:
-> PORT=***porten du vil kjøre apien fra*** *f.eks. 8080*
->
-> HOSTING_URL=***urlen du kjører apiet fra*** *f.eks. localhost*
+`PORT=` **porten du vil kjøre apien fra** *f.eks. 8080*
+`HOSTING_URL=`**urlen du kjører apiet fra** *f.eks. localhost*
 
 Deretter må du sette opp databasetilkoblingene.
-
----
 
 Nå legger du inn databasetilkoblingsinnstillingene som miljøvariabler, anbefaler å bruke en `.env` fil. Du må legge inn alle disse innstillingene:
 `DATABASE_HOST=` *f.eks. localhost*
