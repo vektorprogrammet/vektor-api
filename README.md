@@ -38,7 +38,7 @@ pnpm install
 ```
 
 og pass på at du har fått installert alle avhengighetene riktig.
-Deretter lag en `.env`-fil for å lage egne miljøvariabler
+Deretter lag en `.env`-fil for å lage egne miljøvariabler.
 Start med å sette:
 
 ```.env
@@ -52,11 +52,11 @@ Deretter må du sette opp databasetilkoblingene.
 Nå legger du inn databasetilkoblingsinnstillingene som miljøvariabler, anbefaler å bruke en `.env` fil. Du må legge inn alle disse innstillingene:
 
 ```.env
-DATABASE_HOST= *f.eks. localhost*
-DATABASE_PORT= *f.eks. 5432*
-DATABASE_NAME= *f.eks. vektorpostgres*
-DATABASE_USER= *f.eks. postgres*
-DATABASE_PASSWORD= *f.eks. pass123*
+DATABASE_HOST=*f.eks. localhost*
+DATABASE_PORT=*f.eks. 5432*
+DATABASE_NAME=*f.eks. vektorpostgres*
+DATABASE_USER=*f.eks. postgres*
+DATABASE_PASSWORD=*f.eks. pass123*
 ```
 
 Eventuelt kan du sette:
