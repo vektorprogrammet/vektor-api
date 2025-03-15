@@ -34,41 +34,59 @@ Kildekoden er på engelsk.
 Start med å kjøre `npm install` og pass på at du har fått installert alle avhengighetene riktig.
 Deretter lag en `.env`-fil for å lage egne miljøvariabler
 Start med å sette:
+
 `PORT=` **porten du vil kjøre apien fra** *f.eks. 8080*
+
 `HOSTING_URL=`**urlen du kjører apiet fra** *f.eks. localhost*
 
 Deretter må du sette opp databasetilkoblingene.
 
 Nå legger du inn databasetilkoblingsinnstillingene som miljøvariabler, anbefaler å bruke en `.env` fil. Du må legge inn alle disse innstillingene:
+
 `DATABASE_HOST=` *f.eks. localhost*
+
 `DATABASE_PORT=` *f.eks. 5432*
+
 `DATABASE_NAME=` *f.eks. vektorpostgres*
+
 `DATABASE_USER=` *f.eks. postgres*
+
 `DATABASE_PASSWORD=` *f.eks. pass123*
 
 Eventuelt kan du sette:
+
 `LOG_DATABASE_CREDENTIALS_ON_STARTUP=true`
+
 for å sjekke at tilkoblingsinstillingene til databasen ser bra ut når du kjører appen.
 
 ### Med lokal database
 
 Kjør:
+
 [`docker compose up` scriptet](#database)
-og databasen burde være oppe og gå med en gang
+
+og databasen burde være oppe og gå med en gang.
 I `.env` sett
+
 `DATABASE_SSL_OPTION=false`
+
 fordi lokale databaser ikke tillater ssl-tilkoblinger.
 
 ### Med dev-database på digital ocean
 
 Du finner tilkoblingsinnstillingene på digital ocean.
 Siden databasen fortsatt er i utvilking og vi ikke har skaffet et CA-sertifikat til den enda, må du sette:
+
 `DATABASE_SSL_OPTION=dev`
 
 Eventuelt **kan** du kopiere CA-serifikatet til databasen fra digital ocean og sette dette i en miljøvariabel, men dette er unødvendig under utvilking. Om du uansett vil prøve må du sette:
+
 `DATABASE_SSL_OPTION=prod-provide_ca_cert`
+
 og
+
 `CA_CERT=***CA-sertifikatet***`
+
 i `.env`.
 
 For å kjøre appen og migrere databasen, se [scripts](#database).
