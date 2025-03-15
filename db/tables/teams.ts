@@ -3,7 +3,7 @@ import { mainSchema } from "@/db/tables/schema";
 import { teamApplicationsTable } from "@/db/tables/team-applications";
 import { teamUsersTable } from "@/db/tables/users";
 import { relations } from "drizzle-orm";
-import { boolean, date, serial, text } from "drizzle-orm/pg-core";
+import { boolean, serial, text, timestamp } from "drizzle-orm/pg-core";
 import { integer } from "drizzle-orm/pg-core";
 
 export const teamsTable = mainSchema.table("teams", {
@@ -17,7 +17,7 @@ export const teamsTable = mainSchema.table("teams", {
 	shortDescription: text("shortDescription").notNull(),
 	acceptApplication: boolean("acceptApplication").notNull(),
 	active: boolean("active").notNull(),
-	deadline: date("deadline", { mode: "date" }),
+	deadline: timestamp("deadline"),
 });
 
 export const teamRelations = relations(teamsTable, ({ one, many }) => ({

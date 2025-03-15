@@ -1,15 +1,13 @@
 import { database } from "@/db/setup/query-postgres";
 import { expensesTable } from "@/db/tables/expenses";
+import type { DatePeriod } from "@/lib/time-parsers";
 import {
 	type OrmResult,
 	handleDatabaseFullfillment,
 	handleDatabaseRejection,
 	ormError,
 } from "@/src/error/orm-error";
-import type {
-	DatePeriod,
-	QueryParameters,
-} from "@/src/request-handling/common";
+import type { QueryParameters } from "@/src/request-handling/common";
 import type { NewExpense } from "@/src/request-handling/expenses";
 import type { Expense, ExpenseKey } from "@/src/response-handling/expenses";
 import {
@@ -46,7 +44,7 @@ export async function paybackExpenses(
 				.from(expensesTable)
 				.where(
 					and(
-						isNotNull(expensesTable.handlingDate),
+						isNotNull(expensesTable.handlingTime),
 						inArray(expensesTable.id, expenseIds),
 					),
 				);
@@ -56,7 +54,7 @@ export async function paybackExpenses(
 
 			const updateResult = await database
 				.update(expensesTable)
-				.set({ handlingDate: new Date(), isAccepted: true })
+				.set({ handlingTime: new Date(), isAccepted: true })
 				.where(inArray(expensesTable.id, expenseIds))
 				.returning();
 			if (updateResult.length !== expenseIds.length) {
@@ -77,7 +75,7 @@ export async function rejectExpense(
 				.from(expensesTable)
 				.where(
 					and(
-						isNotNull(expensesTable.handlingDate),
+						isNotNull(expensesTable.handlingTime),
 						inArray(expensesTable.id, expenseIds),
 					),
 				);
@@ -87,7 +85,7 @@ export async function rejectExpense(
 
 			const updateResult = await database
 				.update(expensesTable)
-				.set({ handlingDate: new Date(), isAccepted: false })
+				.set({ handlingTime: new Date(), isAccepted: false })
 				.where(inArray(expensesTable.id, expenseIds))
 				.returning();
 			if (updateResult.length !== expenseIds.length) {
@@ -139,9 +137,9 @@ export async function getSumUnprocessed(
 				.from(expensesTable)
 				.where(
 					and(
-						isNull(expensesTable.handlingDate),
+						isNull(expensesTable.handlingTime),
 						between(
-							expensesTable.submitDate,
+							expensesTable.submitTime,
 							timePeriod.startDate,
 							timePeriod.endDate,
 						),
@@ -175,9 +173,9 @@ export async function getSumAccepted(
 				.where(
 					and(
 						expensesTable.isAccepted,
-						isNotNull(expensesTable.handlingDate),
+						isNotNull(expensesTable.handlingTime),
 						between(
-							expensesTable.submitDate,
+							expensesTable.submitTime,
 							timePeriod.startDate,
 							timePeriod.endDate,
 						),
@@ -211,9 +209,9 @@ export async function getSumRejected(
 				.where(
 					and(
 						not(expensesTable.isAccepted),
-						isNotNull(expensesTable.handlingDate),
+						isNotNull(expensesTable.handlingTime),
 						between(
-							expensesTable.submitDate,
+							expensesTable.submitTime,
 							timePeriod.startDate,
 							timePeriod.endDate,
 						),
@@ -246,9 +244,9 @@ export async function getAveragePaybackTime(
 				.from(expensesTable)
 				.where(
 					and(
-						isNotNull(expensesTable.handlingDate),
+						isNotNull(expensesTable.handlingTime),
 						between(
-							expensesTable.submitDate,
+							expensesTable.submitTime,
 							timePeriod.startDate,
 							timePeriod.endDate,
 						),
@@ -260,12 +258,12 @@ export async function getAveragePaybackTime(
 			}
 
 			const totalMilliseconds = result.reduce((accumulator, currentValue) => {
-				// handlingDate have already checked not to be null
-				const handlingDate = currentValue.handlingDate as Date;
+				// handlingTime have already checked not to be null
+				const handlingDate = currentValue.handlingTime as Date;
 
 				return (
 					accumulator +
-					(handlingDate.getTime() - currentValue.submitDate.getTime())
+					(handlingDate.getTime() - currentValue.submitTime.getTime())
 				);
 			}, 0);
 

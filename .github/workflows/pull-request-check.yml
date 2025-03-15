@@ -1,8 +1,6 @@
 name: Pull request to main
+permissions: {}
 env:
-  NODE_VERSION: 21.7.3
-  PNPM_VERSION: 10.6.0
-  BIOME_VERSION: 1.9.3
   DATABASE_PASSWORD: pass123
   DATABASE_USER: postgres
   DATABASE_HOST: localhost
@@ -25,39 +23,23 @@ jobs:
         uses: actions/checkout@v4
       - name: Setup Biome
         uses: biomejs/setup-biome@v2
-        with:
-          version: ${{ env.BIOME_VERSION }}
       - name: Run Biome
         run: biome ci .
   build:
     runs-on: ubuntu-latest
-    services:
-      database:
-        image: postgres:latest
-        env:
-          POSTGRES_PASSWORD: ${{ env.DATABASE_PASSWORD }}
-        # Wait until postgres has started
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: ${{ env.PNPM_VERSION }}
       - name: Setup node
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
           cache: "pnpm"
       - name: Install pnpm
         run: pnpm install
+      - name: Docker compose
+        run: docker compose up -d
       - name: Generate migration files
         run: pnpm db:generate
       - name: Migrate database
@@ -73,19 +55,6 @@ jobs:
         run: pnpm start &
   test:
     runs-on: ubuntu-latest
-    services:
-      database:
-        image: postgres:latest
-        env:
-          POSTGRES_PASSWORD: ${{ env.DATABASE_PASSWORD }}
-        # Wait until postgres has started
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -100,6 +69,8 @@ jobs:
           cache: "pnpm"
       - name: Install pnpm
         run: pnpm install
+      - name: Docker compose
+        run: docker compose up -d
       - name: Generate migration files
         run: pnpm db:generate
       - name: Migrate database

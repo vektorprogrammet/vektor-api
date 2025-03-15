@@ -1,6 +1,7 @@
 # Vektorprogrammets API
 
 Kildekoden er på engelsk
+For at testene skal fungere, bruk node version >=22
 
 ## Folder structure
 

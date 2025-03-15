@@ -4,3 +4,5 @@ db/migrations
 .vscode
 build
 openapi-document.yaml
+#From docker compose database
+db-data

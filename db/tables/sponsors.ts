@@ -1,7 +1,7 @@
 import { departmentsTable } from "@/db/tables/departments";
 import { mainSchema } from "@/db/tables/schema";
 import { relations } from "drizzle-orm";
-import { date, integer, serial, text } from "drizzle-orm/pg-core";
+import { integer, serial, text, timestamp } from "drizzle-orm/pg-core";
 
 export const sponsorSizeEnum = mainSchema.enum("size", [
 	"small",
@@ -13,8 +13,8 @@ export const sponsorsTable = mainSchema.table("sponsors", {
 	id: serial("id").primaryKey(),
 	name: text("name").notNull(),
 	homePageUrl: text("homePageURL").notNull(),
-	startDate: date("startDate", { mode: "date" }).notNull(),
-	endDate: date("endDate", { mode: "date" }),
+	startTime: timestamp("startTime").notNull(),
+	endTime: timestamp("endTime"),
 	size: sponsorSizeEnum("size").notNull(),
 	spesificDepartmentId: integer("spesificDepartmentId").references(
 		() => departmentsTable.id,

@@ -1,3 +1,4 @@
+import { toDatePeriodParser } from "@/lib/time-parsers";
 import {
 	getAveragePaybackTime,
 	getSumAccepted,
@@ -11,20 +12,18 @@ import {
 } from "@/src/db-access/expenses";
 import { clientError } from "@/src/error/http-errors";
 import {
-	toDatePeriodParser,
 	toListQueryParser,
 	toSerialIdParser,
 } from "@/src/request-handling/common";
 import { expenseRequestToInsertParser } from "@/src/request-handling/expenses";
 import { Router, json } from "express";
 
-export const expenseRouter = Router();
 export const expensesRouter = Router();
-expenseRouter.use(json());
+expensesRouter.use(json());
 
 /**
  * @openapi
- * /expense/:
+ * /expenses:
  *  post:
  *   tags: [expenses]
  *   summary: Add expense
@@ -43,7 +42,7 @@ expenseRouter.use(json());
  *       schema:
  *        $ref: "#/components/schemas/expense"
  */
-expenseRouter.post("/", async (req, res, next) => {
+expensesRouter.post("", async (req, res, next) => {
 	const expenseRequest = expenseRequestToInsertParser.safeParse(req.body);
 	if (!expenseRequest.success) {
 		const error = clientError(
@@ -65,11 +64,9 @@ expenseRouter.post("/", async (req, res, next) => {
 	res.status(201).json(databaseResult.data);
 });
 
-expensesRouter.use(json());
-
 /**
  * @openapi
- * /expense/{id}/payback/:
+ * /expenses/{id}/payback:
  *  put:
  *   tags: [expenses]
  *   summary: Payback expense with ID
@@ -84,7 +81,7 @@ expensesRouter.use(json());
  *       schema:
  *        $ref: "#/components/schemas/expense"
  */
-expenseRouter.put("/:id/payback/", async (req, res, next) => {
+expensesRouter.put("/:id/payback", async (req, res, next) => {
 	const paybackRequest = toSerialIdParser.safeParse(req.params.id);
 	if (!paybackRequest.success) {
 		return next(
@@ -106,7 +103,7 @@ expenseRouter.put("/:id/payback/", async (req, res, next) => {
 
 /**
  * @openapi
- * /expense/{id}/reject/:
+ * /expenses/{id}/reject:
  *  put:
  *   tags: [expenses]
  *   summary: Reject expense with ID
@@ -121,7 +118,7 @@ expenseRouter.put("/:id/payback/", async (req, res, next) => {
  *       schema:
  *        $ref: "#/components/schemas/expense"
  */
-expenseRouter.put("/:id/reject/", async (req, res, next) => {
+expensesRouter.put("/:id/reject", async (req, res, next) => {
 	const rejectRequest = toSerialIdParser.safeParse(req.params.id);
 	if (!rejectRequest.success) {
 		return next(
@@ -143,7 +140,7 @@ expenseRouter.put("/:id/reject/", async (req, res, next) => {
 
 /**
  * @openapi
- * /expense/{id}/:
+ * /expenses/{id}:
  *  get:
  *   tags: [expenses]
  *   summary: Get expense with id
@@ -158,7 +155,7 @@ expenseRouter.put("/:id/reject/", async (req, res, next) => {
  *       schema:
  *        $ref: "#/components/schemas/expense"
  */
-expenseRouter.get("/:expenseId/", async (req, res, next) => {
+expensesRouter.get("/:expenseId", async (req, res, next) => {
 	const expenseIdResult = toSerialIdParser.safeParse(req.params.expenseId);
 	if (!expenseIdResult.success) {
 		return next(
@@ -180,7 +177,7 @@ expenseRouter.get("/:expenseId/", async (req, res, next) => {
 
 /**
  * @openapi
- * /expenses/:
+ * /expenses:
  *  get:
  *   tags: [expenses]
  *   summary: Get expenses
@@ -197,7 +194,7 @@ expenseRouter.get("/:expenseId/", async (req, res, next) => {
  *       schema:
  *        $ref: "#/components/schemas/expense"
  */
-expensesRouter.get("/", async (req, res, next) => {
+expensesRouter.get("", async (req, res, next) => {
 	const queryParametersResult = toListQueryParser.safeParse(req.query);
 	if (!queryParametersResult.success) {
 		return next(
@@ -219,7 +216,7 @@ expensesRouter.get("/", async (req, res, next) => {
 
 /**
  * @openapi
- * /expenses/money-amount/unprocessed/:
+ * /expensess/money-amount/unprocessed:
  *  get:
  *   tags: [expenses]
  *   requestBody:
@@ -238,7 +235,7 @@ expensesRouter.get("/", async (req, res, next) => {
  *      application/json:
  *       schema:
  */
-expensesRouter.get("/money-amount/unprocessed/", async (req, res, next) => {
+expensesRouter.get("/money-amount/unprocessed", async (req, res, next) => {
 	const bodyParameterResult = toDatePeriodParser.safeParse(req.body);
 	if (!bodyParameterResult.success) {
 		return next(
@@ -260,7 +257,7 @@ expensesRouter.get("/money-amount/unprocessed/", async (req, res, next) => {
 
 /**
  * @openapi
- * /expenses/money-amount/accepted/:
+ * /expenses/money-amount/accepted:
  *  get:
  *   tags: [expenses]
  *   requestBody:
@@ -279,7 +276,7 @@ expensesRouter.get("/money-amount/unprocessed/", async (req, res, next) => {
  *      application/json:
  *       schema:
  */
-expensesRouter.get("/money-amount/accepted/", async (req, res, next) => {
+expensesRouter.get("/money-amount/accepted", async (req, res, next) => {
 	const bodyParameterResult = toDatePeriodParser.safeParse(req.body);
 	if (!bodyParameterResult.success) {
 		return next(
@@ -301,7 +298,7 @@ expensesRouter.get("/money-amount/accepted/", async (req, res, next) => {
 
 /**
  * @openapi
- * /expenses/money-amount/rejected/:
+ * /expenses/money-amount/rejected:
  *  get:
  *   tags: [expenses]
  *   requestBody:
@@ -320,7 +317,7 @@ expensesRouter.get("/money-amount/accepted/", async (req, res, next) => {
  *      application/json:
  *       schema:
  */
-expensesRouter.get("/money-amount/rejected/", async (req, res, next) => {
+expensesRouter.get("/money-amount/rejected", async (req, res, next) => {
 	const bodyParameterResult = toDatePeriodParser.safeParse(req.body);
 	if (!bodyParameterResult.success) {
 		return next(
@@ -342,7 +339,7 @@ expensesRouter.get("/money-amount/rejected/", async (req, res, next) => {
 
 /**
  * @openapi
- * /expenses/payback-time/average/:
+ * /expenses/payback-time/average:
  *  get:
  *   tags: [expenses]
  *   requestBody:
@@ -361,7 +358,7 @@ expensesRouter.get("/money-amount/rejected/", async (req, res, next) => {
  *      application/json:
  *       schema:
  */
-expensesRouter.get("/payback-time/average/", async (req, res, next) => {
+expensesRouter.get("/payback-time/average", async (req, res, next) => {
 	const bodyParameterResult = toDatePeriodParser.safeParse(req.body);
 	if (!bodyParameterResult.success) {
 		return next(

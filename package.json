@@ -10,12 +10,12 @@
 		"build": "tsc --project ./tsconfig.json && tsc-alias --project ./tsconfig.json --resolve-full-paths",
 		"start": "node ./build/src/main.js",
 		"prod": "pnpm build && pnpm start",
-		"test": "tsc --noEmit && node --import tsx --test ./src/test/*.ts",
+		"test": "tsc --noEmit && node --import tsx --test --test-force-exit ./src/test/*.ts",
 		"format": "biome format --write",
 		"lint": "biome lint --write",
 		"check": "biome check --write",
 		"db:generate": "drizzle-kit generate --config=db/config/drizzle.config.ts",
-		"db:migrate": "tsx ./db/setup/create-database.ts && drizzle-kit migrate --config=db/config/drizzle.config.ts",
+		"db:migrate": "drizzle-kit migrate --config=db/config/drizzle.config.ts",
 		"db:studio": "drizzle-kit studio --config=db/config/drizzle.config.ts",
 		"docs:generate": "tsx ./src/openapi/generateDocument.ts"
 	},
@@ -40,13 +40,16 @@
 		"@types/express": "^4.17.21",
 		"@types/node": "^22.7.8",
 		"@types/pg": "^8.11.10",
+		"@types/supertest": "^6.0.2",
 		"@types/swagger-jsdoc": "^6.0.4",
 		"@types/swagger-ui-express": "^4.1.7",
 		"@types/validator": "^13.12.2",
 		"drizzle-kit": "^0.24.2",
+		"supertest": "^7.0.0",
 		"tsc-alias": "^1.8.10",
 		"tsx": "^4.19.1",
 		"typescript": "^5.6.3",
 		"yaml": "^2.6.0"
-	}
+	},
+	"packageManager": "pnpm@10.6.3+sha512.bb45e34d50a9a76e858a95837301bfb6bd6d35aea2c5d52094fa497a467c43f5c440103ce2511e9e0a2f89c3d6071baac3358fc68ac6fb75e2ceb3d2736065e6"
 }

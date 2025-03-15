@@ -1,14 +1,12 @@
 import "dotenv/config";
-import express from "express";
-
-import { hostOptions } from "@/src/enviroment";
 import {
 	defaultErrorHandler,
 	errorHandler,
 } from "@/src/middleware/error-middleware";
 import { logger } from "@/src/middleware/logging-middleware";
+import express from "express";
 
-import { expenseRouter, expensesRouter } from "@/src/routers/expenses";
+import { expensesRouter } from "@/src/routers/expenses";
 import { customCors, customHelmetSecurity } from "@/src/security";
 
 import { teamApplicationRouter } from "@/src/routers/team-applications";
@@ -17,33 +15,33 @@ import { openapiSpecification } from "@/src/openapi/config";
 import { sponsorsRouter } from "@/src/routers/sponsors";
 import { usersRouter } from "@/src/routers/users";
 import openapiExpressHandler from "swagger-ui-express";
+import { hostOptions } from "./enviroment";
 
-const app = express();
+export const api = express();
 
 // Security
-app.use(customHelmetSecurity);
-app.disable("x-powered-by");
-app.use(customCors());
+api.use(customHelmetSecurity);
+api.disable("x-powered-by");
+api.use(customCors());
 
 // OpenAPI
-app.use("/docs/api", openapiExpressHandler.serve);
-app.get("/docs/api", openapiExpressHandler.setup(openapiSpecification));
+api.use("/docs/api", openapiExpressHandler.serve);
+api.get("/docs/api", openapiExpressHandler.setup(openapiSpecification));
 
-app.use("/", logger);
+api.use("", logger);
 
-app.use("/expense", expenseRouter);
-app.use("/expenses", expensesRouter);
+api.use("/expenses", expensesRouter);
 
-app.use("/sponsors", sponsorsRouter);
+api.use("/sponsors", sponsorsRouter);
 
-app.use("/users", usersRouter);
+api.use("/users", usersRouter);
 
-app.use("/teamapplications", teamApplicationRouter);
+api.use("/teamapplications", teamApplicationRouter);
 
-app.use("", errorHandler);
-app.use("", defaultErrorHandler);
+api.use("", errorHandler);
+api.use("", defaultErrorHandler);
 
-app.listen(hostOptions.port, () => {
+api.listen(hostOptions.port, () => {
 	console.info(
 		`Listening on ${hostOptions.hostingUrl}. May need to specify port ${hostOptions.port}.`,
 	);
