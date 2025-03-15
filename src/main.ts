@@ -1,12 +1,10 @@
 import "dotenv/config";
-import express from "express";
-
-import { hostOptions } from "@/src/enviroment";
 import {
 	defaultErrorHandler,
 	errorHandler,
 } from "@/src/middleware/error-middleware";
 import { logger } from "@/src/middleware/logging-middleware";
+import express from "express";
 
 import { expensesRouter } from "@/src/routers/expenses";
 import { customCors, customHelmetSecurity } from "@/src/security";
@@ -17,32 +15,33 @@ import { openapiSpecification } from "@/src/openapi/config";
 import { sponsorsRouter } from "@/src/routers/sponsors";
 import { usersRouter } from "@/src/routers/users";
 import openapiExpressHandler from "swagger-ui-express";
+import { hostOptions } from "./enviroment";
 
-export const vektorApi = express();
+export const api = express();
 
 // Security
-vektorApi.use(customHelmetSecurity);
-vektorApi.disable("x-powered-by");
-vektorApi.use(customCors());
+api.use(customHelmetSecurity);
+api.disable("x-powered-by");
+api.use(customCors());
 
 // OpenAPI
-vektorApi.use("/docs/api", openapiExpressHandler.serve);
-vektorApi.get("/docs/api", openapiExpressHandler.setup(openapiSpecification));
+api.use("/docs/api", openapiExpressHandler.serve);
+api.get("/docs/api", openapiExpressHandler.setup(openapiSpecification));
 
-vektorApi.use("", logger);
+api.use("", logger);
 
-vektorApi.use("/expenses", expensesRouter);
+api.use("/expenses", expensesRouter);
 
-vektorApi.use("/sponsors", sponsorsRouter);
+api.use("/sponsors", sponsorsRouter);
 
-vektorApi.use("/users", usersRouter);
+api.use("/users", usersRouter);
 
-vektorApi.use("/teamapplications", teamApplicationRouter);
+api.use("/teamapplications", teamApplicationRouter);
 
-vektorApi.use("", errorHandler);
-vektorApi.use("", defaultErrorHandler);
+api.use("", errorHandler);
+api.use("", defaultErrorHandler);
 
-vektorApi.listen(hostOptions.port, () => {
+api.listen(hostOptions.port, () => {
 	console.info(
 		`Listening on ${hostOptions.hostingUrl}. May need to specify port ${hostOptions.port}.`,
 	);
