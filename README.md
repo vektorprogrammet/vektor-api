@@ -85,7 +85,7 @@ Eventuelt **kan** du kopiere CA-serifikatet til databasen fra digital ocean og s
 
 og
 
->`CA_CERT=***CA-sertifikatet***`
+>`CA_CERT=`**CA-sertifikatet**
 
 i `.env`.
 
