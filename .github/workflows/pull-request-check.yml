@@ -1,4 +1,5 @@
 name: Pull request to main
+permissions: {}
 env:
   DATABASE_PASSWORD: pass123
   DATABASE_USER: postgres
